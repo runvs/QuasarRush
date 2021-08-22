@@ -3,7 +3,7 @@ cmake_minimum_required (VERSION 3.10)
 #####################################################
 ## Variables to be set depending on project
 #####################################################
-set (PROJECTNAME "MyAwesomeGame") 
+set (PROJECTNAME "QuasarRush") 
 
 set (ENABLE_UNITTESTS OFF CACHE BOOL "enable unittests")
 set (ENABLE_COVERAGE OFF CACHE BOOL "enable coverage")
