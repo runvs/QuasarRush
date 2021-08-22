@@ -9,7 +9,7 @@ class GP {
 public:
     GP() = delete;
 
-    static std::string GameName() { return "MyAwesomeGame"; }
+    static std::string GameName() { return "Quasar Rush"; }
     static std::string AuthorName() { return "TODO"; }
     static std::string JamName() { return "TODO"; }
     static std::string JamDate() { return "TODO"; }

@@ -1,5 +1,4 @@
 ﻿#include "state_game.hpp"
-#include "Box2D/Box2D.h"
 #include "color.hpp"
 #include "game_interface.hpp"
 #include "game_properties.hpp"
@@ -11,8 +10,6 @@
 
 void StateGame::doInternalCreate()
 {
-    m_world = std::make_shared<b2World>(b2Vec2 { 0.0f, 0.0f });
-
     float const w = static_cast<float>(GP::GetWindowSize().x());
     float const h = static_cast<float>(GP::GetWindowSize().y());
 
@@ -41,6 +38,9 @@ void StateGame::doInternalCreate()
     m_vignette->setIgnoreCamMovement(true);
     m_vignette->setColor({ 255, 255, 255, 100 });
 
+    m_player = std::make_shared<Player>();
+    add(m_player);
+
     m_hud = std::make_shared<Hud>();
     add(m_hud);
 
@@ -51,7 +51,6 @@ void StateGame::doInternalCreate()
 void StateGame::doInternalUpdate(float const elapsed)
 {
     if (m_running) {
-        m_world->Step(elapsed, GP::PhysicVelocityIterations(), GP::PhysicPositionIterations());
         // update game logic here
         if (getGame()->input()->keyboard()->justPressed(jt::KeyCode::A)) {
             m_scoreP1++;
