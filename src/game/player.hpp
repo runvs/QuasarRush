@@ -18,7 +18,6 @@ public:
     void doKill() override;
 
     std::shared_ptr<Transform> getTransform();
-
 };
 	    
 

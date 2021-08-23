@@ -3,6 +3,7 @@
 
 #include "game_state.hpp"
 #include "player.hpp"
+#include "physic_system.hpp"
 #include <memory>
 #include <vector>
 
@@ -29,6 +30,8 @@ private:
     int m_scoreP2 { 0 };
 
     std::shared_ptr<Player> m_player;
+    std::unique_ptr<PhysicsSystem> m_physics_system;
+    std::vector<std::shared_ptr<Player>> m_objects;
 
     void doInternalCreate() override;
     void doInternalUpdate(float const elapsed) override;

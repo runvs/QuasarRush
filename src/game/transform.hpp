@@ -9,7 +9,9 @@ struct Transform {
     jt::Vector2 acceleration {0.0f, 0.0f};
 
     /// in degree
-    float angle{0.0}; 
+    float angle{0.0};
+
+    float mass { 1.0f };
 };
 
 #endif

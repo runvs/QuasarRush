@@ -38,8 +38,34 @@ void StateGame::doInternalCreate()
     m_vignette->setIgnoreCamMovement(true);
     m_vignette->setColor({ 255, 255, 255, 100 });
 
+    m_physics_system = std::make_unique<PhysicsSystem>();
+
     m_player = std::make_shared<Player>();
     add(m_player);
+    m_physics_system->registerTransform(m_player->getTransform());
+
+
+    
+    {
+        auto object = std::make_shared<Player>();
+        add(object);
+        object->getTransform()->mass = 100.0f;
+        object->getTransform()->position = jt::Vector2 { 100, 150 };
+        object->getTransform()->velocity = jt::Vector2 { -30, 0 };
+        m_physics_system->registerTransform(object->getTransform());
+        m_objects.push_back(object);
+    }
+
+    {
+        auto object = std::make_shared<Player>();
+        add(object);
+        object->getTransform()->mass = 500;
+        object->getTransform()->position = jt::Vector2 { 200, 100 };
+        object->getTransform()->velocity = jt::Vector2 { 0, 0 };
+        m_physics_system->registerTransform(object->getTransform());
+        m_objects.push_back(object);
+        
+    }
 
     m_hud = std::make_shared<Hud>();
     add(m_hud);
@@ -61,6 +87,7 @@ void StateGame::doInternalUpdate(float const elapsed)
             m_hud->getObserverScoreP2()->notify(m_scoreP2);
         }
     }
+    m_physics_system->update(elapsed);
 
     m_background->update(elapsed);
     m_vignette->update(elapsed);
