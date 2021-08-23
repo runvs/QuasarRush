@@ -65,10 +65,10 @@ function (jt_deploy_dlls DESTFOLDER)
 	endif()
 endfunction()
 
-if (WIN32)
-	set (SFML_DIR "${SFML_DIR_ROOT}/lib/cmake/SFML")
-	#find_package(SFML COMPONENTS graphics window system audio REQUIRED)
-endif()
+if ($ENV{CLION_IDE})
+    set (SFML_DIR "${SFML_DIR_ROOT}/lib/cmake/SFML")
+    find_package(SFML COMPONENTS graphics window system audio REQUIRED)
+endif ()
 #####################################################
 ## Other variables and compiler setup
 #####################################################
