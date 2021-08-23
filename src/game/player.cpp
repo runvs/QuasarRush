@@ -25,3 +25,4 @@ void Player::doDraw() const { m_shape->draw(getGame()->getRenderTarget()); }
 void Player::doKill() {}
 
 std::shared_ptr<Transform> Player::getTransform() { return m_transform; }
+void Player::setTransform(std::shared_ptr<Transform> t) { m_transform = t; }

@@ -284,6 +284,7 @@ endif()
 
 target_link_libraries(${PROJECTNAME} JamTemplate)
 target_include_directories(${PROJECTNAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/game/)
+target_include_directories(${PROJECTNAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/ext/tileson-master/include/external)
 
 jt_use_assets(${PROJECTNAME})
 
