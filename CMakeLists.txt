@@ -69,6 +69,17 @@ if ($ENV{CLION_IDE})
     set (SFML_DIR "${SFML_DIR_ROOT}/lib/cmake/SFML")
     find_package(SFML COMPONENTS graphics window system audio REQUIRED)
 endif ()
+
+#####################################################
+## Create Project file and link directories
+#####################################################
+project (${PROJECTNAME})
+if(NOT ENABLE_WEB)
+	if (WIN32 OR APPLE)
+		link_directories(${SFML_DIR_ROOT}/lib)
+	endif()
+endif()
+
 #####################################################
 ## Other variables and compiler setup
 #####################################################
@@ -91,7 +102,7 @@ if(ENABLE_WEB)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s USE_SDL_TTF=2 -s USE_PTHREADS=1")
 	add_definitions(-DENABLE_WEB)
 else()
-	if(WIN32)
+	if(MSVC)
 		## nasty warning 5205 from tileson should not show up,
 		## so the warning level of this one is set to 4 and the global warning level is set to three
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /w45205 /W3 /EHsc")
@@ -101,16 +112,6 @@ else()
 		else ()
 			set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -O3 --std=c++17 -fpermissive -lstdc++fs")
 		endif()
-	endif()
-endif()
-
-#####################################################
-## Create Project file and link directories
-#####################################################
-project (${PROJECTNAME})
-if(NOT ENABLE_WEB)
-	if (WIN32 OR APPLE)
-		link_directories(${SFML_DIR_ROOT}/lib)
 	endif()
 endif()
 
