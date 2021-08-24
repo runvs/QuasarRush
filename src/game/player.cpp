@@ -17,7 +17,6 @@ void Player::doCreate()
 void Player::doUpdate(float const elapsed)
 {
     if (getGame()->input()->keyboard()->pressed(jt::KeyCode::W)) {
-
         auto const a =jt::MathHelper::deg2rad( m_transform->angle);
         jt::Vector2 const acc{cos(a), sin(a)};
         m_transform->acceleration += acc * GP::PlayerAcceleration();
@@ -34,10 +33,11 @@ void Player::doUpdate(float const elapsed)
     m_sprite->setRotation(jt::MathHelper::deg2rad(m_transform->angle));
 
     m_sprite->setPosition(m_transform->position);
-    m_sprite->update(elapsed);
+    m_sprite->update(0.0f);
+
 }
 
-void Player::doDraw() const { m_sprite->draw(getGame()->getRenderTarget()); }
+void Player::doDraw() const {    m_sprite->draw(getGame()->getRenderTarget()); }
 void Player::doKill() { }
 
 std::shared_ptr<Transform> Player::getTransform() { return m_transform; }

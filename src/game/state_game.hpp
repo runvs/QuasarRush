@@ -30,8 +30,10 @@ private:
     int m_scoreP2 { 0 };
 
     std::shared_ptr<Player> m_player;
-    std::unique_ptr<PhysicsSystem> m_physics_system;
+
     std::vector<std::shared_ptr<Player>> m_planets;
+    std::unique_ptr<PhysicsSystem> m_physics_system;
+
 
     void doInternalCreate() override;
     void doInternalUpdate(float const elapsed) override;

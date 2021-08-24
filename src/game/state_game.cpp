@@ -63,7 +63,7 @@ void StateGame::doInternalCreate()
 
     // StateGame will call drawObjects itself.
     setAutoDraw(false);
-    setAutoUpdateObjects(false);
+//    setAutoUpdateObjects(false);
 }
 
 void StateGame::doInternalUpdate(float const elapsed)
