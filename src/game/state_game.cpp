@@ -49,21 +49,20 @@ void StateGame::doInternalCreate()
 
     m_physics_system->registerTransform(m_player->getTransform());
 
-    for (auto t : l.getTransforms())
-    {
-        auto object = std::make_shared<Player>();
-        add(object);
-        object->setTransform(t);
-        m_physics_system->registerTransform(t);
-        m_planets.push_back(object);
-    }
+//    for (auto t : l.getTransforms())
+//    {
+//        auto object = std::make_shared<Player>();
+//        add(object);
+//        object->setTransform(t);
+//        m_physics_system->registerTransform(t);
+//        m_planets.push_back(object);
+//    }
 
     m_hud = std::make_shared<Hud>();
     add(m_hud);
 
     // StateGame will call drawObjects itself.
     setAutoDraw(false);
-//    setAutoUpdateObjects(false);
 }
 
 void StateGame::doInternalUpdate(float const elapsed)
@@ -80,8 +79,9 @@ void StateGame::doInternalUpdate(float const elapsed)
         }
 
         m_physics_system->reset_accelerations();
-
         m_player->update(elapsed);
+        // TODO do not use public member
+        m_player->m_projectionPoints = m_physics_system->precalculate_path(m_player->getTransform());
 
         for (auto o : m_planets)
         {
