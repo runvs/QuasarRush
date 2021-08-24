@@ -3,6 +3,7 @@
 
 #include "game_state.hpp"
 #include "physics_system.hpp"
+#include "planet.hpp"
 #include "player.hpp"
 #include <memory>
 #include <vector>
@@ -31,9 +32,8 @@ private:
 
     std::shared_ptr<Player> m_player;
 
-    std::vector<std::shared_ptr<Player>> m_planets;
+    std::vector<std::shared_ptr<Planet>> m_planets;
     std::unique_ptr<PhysicsSystem> m_physics_system;
-
 
     void doInternalCreate() override;
     void doInternalUpdate(float const elapsed) override;

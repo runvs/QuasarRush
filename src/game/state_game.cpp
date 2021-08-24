@@ -49,7 +49,7 @@ void StateGame::doInternalCreate()
     m_physics_system->registerTransform(m_player->getTransform());
 
     for (auto t : l.getTransforms()) {
-        auto object = std::make_shared<Player>();
+        auto object = std::make_shared<Planet>();
         add(object);
         object->setTransform(t);
         m_physics_system->registerTransform(t);
