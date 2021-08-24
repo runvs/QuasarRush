@@ -27,9 +27,6 @@ private:
     bool m_running { false };
     bool m_hasEnded { false };
 
-    int m_scoreP1 { 0 };
-    int m_scoreP2 { 0 };
-
     std::shared_ptr<Player> m_player;
 
     std::vector<std::shared_ptr<Planet>> m_planets;
