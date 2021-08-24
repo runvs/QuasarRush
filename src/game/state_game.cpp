@@ -3,11 +3,11 @@
 #include "game_interface.hpp"
 #include "game_properties.hpp"
 #include "hud/hud.hpp"
+#include "level.hpp"
 #include "shape.hpp"
 #include "sprite.hpp"
 #include "state_menu.hpp"
 #include "tween_alpha.hpp"
-#include "level.hpp"
 
 void StateGame::doInternalCreate()
 {
@@ -46,17 +46,15 @@ void StateGame::doInternalCreate()
     add(m_player);
     m_player->setTransform(l.getPlayer());
 
-
     m_physics_system->registerTransform(m_player->getTransform());
 
-//    for (auto t : l.getTransforms())
-//    {
-//        auto object = std::make_shared<Player>();
-//        add(object);
-//        object->setTransform(t);
-//        m_physics_system->registerTransform(t);
-//        m_planets.push_back(object);
-//    }
+    for (auto t : l.getTransforms()) {
+        auto object = std::make_shared<Player>();
+        add(object);
+        object->setTransform(t);
+        m_physics_system->registerTransform(t);
+        m_planets.push_back(object);
+    }
 
     m_hud = std::make_shared<Hud>();
     add(m_hud);
@@ -81,18 +79,14 @@ void StateGame::doInternalUpdate(float const elapsed)
         m_physics_system->reset_accelerations();
         m_player->update(elapsed);
         // TODO do not use public member
-        m_player->m_projectionPoints = m_physics_system->precalculate_path(m_player->getTransform());
+        m_player->m_projectionPoints
+            = m_physics_system->precalculate_path(m_player->getTransform());
 
-        for (auto o : m_planets)
-        {
+        for (auto o : m_planets) {
             o->update(elapsed);
         }
 
-        for (auto i = 0U; i != GP::PhysicsNumberOfIntegrationSubdivides(); ++i)
-        {
-            m_physics_system->update(elapsed/GP::PhysicsNumberOfIntegrationSubdivides());
-        }
-
+        m_physics_system->update(elapsed * 2.0f);
     }
 
     m_background->update(elapsed);

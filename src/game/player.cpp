@@ -19,7 +19,7 @@ void Player::doUpdate(float const elapsed)
     auto const a = jt::MathHelper::deg2rad(m_transform->angle);
     jt::Vector2 const acc { cos(a), -sin(a) };
 
-    std::cout << m_transform->angle << " " << a << " " << acc.x() << " " << acc.y() << std::endl;
+//    std::cout << m_transform->angle << " " << a << " " << acc.x() << " " << acc.y() << std::endl;
 
     if (getGame()->input()->keyboard()->pressed(jt::KeyCode::W)) {
 
@@ -42,11 +42,14 @@ void Player::doUpdate(float const elapsed)
 
 void Player::doDraw() const
 {
+
     for (auto& p : m_projectionPoints) {
+//        std::cout << p.x() << " " << p.y() << std::endl;
         m_projectionShape->setPosition(p);
         m_projectionShape->update(0.1f);
         m_projectionShape->draw(getGame()->getRenderTarget());
     }
+    std::cout << std::endl;
 
     m_sprite->draw(getGame()->getRenderTarget());
 }

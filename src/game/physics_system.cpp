@@ -1,4 +1,5 @@
 #include "physics_system.hpp"
+#include "game_properties.hpp"
 #include "math_helper.hpp"
 
 void PhysicsSystem::registerTransform(std::shared_ptr<Transform> transform)
@@ -23,6 +24,7 @@ void PhysicsSystem::calculate_forces()
         calculateForcesForSingleTransform(t1);
     }
 }
+
 void PhysicsSystem::calculateForcesForSingleTransform(std::shared_ptr<Transform> t1)
 {
     auto const p1 = t1->position;
@@ -36,12 +38,9 @@ void PhysicsSystem::calculateForcesForSingleTransform(std::shared_ptr<Transform>
         auto dist = p2 - p1;
 
         float r = jt::MathHelper::length(dist);
-        if (r < 0.00001)
-        {
-            continue;
-        }
+
         jt::MathHelper::normalizeMe(dist, 5);
-        auto force = dist / r * 10.0f * t1->mass * t2->mass;
+        auto force = dist / r / r * 1000.0f * t1->mass * t2->mass;
 
         if (!t1->is_fixed) {
             t1->acceleration += force / t1->mass;
@@ -86,21 +85,23 @@ std::vector<jt::Vector2> PhysicsSystem::precalculate_path(std::shared_ptr<Transf
 {
     std::vector<jt::Vector2> updated_positions {};
 
-    auto tmp = createDeepTransformCopy(transform);
+    auto backup = createDeepTransformCopy(transform);
 
-    int N = 80;
-    int substeps = 10;
-    for (int i = 0; i != N; ++i)
-    {
-        tmp->acceleration = jt::Vector2{0.0f, 0.0f};
-        calculateForcesForSingleTransform(tmp);
-        integrateSinglePosition(0.016f, tmp);
-        substeps--;
-        if (substeps == 0) {substeps= 10;
+    int N = 1000;
+    int draw_resolution = 100;
+    for (int i = 0; i != N; ++i) {
 
-            updated_positions.push_back(tmp->position);
+        transform->acceleration = jt::Vector2 { 0.0f, 0.0f };
+        calculateForcesForSingleTransform(transform);
+        integrateSinglePosition(0.02f, transform);
+        if (i % draw_resolution == 0) {
+            updated_positions.push_back(transform->position);
         }
     }
+
+    transform->acceleration = backup->acceleration;
+    transform->velocity = backup->velocity;
+    transform->position = backup->position;
 
     return updated_positions;
 }

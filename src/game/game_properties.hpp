@@ -34,7 +34,7 @@ public:
     static int PhysicVelocityIterations() { return 6; }
     static int PhysicPositionIterations() { return 2; }
     static size_t PhysicsNumberOfIntegrationSubdivides() { return 4U; }
-    static float PlayerRotationSpeed() { return 20.0; }
+    static float PlayerRotationSpeed() { return 40.0; }
     static float PlayerAcceleration() { return 10.0; }
 };
 
