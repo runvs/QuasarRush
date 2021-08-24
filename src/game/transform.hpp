@@ -12,6 +12,9 @@ struct Transform {
     float angle { 0.0f };
 
     float mass { 1.0f };
+
+    bool is_fixed{false};
+    bool is_actor{true};
 };
 
 #endif

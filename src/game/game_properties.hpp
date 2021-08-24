@@ -33,6 +33,7 @@ public:
 
     static int PhysicVelocityIterations() { return 6; }
     static int PhysicPositionIterations() { return 2; }
+    static size_t PhysicsNumberOfIntegrationSubdivides() { return 4U; }
 };
 
 #endif

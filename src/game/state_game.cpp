@@ -41,12 +41,16 @@ void StateGame::doInternalCreate()
 
     m_physics_system = std::make_unique<PhysicsSystem>();
 
+    Level l("assets/levels/test.json");
     m_player = std::make_shared<Player>();
     add(m_player);
+    m_player->setTransform(l.getPlayer());
+
+
     m_physics_system->registerTransform(m_player->getTransform());
 
 
-    Level l("assets/levels/test.json");
+
     for (auto t : l.getTransforms())
     {
         auto object = std::make_shared<Player>();
@@ -76,7 +80,12 @@ void StateGame::doInternalUpdate(float const elapsed)
             m_hud->getObserverScoreP2()->notify(m_scoreP2);
         }
     }
-    m_physics_system->update(elapsed);
+
+    for (auto i = 0U; i != GP::PhysicsNumberOfIntegrationSubdivides(); ++i)
+    {
+        m_physics_system->update(elapsed/GP::PhysicsNumberOfIntegrationSubdivides());
+    }
+
 
     m_background->update(elapsed);
     m_vignette->update(elapsed);

@@ -31,8 +31,12 @@ void PhysicsSystem::calculate_forces()
             jt::MathHelper::normalizeMe(dist, 5);
             auto force = dist / r * 10.0f * t1->mass * t2->mass;
 
-            t1->acceleration += force / t1->mass;
-            t2->acceleration -= force / t2->mass;
+            if (!t1->is_fixed) {
+                t1->acceleration += force / t1->mass;
+            }
+            if (!t2->is_fixed) {
+                t2->acceleration -= force / t2->mass;
+            }
         }
     }
 }
@@ -41,8 +45,10 @@ void PhysicsSystem::integrate_positions(float elapsed)
 {
     for (auto tptr : m_transforms) {
         auto t = tptr.lock();
-        t->velocity += t->acceleration * elapsed;
-        t->position += t->velocity * elapsed;
+        if (!t->is_fixed) {
+            t->velocity += t->acceleration * elapsed;
+            t->position += t->velocity * elapsed;
+        }
     }
 }
 
