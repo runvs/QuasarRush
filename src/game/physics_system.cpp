@@ -54,8 +54,6 @@ void PhysicsSystem::integrate_positions(float elapsed)
 
 void PhysicsSystem::update(float elapsed)
 {
-    reset_accelerations();
-
     calculate_forces();
 
     integrate_positions(elapsed);

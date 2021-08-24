@@ -3,6 +3,7 @@
 #include "game.hpp"
 #include "game_interface.hpp"
 #include "math_helper.hpp"
+#include "game_properties.hpp"
 
 void Player::doCreate()
 {
@@ -15,17 +16,21 @@ void Player::doCreate()
 
 void Player::doUpdate(float const elapsed)
 {
-    float const a = getAge();
-    // m_transform->position = jt::Vector2(200 + sin(a / 2) * 50, 200 + cos(a / 2) * 50);
+    if (getGame()->input()->keyboard()->pressed(jt::KeyCode::W)) {
 
-    if (getGame()->input()->keyboard()->pressed(jt::KeyCode::W)) { }
-
-    if (getGame()->input()->keyboard()->pressed(jt::KeyCode::A)) {
-        m_transform->angle += 36.0f;
-    } else if (getGame()->input()->keyboard()->pressed(jt::KeyCode::D)) {
-        m_transform->angle -= 36.0f;
+        auto const a =jt::MathHelper::deg2rad( m_transform->angle);
+        jt::Vector2 const acc{cos(a), sin(a)};
+        m_transform->acceleration += acc * GP::PlayerAcceleration();
     }
 
+    float const rotationSpeed = GP::PlayerRotationSpeed();
+    if (getGame()->input()->keyboard()->pressed(jt::KeyCode::A)) {
+        m_transform->angle += rotationSpeed * elapsed;
+    } else if (getGame()->input()->keyboard()->pressed(jt::KeyCode::D)) {
+        m_transform->angle -= rotationSpeed * elapsed;
+    }
+
+    m_sprite->setOrigin(jt::Vector2{5.0,5.0});
     m_sprite->setRotation(jt::MathHelper::deg2rad(m_transform->angle));
 
     m_sprite->setPosition(m_transform->position);

@@ -49,15 +49,13 @@ void StateGame::doInternalCreate()
 
     m_physics_system->registerTransform(m_player->getTransform());
 
-
-
     for (auto t : l.getTransforms())
     {
         auto object = std::make_shared<Player>();
         add(object);
         object->setTransform(t);
         m_physics_system->registerTransform(t);
-        m_objects.push_back(object);
+        m_planets.push_back(object);
     }
 
     m_hud = std::make_shared<Hud>();
@@ -65,6 +63,7 @@ void StateGame::doInternalCreate()
 
     // StateGame will call drawObjects itself.
     setAutoDraw(false);
+    setAutoUpdateObjects(false);
 }
 
 void StateGame::doInternalUpdate(float const elapsed)
@@ -79,13 +78,22 @@ void StateGame::doInternalUpdate(float const elapsed)
             m_scoreP2++;
             m_hud->getObserverScoreP2()->notify(m_scoreP2);
         }
-    }
 
-    for (auto i = 0U; i != GP::PhysicsNumberOfIntegrationSubdivides(); ++i)
-    {
-        m_physics_system->update(elapsed/GP::PhysicsNumberOfIntegrationSubdivides());
-    }
+        m_physics_system->reset_accelerations();
 
+        m_player->update(elapsed);
+
+        for (auto o : m_planets)
+        {
+            o->update(elapsed);
+        }
+
+        for (auto i = 0U; i != GP::PhysicsNumberOfIntegrationSubdivides(); ++i)
+        {
+            m_physics_system->update(elapsed/GP::PhysicsNumberOfIntegrationSubdivides());
+        }
+
+    }
 
     m_background->update(elapsed);
     m_vignette->update(elapsed);
