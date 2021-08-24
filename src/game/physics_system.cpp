@@ -1,4 +1,4 @@
-#include "physic_system.hpp"
+#include "physics_system.hpp"
 #include "math_helper.hpp"
 
 void PhysicsSystem::registerTransform(std::shared_ptr<Transform> transform)
@@ -42,8 +42,7 @@ void PhysicsSystem::integrate_positions(float elapsed)
     for (auto tptr : m_transforms) {
         auto t = tptr.lock();
         t->velocity += t->acceleration * elapsed;
-        t->position+= t->velocity* elapsed;
-
+        t->position += t->velocity * elapsed;
     }
 }
 
