@@ -1,16 +1,16 @@
 #ifndef GAME_PLAYER_GUARD_HPP
 #define GAME_PLAYER_GUARD_HPP
 
-#include "shape.hpp"
 #include "game_object.hpp"
+#include "sprite.hpp"
 #include "transform.hpp"
 #include <memory>
 
 class Player : public jt::GameObject {
 private:
-    std::shared_ptr<jt::Shape> m_shape;
+    std::shared_ptr<jt::Sprite> m_sprite;
     std::shared_ptr<Transform> m_transform;
-    
+
 public:
     void doCreate() override;
     void doUpdate(float const /*elapsed*/) override;
@@ -20,6 +20,5 @@ public:
     std::shared_ptr<Transform> getTransform();
     void setTransform(std::shared_ptr<Transform> t);
 };
-	    
 
-#endif 
+#endif

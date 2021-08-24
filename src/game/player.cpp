@@ -6,7 +6,8 @@
 
 void Player::doCreate()
 {
-    m_shape = jt::dh::createRectShape({ 10.0f, 10.0f }, jt::colors::White);
+    m_sprite = std::make_shared<jt::Sprite>();
+    m_sprite->loadSprite("assets/ship.png");
     m_transform = std::make_shared<Transform>();
     m_transform->position = jt::Vector2 { 100, 100 };
     m_transform->velocity= jt::Vector2 {20 , 20 };
