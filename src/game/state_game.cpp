@@ -7,6 +7,7 @@
 #include "sprite.hpp"
 #include "state_menu.hpp"
 #include "tween_alpha.hpp"
+#include "level.hpp"
 
 void StateGame::doInternalCreate()
 {
@@ -45,26 +46,14 @@ void StateGame::doInternalCreate()
     m_physics_system->registerTransform(m_player->getTransform());
 
 
-    
+    Level l("assets/levels/test.json");
+    for (auto t : l.getTransforms())
     {
         auto object = std::make_shared<Player>();
         add(object);
-        object->getTransform()->mass = 100.0f;
-        object->getTransform()->position = jt::Vector2 { 100, 150 };
-        object->getTransform()->velocity = jt::Vector2 { -30, 0 };
-        m_physics_system->registerTransform(object->getTransform());
+        object->setTransform(t);
+        m_physics_system->registerTransform(t);
         m_objects.push_back(object);
-    }
-
-    {
-        auto object = std::make_shared<Player>();
-        add(object);
-        object->getTransform()->mass = 500;
-        object->getTransform()->position = jt::Vector2 { 200, 100 };
-        object->getTransform()->velocity = jt::Vector2 { 0, 0 };
-        m_physics_system->registerTransform(object->getTransform());
-        m_objects.push_back(object);
-        
     }
 
     m_hud = std::make_shared<Hud>();
