@@ -68,9 +68,8 @@ void StateGame::doInternalUpdate(float const elapsed)
     if (m_running) {
         m_physics_system->reset_accelerations();
         m_player->update(elapsed);
-        // TODO do not use public member
-        m_player->m_projectionPoints
-            = m_physics_system->precalculate_path(m_player->getTransform());
+        m_player->setProjectionPoints(
+            m_physics_system->precalculate_path(m_player->getTransform()));
 
         for (auto o : m_planets) {
             o->update(elapsed);

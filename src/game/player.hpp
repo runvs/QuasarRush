@@ -12,6 +12,7 @@ private:
     std::shared_ptr<jt::Sprite> m_sprite;
     std::shared_ptr<jt::Shape> m_projectionShape;
     std::shared_ptr<Transform> m_transform;
+    std::vector<jt::Vector2> m_projectionPoints;
 
 public:
     void doCreate() override;
@@ -22,7 +23,7 @@ public:
     std::shared_ptr<Transform> getTransform();
     void setTransform(std::shared_ptr<Transform> t);
 
-    std::vector<jt::Vector2> m_projectionPoints;
+    void setProjectionPoints(std::vector<jt::Vector2>&& points);
 };
 
 #endif

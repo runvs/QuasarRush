@@ -4,6 +4,7 @@
 #include "game_interface.hpp"
 #include "game_properties.hpp"
 #include "math_helper.hpp"
+#include <utility>
 
 void Player::doCreate()
 {
@@ -18,8 +19,6 @@ void Player::doUpdate(float const elapsed)
 {
     auto const a = jt::MathHelper::deg2rad(m_transform->angle);
     jt::Vector2 const acc { cos(a), -sin(a) };
-
-//    std::cout << m_transform->angle << " " << a << " " << acc.x() << " " << acc.y() << std::endl;
 
     if (getGame()->input()->keyboard()->pressed(jt::KeyCode::W)) {
 
@@ -44,7 +43,6 @@ void Player::doDraw() const
 {
 
     for (auto& p : m_projectionPoints) {
-//        std::cout << p.x() << " " << p.y() << std::endl;
         m_projectionShape->setPosition(p);
         m_projectionShape->update(0.1f);
         m_projectionShape->draw(getGame()->getRenderTarget());
@@ -57,3 +55,8 @@ void Player::doKill() { }
 
 std::shared_ptr<Transform> Player::getTransform() { return m_transform; }
 void Player::setTransform(std::shared_ptr<Transform> t) { m_transform = t; }
+
+void Player::setProjectionPoints(std::vector<jt::Vector2>&& points)
+{
+    m_projectionPoints = std::move(points);
+}
