@@ -13,6 +13,8 @@ private:
     std::shared_ptr<jt::Shape> m_projectionShape;
     std::shared_ptr<Transform> m_transform;
     std::vector<jt::Vector2> m_projectionPoints;
+    
+    void updateMovement(const float elapsed);
 
 public:
     void doCreate() override;
