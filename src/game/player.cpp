@@ -29,17 +29,18 @@ void Player::doUpdate(float const elapsed)
 void Player::updateMovement(const float elapsed)
 {
     auto const a = jt::MathHelper::deg2rad(m_transform->angle);
-    jt::Vector2 const acc { cos(a), -sin(a) };
+    jt::Vector2 const direction { cos(a), -sin(a) };
 
-    if (getGame()->input()->keyboard()->pressed(jt::KeyCode::W)) {
-
-        m_transform->acceleration += acc * GP::PlayerAcceleration();
+    auto const& keyboard = getGame()->input()->keyboard();
+    if (keyboard->pressed(jt::KeyCode::W)) {
+        float const acceleration_factor = keyboard->pressed(jt::KeyCode::LShift) ? GP::PlayerAccelerationBoostFactor() : 1.0f ;
+        m_transform->acceleration += direction * GP::PlayerAcceleration() * acceleration_factor;
     }
 
     float const rotationSpeed = GP::PlayerRotationSpeed();
-    if (getGame()->input()->keyboard()->pressed(jt::KeyCode::A)) {
+    if (keyboard->pressed(jt::KeyCode::A)) {
         m_transform->angle += rotationSpeed * elapsed;
-    } else if (getGame()->input()->keyboard()->pressed(jt::KeyCode::D)) {
+    } else if (keyboard->pressed(jt::KeyCode::D)) {
         m_transform->angle -= rotationSpeed * elapsed;
     }
 }
