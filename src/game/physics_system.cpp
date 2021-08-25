@@ -33,6 +33,10 @@ void PhysicsSystem::calculateForcesForSingleTransform(std::shared_ptr<Transform>
         if (t1 == t2) {
             continue;
         }
+        if (!t2->is_force_emitter)
+        {
+            continue;
+        }
         auto const p2 = t2->position;
 
         auto dist = p2 - p1;
@@ -66,9 +70,7 @@ void PhysicsSystem::integrateSinglePosition(float elapsed, std::shared_ptr<Trans
 void PhysicsSystem::update(float elapsed)
 {
     cleanUpTransforms();
-
     calculate_forces();
-
     integratePositions(elapsed);
 }
 
@@ -93,7 +95,6 @@ std::vector<jt::Vector2> PhysicsSystem::precalculate_path(std::shared_ptr<Transf
     int N = 1000;
     int draw_resolution = 100;
     for (int i = 0; i != N; ++i) {
-
         transform->acceleration = jt::Vector2 { 0.0f, 0.0f };
         calculateForcesForSingleTransform(transform);
         integrateSinglePosition(0.02f, transform);
@@ -102,10 +103,8 @@ std::vector<jt::Vector2> PhysicsSystem::precalculate_path(std::shared_ptr<Transf
         }
     }
 
-    // reset original transform
-    transform->acceleration = backup->acceleration;
-    transform->velocity = backup->velocity;
-    transform->position = backup->position;
+    // reset original transform values
+    *transform = *backup;
 
     return updated_positions;
 }

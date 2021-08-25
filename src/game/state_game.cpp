@@ -82,10 +82,13 @@ void StateGame::doInternalUpdate(float const elapsed)
             auto const playerTransform = m_player->getTransform();
             auto transform = std::make_shared<Transform>();
             auto alpha = jt::MathHelper::deg2rad(playerTransform->angle);
-            transform->velocity = jt::Vector2 { cos(alpha), -sin(alpha) } * 40.0f;
+            auto const aim_direction = jt::Vector2 { cos(alpha), -sin(alpha) } ;
+            transform->velocity = aim_direction * 30.0f;
+
             transform->position
-                = jt::Vector2 { playerTransform->position.x() + 1, playerTransform->position.y() };
-            transform->mass = 0.0000001f;
+            = jt::Vector2 { playerTransform->position.x(), playerTransform->position.y() } + aim_direction * 5.0f;
+            transform->mass = 0.000001f;
+            transform->is_force_emitter = false;
             shot->setTransform(transform);
 
             m_physics_system->registerTransform(transform);
