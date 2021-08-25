@@ -27,7 +27,7 @@ public:
     static jt::Color PaletteColor3() { return jt::Color { 133, 225, 66 }; }
     static jt::Color PaletteColor4() { return jt::Color { 239, 255, 124 }; }
     static jt::Color PaletteColor5() { return jt::Color { 251, 114, 48 }; }
-    static jt::Color PaletteColor6() { return jt::Color { 184, 39, 45 }; }
+    static jt::Color PaletteColor6() { return jt::Color { 20, 20, 20 }; }
     static jt::Color PaletteColor7() { return jt::Color { 64, 23, 58 }; }
     static jt::Color PaletteColor8() { return jt::Color { 157, 64, 43 }; }
 
@@ -37,6 +37,7 @@ public:
     static float PlayerRotationSpeed() { return 55.0; }
     static float PlayerAcceleration() { return 2.0; }
     static float PlayerAccelerationBoostFactor() { return 3.0; }
+    static float PlayerShootTimer() { return 0.3f; }
 };
 
 #endif

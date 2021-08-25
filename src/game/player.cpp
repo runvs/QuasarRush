@@ -19,6 +19,8 @@ void Player::doUpdate(float const elapsed)
 {
     updateMovement(elapsed);
 
+    m_shootTimer -= elapsed;
+
     m_sprite->setOrigin(jt::Vector2 { 5.0, 5.0 });
     m_sprite->setRotation(m_transform->angle);
 
@@ -47,7 +49,6 @@ void Player::updateMovement(const float elapsed)
 
 void Player::doDraw() const
 {
-
     for (size_t i = 0U; i != m_projectionPoints.size(); ++i) {
         float const v =  255.0f - static_cast<float>(i) / m_projectionPoints.size() * 255.0f;
         m_projectionShape->setPosition(m_projectionPoints.at(i));
@@ -67,3 +68,5 @@ void Player::setProjectionPoints(std::vector<jt::Vector2>&& points)
 {
     m_projectionPoints = std::move(points);
 }
+bool Player::canShoot() { return m_shootTimer <= 0; }
+void Player::shoot() { m_shootTimer = GP::PlayerShootTimer(); }

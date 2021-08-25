@@ -76,23 +76,29 @@ void StateGame::doInternalUpdate(float const elapsed)
             o->update(elapsed);
         }
 
-        if (getGame()->input()->keyboard()->pressed(jt::KeyCode::Space)) {
-            auto shot = std::make_shared<Shot>();
-            add(shot);
-            auto const playerTransform = m_player->getTransform();
-            auto transform = std::make_shared<Transform>();
-            auto alpha = jt::MathHelper::deg2rad(playerTransform->angle);
-            auto const aim_direction = jt::Vector2 { cos(alpha), -sin(alpha) } ;
-            transform->velocity = aim_direction * 30.0f;
+        if (getGame()->input()->mouse()->pressed(jt::MouseButtonCode::MBLeft)) {
+            if (m_player->canShoot()) {
+                m_player->shoot();
 
-            transform->position
-            = jt::Vector2 { playerTransform->position.x(), playerTransform->position.y() } + aim_direction * 5.0f;
-            transform->mass = 0.000001f;
-            transform->is_force_emitter = false;
-            shot->setTransform(transform);
+                auto shot = std::make_shared<Shot>();
+                add(shot);
+                auto const playerTransform = m_player->getTransform();
+                auto transform = std::make_shared<Transform>();
+                auto const mouse_position = getGame()->input()->mouse()->getMousePositionScreen();
+                auto aim_direction = mouse_position - playerTransform->position;
+                jt::MathHelper::normalizeMe(aim_direction);
+                transform->velocity = aim_direction * 30.0f;
 
-            m_physics_system->registerTransform(transform);
-            m_shots.push_back(shot);
+                transform->position
+                    = jt::Vector2 { playerTransform->position.x(), playerTransform->position.y() }
+                    + aim_direction * 5.0f;
+                transform->mass = 0.000001f;
+                transform->is_force_emitter = false;
+                shot->setTransform(transform);
+
+                m_physics_system->registerTransform(transform);
+                m_shots.push_back(shot);
+            }
         }
 
         m_physics_system->update(elapsed * 2.0f);

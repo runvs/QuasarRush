@@ -13,6 +13,8 @@ private:
     std::shared_ptr<jt::Shape> m_projectionShape;
     std::shared_ptr<Transform> m_transform;
     std::vector<jt::Vector2> m_projectionPoints;
+
+    float m_shootTimer = 0.0f;
     
     void updateMovement(const float elapsed);
 
@@ -21,6 +23,9 @@ public:
     void doUpdate(float const /*elapsed*/) override;
     void doDraw() const override;
     void doKill() override;
+
+    bool canShoot();
+    void shoot();
 
     std::shared_ptr<Transform> getTransform();
     void setTransform(std::shared_ptr<Transform> t);
