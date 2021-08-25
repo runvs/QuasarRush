@@ -42,7 +42,7 @@ void StateGame::doInternalCreate()
 
     m_physics_system = std::make_unique<PhysicsSystem>();
 
-    Level l("assets/levels/test.json");
+    Level l("assets/levels/"+ m_level_filename);
     m_player = std::make_shared<Player>();
     add(m_player);
     m_player->setTransform(l.getPlayer());
@@ -80,24 +80,7 @@ void StateGame::doInternalUpdate(float const elapsed)
             if (m_player->canShoot()) {
                 m_player->shoot();
 
-                auto shot = std::make_shared<Shot>();
-                add(shot);
-                auto const playerTransform = m_player->getTransform();
-                auto transform = std::make_shared<Transform>();
-                auto const mouse_position = getGame()->input()->mouse()->getMousePositionScreen();
-                auto aim_direction = mouse_position - playerTransform->position;
-                jt::MathHelper::normalizeMe(aim_direction);
-                transform->velocity = aim_direction * 30.0f;
-
-                transform->position
-                    = jt::Vector2 { playerTransform->position.x(), playerTransform->position.y() }
-                    + aim_direction * 5.0f;
-                transform->mass = 0.000001f;
-                transform->is_force_emitter = false;
-                shot->setTransform(transform);
-
-                m_physics_system->registerTransform(transform);
-                m_shots.push_back(shot);
+                spawnShot();
             }
         }
 
@@ -107,6 +90,27 @@ void StateGame::doInternalUpdate(float const elapsed)
     m_background->update(elapsed);
     m_vignette->update(elapsed);
     m_overlay->update(elapsed);
+}
+void StateGame::spawnShot()
+{
+    auto shot = std::make_shared<Shot>();
+    add(shot);
+    auto const playerTransform = m_player->getTransform();
+    auto transform = std::make_shared<Transform>();
+    auto const mouse_position = getGame()->input()->mouse()->getMousePositionScreen();
+    auto aim_direction = mouse_position - playerTransform->position;
+    jt::MathHelper::normalizeMe(aim_direction);
+    transform->velocity = aim_direction * 30.0f;
+
+    transform->position
+        = jt::Vector2 { playerTransform->position.x(), playerTransform->position.y() }
+        + aim_direction * 5.0f;
+    transform->mass = 0.000001f;
+    transform->is_force_emitter = false;
+    shot->setTransform(transform);
+
+    m_physics_system->registerTransform(transform);
+    m_shots.push_back(shot);
 }
 
 void StateGame::doInternalDraw() const
@@ -132,4 +136,8 @@ void StateGame::endGame()
     tw->setSkipFrames();
     tw->addCompleteCallback([this]() { getGame()->switchState(std::make_shared<StateMenu>()); });
     add(tw);
+}
+
+void StateGame::setLevel(std::string const& level_filename) {
+    m_level_filename = level_filename;
 }

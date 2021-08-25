@@ -6,7 +6,10 @@
 #include "planet.hpp"
 #include "player.hpp"
 #include "shot.hpp"
+#include "enemy.hpp"
+#include "object_group.hpp"
 #include <memory>
+
 #include <vector>
 
 // fwd decls
@@ -18,7 +21,8 @@ class Sprite;
 class Hud;
 
 class StateGame : public jt::GameState {
-
+public:
+    void setLevel(std::string const& level_filename);
 private:
     std::shared_ptr<jt::Shape> m_background;
     std::shared_ptr<jt::Shape> m_overlay;
@@ -33,13 +37,17 @@ private:
     std::vector<std::shared_ptr<Planet>> m_planets;
     std::unique_ptr<PhysicsSystem> m_physics_system;
 
-    std::vector<std::shared_ptr<Shot>> m_shots;
+    jt::ObjectGroup<Shot> m_shots;
+    jt::ObjectGroup<Enemy> m_enemies;
+
+    std::string m_level_filename;
 
     void doInternalCreate() override;
     void doInternalUpdate(float const elapsed) override;
     void doInternalDraw() const override;
 
     void endGame();
+    void spawnShot();
 };
 
 #endif

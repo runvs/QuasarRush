@@ -182,7 +182,10 @@ void StateMenu::createTweenTransition()
     auto tw = jt::TweenAlpha<jt::Shape>::create(
         m_overlay, 0.5f, std::uint8_t { 0 }, std::uint8_t { 255 });
     tw->setSkipFrames();
-    tw->addCompleteCallback([this]() { getGame()->switchState(std::make_shared<StateGame>()); });
+    tw->addCompleteCallback([this]() {
+        std::shared_ptr<StateGame> newState = std::make_shared<StateGame>();
+        newState->setLevel("two_stars_with_enemies.json");
+        getGame()->switchState(newState); });
     add(tw);
 }
 
