@@ -1,6 +1,7 @@
 #include "physics_system.hpp"
 #include "game_properties.hpp"
 #include "math_helper.hpp"
+#include <iostream>
 
 void PhysicsSystem::registerTransform(std::shared_ptr<Transform> transform)
 {
@@ -70,10 +71,10 @@ void PhysicsSystem::integrateSinglePosition(float elapsed, std::shared_ptr<Trans
 
 void PhysicsSystem::update(float elapsed)
 {
-
+    std::cout << m_transforms.size() << std::endl;
     cleanUpTransforms();
     calculate_forces();
-    integratePositions(elapsed / 2);
+    integratePositions(elapsed * 0.75f);
 }
 
 void PhysicsSystem::cleanUpTransforms()

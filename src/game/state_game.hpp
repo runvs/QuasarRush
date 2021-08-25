@@ -34,7 +34,7 @@ private:
 
     std::shared_ptr<Player> m_player;
 
-    std::vector<std::shared_ptr<Planet>> m_planets;
+    jt::ObjectGroup<Planet> m_planets;
     std::unique_ptr<PhysicsSystem> m_physics_system;
 
     jt::ObjectGroup<Shot> m_shots;

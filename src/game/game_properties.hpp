@@ -34,11 +34,14 @@ public:
     static int PhysicVelocityIterations() { return 6; }
     static int PhysicPositionIterations() { return 2; }
     static size_t PhysicsNumberOfIntegrationSubdivides() { return 4U; }
+
     static float PlayerRotationSpeed() { return 55.0; }
     static float PlayerAcceleration() { return 2.0; }
     static float PlayerAccelerationBoostFactor() { return 3.0; }
     static float PlayerShootTimer() { return 0.3f; }
     static float EnemyShootTimer() { return 0.7f; }
+
+    static float ShotSpeed() {return 40.0f;}
 };
 
 #endif

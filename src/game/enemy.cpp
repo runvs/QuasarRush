@@ -32,3 +32,11 @@ void Enemy::setTransform(std::shared_ptr<Transform> t) { m_transform = t; }
 
 bool Enemy::canShoot() { return m_shootTimer <= 0; }
 void Enemy::shoot() { m_shootTimer = GP::EnemyShootTimer(); }
+
+void Enemy::takeDamage() {
+    m_health -= 1;
+    if (m_health <= 0)
+    {
+        kill();
+    }
+}

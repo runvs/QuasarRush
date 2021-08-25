@@ -11,6 +11,8 @@ class Enemy : public jt::GameObject {
 
     float m_shootTimer = 0.0f;
 
+    float m_health = 5.0f;
+
 public:
     void doCreate() override;
     void doUpdate(float const /*elapsed*/) override;
@@ -23,7 +25,8 @@ public:
     std::shared_ptr<Transform> getTransform();
     void setTransform(std::shared_ptr<Transform> t);
 
-    void setProjectionPoints(std::vector<jt::Vector2>&& points);
+    void takeDamage();
+
 };
 
 #endif // QUASARRUSH_ENEMY_HPP

@@ -52,7 +52,7 @@ void StateGame::doInternalCreate()
 }
 void StateGame::createLevelEntities()
 {
-    Level l("assets/levels/"+ m_level_filename);
+    Level l("assets/levels/" + m_level_filename);
     m_player = std::make_shared<Player>();
     add(m_player);
     m_player->setTransform(l.getPlayer());
@@ -67,8 +67,7 @@ void StateGame::createLevelEntities()
         m_planets.push_back(object);
     }
 
-    for (auto t : l.getEnemies())
-    {
+    for (auto t : l.getEnemies()) {
         auto enemy = std::make_shared<Enemy>();
         add(enemy);
         enemy->setTransform(t);
@@ -85,13 +84,55 @@ void StateGame::doInternalUpdate(float const elapsed)
         m_player->setProjectionPoints(
             m_physics_system->precalculate_path(m_player->getTransform()));
 
-        for (auto o : m_planets) {
-            o->update(elapsed);
+        for (auto p : m_planets) {
+            p.lock()->update(elapsed);
         }
 
         if (getGame()->input()->mouse()->pressed(jt::MouseButtonCode::MBLeft)) {
             if (m_player->canShoot()) {
                 spawnShot();
+            }
+        }
+
+        for (auto sptr : m_shots)
+        {
+            if (sptr.expired())
+            {
+                continue;
+            }
+
+            auto s = sptr.lock();
+            auto const sp = s->getTransform()->position;
+            for (auto eptr : m_enemies)
+            {
+                if (eptr.expired())
+                {
+                    continue;
+                }
+                auto e = eptr.lock();
+                auto const ep = e->getTransform()->position;
+                auto const diff = ep - sp;
+                auto const lengthSquared = jt::MathHelper::lengthSquared(diff);
+                if (lengthSquared <= 5*5)
+                {
+                    s->kill();
+                    e->takeDamage();
+                }
+            }
+            for (auto pptr : m_planets)
+            {
+                if (pptr.expired())
+                {
+                    continue;
+                }
+                auto p = pptr.lock();
+                auto const ep = p->getTransform()->position;
+                auto const diff = ep - sp;
+                auto const lengthSquared = jt::MathHelper::lengthSquared(diff);
+                if (lengthSquared <= 5*5)
+                {
+                    s->kill();
+                }
             }
         }
 
@@ -114,10 +155,10 @@ void StateGame::spawnShot()
     auto aim_direction = mouse_position - playerTransform->position;
     jt::MathHelper::normalizeMe(aim_direction);
     auto transform = shot->getTransform();
-    transform->velocity = aim_direction * 30.0f;
+    transform->velocity = aim_direction * GP::ShotSpeed();
     transform->position
         = jt::Vector2 { playerTransform->position.x(), playerTransform->position.y() }
-        + aim_direction * 5.0f;
+        + aim_direction * 7.0f;
     transform->mass = 0.000001f;
     transform->is_force_emitter = false;
 
@@ -150,6 +191,4 @@ void StateGame::endGame()
     add(tw);
 }
 
-void StateGame::setLevel(std::string const& level_filename) {
-    m_level_filename = level_filename;
-}
+void StateGame::setLevel(std::string const& level_filename) { m_level_filename = level_filename; }

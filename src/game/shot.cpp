@@ -14,11 +14,15 @@ void Shot::doUpdate(float const elapsed)
     m_shape->setPosition(m_transform->position);
     m_shape->update(elapsed);
 
-    if (m_transform->position.x() < 0 || m_transform->position.x() > GP::GetWindowSize().x())
+    if (m_transform->position.x() < 0 || m_transform->position.x() > GP::GetScreenSize().x())
     {
         kill();
     }
-    if (m_transform->position.y() < 0 || m_transform->position.y() > GP::GetWindowSize().y())
+    if (m_transform->position.y() < 0 || m_transform->position.y() > GP::GetScreenSize().y())
+    {
+        kill();
+    }
+    if (getAge() > 60.0f)
     {
         kill();
     }
