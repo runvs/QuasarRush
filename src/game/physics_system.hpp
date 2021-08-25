@@ -8,7 +8,6 @@
 class PhysicsSystem {
 public:
     void registerTransform(std::shared_ptr<Transform> transform);
-    void deregisterTransform(std::shared_ptr<Transform> transform);
     void reset_accelerations();
     void calculate_forces();
     void integratePositions(float elapsed);
@@ -22,6 +21,7 @@ private:
 
     void calculateForcesForSingleTransform(std::shared_ptr<Transform> t1);
     void integrateSinglePosition(float elapsed, std::shared_ptr<Transform> t) const;
+    void cleanUpTransforms();
 };
 
 #endif

@@ -47,8 +47,10 @@ void Player::updateMovement(const float elapsed)
 void Player::doDraw() const
 {
 
-    for (auto& p : m_projectionPoints) {
-        m_projectionShape->setPosition(p);
+    for (size_t i = 0U; i != m_projectionPoints.size(); ++i) {
+        float const v =  255.0f - static_cast<float>(i) / m_projectionPoints.size() * 255.0f;
+        m_projectionShape->setPosition(m_projectionPoints.at(i));
+        m_projectionShape->setColor(jt::Color { 255, 255, 255, static_cast<std::uint8_t>(v) });
         m_projectionShape->update(0.1f);
         m_projectionShape->draw(getGame()->getRenderTarget());
     }

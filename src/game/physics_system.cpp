@@ -9,14 +9,6 @@ void PhysicsSystem::registerTransform(std::shared_ptr<Transform> transform)
     }
 }
 
-void PhysicsSystem::deregisterTransform(std::shared_ptr<Transform> transform)
-{
-    if (transform) {
-        // m_transforms.erase(
-        //    std::remove(m_transforms.begin(), m_transforms.end(), transform), m_transforms.end());
-    }
-}
-
 void PhysicsSystem::reset_accelerations()
 {
     for (auto tptr : m_transforms) {
@@ -73,20 +65,23 @@ void PhysicsSystem::integrateSinglePosition(float elapsed, std::shared_ptr<Trans
 
 void PhysicsSystem::update(float elapsed)
 {
+    cleanUpTransforms();
+
     calculate_forces();
 
     integratePositions(elapsed);
 }
 
+void PhysicsSystem::cleanUpTransforms()
+{
+    m_transforms.erase(std::remove_if(m_transforms.begin(), m_transforms.end(),
+                           [](std::weak_ptr<Transform> wptr) { return wptr.expired(); }),
+        m_transforms.end());
+}
+
 std::shared_ptr<Transform> createDeepTransformCopy(std::shared_ptr<Transform> const& transform)
 {
-    auto tmp = std::make_shared<Transform>();
-    tmp->acceleration = transform->acceleration;
-    tmp->velocity = transform->velocity;
-    tmp->position = transform->position;
-    tmp->mass = transform->mass;
-    tmp->is_fixed = transform->is_fixed;
-    return tmp;
+    return std::make_shared<Transform>(*transform);
 }
 
 std::vector<jt::Vector2> PhysicsSystem::precalculate_path(std::shared_ptr<Transform> transform)
@@ -107,6 +102,7 @@ std::vector<jt::Vector2> PhysicsSystem::precalculate_path(std::shared_ptr<Transf
         }
     }
 
+    // reset original transform
     transform->acceleration = backup->acceleration;
     transform->velocity = backup->velocity;
     transform->position = backup->position;
