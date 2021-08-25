@@ -4,6 +4,7 @@
 #include "game_properties.hpp"
 #include "hud/hud.hpp"
 #include "level.hpp"
+#include "math_helper.hpp"
 #include "shape.hpp"
 #include "sprite.hpp"
 #include "state_menu.hpp"
@@ -73,6 +74,22 @@ void StateGame::doInternalUpdate(float const elapsed)
 
         for (auto o : m_planets) {
             o->update(elapsed);
+        }
+
+        if (getGame()->input()->keyboard()->pressed(jt::KeyCode::Space)) {
+            auto shot = std::make_shared<Shot>();
+            add(shot);
+            auto const playerTransform = m_player->getTransform();
+            auto transform = std::make_shared<Transform>();
+            auto alpha = jt::MathHelper::deg2rad(playerTransform->angle);
+            transform->velocity = jt::Vector2 { cos(alpha), -sin(alpha) } * 40.0f;
+            transform->position
+                = jt::Vector2 { playerTransform->position.x() + 1, playerTransform->position.y() };
+            transform->mass = 0.0000001f;
+            shot->setTransform(transform);
+
+            m_physics_system->registerTransform(transform);
+            m_shots.push_back(shot);
         }
 
         m_physics_system->update(elapsed * 2.0f);

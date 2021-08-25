@@ -13,8 +13,8 @@ struct Transform {
 
     float mass { 1.0f };
 
-    bool is_fixed{false};
-    bool is_actor{true};
+    bool is_fixed { false };
+    bool is_actor { true };
 };
 
 #endif
