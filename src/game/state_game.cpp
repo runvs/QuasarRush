@@ -42,6 +42,16 @@ void StateGame::doInternalCreate()
 
     m_physics_system = std::make_unique<PhysicsSystem>();
 
+    createLevelEntities();
+
+    m_hud = std::make_shared<Hud>();
+    add(m_hud);
+
+    // StateGame will call drawObjects itself.
+    setAutoDraw(false);
+}
+void StateGame::createLevelEntities()
+{
     Level l("assets/levels/"+ m_level_filename);
     m_player = std::make_shared<Player>();
     add(m_player);
@@ -57,11 +67,14 @@ void StateGame::doInternalCreate()
         m_planets.push_back(object);
     }
 
-    m_hud = std::make_shared<Hud>();
-    add(m_hud);
-
-    // StateGame will call drawObjects itself.
-    setAutoDraw(false);
+    for (auto t : l.getEnemies())
+    {
+        auto enemy = std::make_shared<Enemy>();
+        add(enemy);
+        enemy->setTransform(t);
+        m_physics_system->registerTransform(t);
+        m_enemies.push_back(enemy);
+    }
 }
 
 void StateGame::doInternalUpdate(float const elapsed)
@@ -78,8 +91,6 @@ void StateGame::doInternalUpdate(float const elapsed)
 
         if (getGame()->input()->mouse()->pressed(jt::MouseButtonCode::MBLeft)) {
             if (m_player->canShoot()) {
-                m_player->shoot();
-
                 spawnShot();
             }
         }
@@ -93,21 +104,22 @@ void StateGame::doInternalUpdate(float const elapsed)
 }
 void StateGame::spawnShot()
 {
+    m_player->shoot();
+
     auto shot = std::make_shared<Shot>();
     add(shot);
     auto const playerTransform = m_player->getTransform();
-    auto transform = std::make_shared<Transform>();
+
     auto const mouse_position = getGame()->input()->mouse()->getMousePositionScreen();
     auto aim_direction = mouse_position - playerTransform->position;
     jt::MathHelper::normalizeMe(aim_direction);
+    auto transform = shot->getTransform();
     transform->velocity = aim_direction * 30.0f;
-
     transform->position
         = jt::Vector2 { playerTransform->position.x(), playerTransform->position.y() }
         + aim_direction * 5.0f;
     transform->mass = 0.000001f;
     transform->is_force_emitter = false;
-    shot->setTransform(transform);
 
     m_physics_system->registerTransform(transform);
     m_shots.push_back(shot);

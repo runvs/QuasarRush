@@ -48,6 +48,7 @@ private:
 
     void endGame();
     void spawnShot();
+    void createLevelEntities();
 };
 
 #endif

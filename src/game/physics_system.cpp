@@ -11,6 +11,7 @@ void PhysicsSystem::registerTransform(std::shared_ptr<Transform> transform)
 
 void PhysicsSystem::reset_accelerations()
 {
+    cleanUpTransforms();
     for (auto tptr : m_transforms) {
         auto t = tptr.lock();
         t->acceleration = jt::Vector2 { 0.0f, 0.0f };
@@ -33,8 +34,7 @@ void PhysicsSystem::calculateForcesForSingleTransform(std::shared_ptr<Transform>
         if (t1 == t2) {
             continue;
         }
-        if (!t2->is_force_emitter)
-        {
+        if (!t2->is_force_emitter) {
             continue;
         }
         auto const p2 = t2->position;
@@ -62,6 +62,7 @@ void PhysicsSystem::integratePositions(float elapsed)
 void PhysicsSystem::integrateSinglePosition(float elapsed, std::shared_ptr<Transform> t) const
 {
     if (!t->is_fixed) {
+
         t->velocity += t->acceleration * elapsed;
         t->position += t->velocity * elapsed;
     }
@@ -69,9 +70,10 @@ void PhysicsSystem::integrateSinglePosition(float elapsed, std::shared_ptr<Trans
 
 void PhysicsSystem::update(float elapsed)
 {
+
     cleanUpTransforms();
     calculate_forces();
-    integratePositions(elapsed);
+    integratePositions(elapsed / 2);
 }
 
 void PhysicsSystem::cleanUpTransforms()
