@@ -9,6 +9,14 @@ void PhysicsSystem::registerTransform(std::shared_ptr<Transform> transform)
     }
 }
 
+void PhysicsSystem::deregisterTransform(std::shared_ptr<Transform> transform)
+{
+    if (transform) {
+        // m_transforms.erase(
+        //    std::remove(m_transforms.begin(), m_transforms.end(), transform), m_transforms.end());
+    }
+}
+
 void PhysicsSystem::reset_accelerations()
 {
     for (auto tptr : m_transforms) {

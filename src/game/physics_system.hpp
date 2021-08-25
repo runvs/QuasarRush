@@ -1,13 +1,14 @@
 #ifndef GAME_PHYSICS_SYSTEM_GUARD_HPP
 #define GAME_PHYSICS_SYSTEM_GUARD_HPP
 
-#include <vector>
-#include <memory>
 #include "transform.hpp"
+#include <memory>
+#include <vector>
 
 class PhysicsSystem {
 public:
     void registerTransform(std::shared_ptr<Transform> transform);
+    void deregisterTransform(std::shared_ptr<Transform> transform);
     void reset_accelerations();
     void calculate_forces();
     void integratePositions(float elapsed);
@@ -23,4 +24,4 @@ private:
     void integrateSinglePosition(float elapsed, std::shared_ptr<Transform> t) const;
 };
 
-#endif 
+#endif
