@@ -1,14 +1,14 @@
 #ifndef PLANET_GUARD_HPP
 #define PLANET_GUARD_HPP
 
+#include "animation.hpp"
 #include "game_object.hpp"
-#include "sprite.hpp"
 #include "transform.hpp"
 #include <memory>
 
 class Planet : public jt::GameObject {
 private:
-    std::shared_ptr<jt::Sprite> m_sprite;
+    std::shared_ptr<jt::Animation> m_sprite;
     std::shared_ptr<Transform> m_transform;
 
 public:
