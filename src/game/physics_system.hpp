@@ -20,7 +20,8 @@ private:
     std::vector<std::weak_ptr<Transform>> m_transforms;
 
     void calculateForcesForSingleTransform(std::shared_ptr<Transform> t1);
-    void integrateSinglePosition(float elapsed, std::shared_ptr<Transform> t) const;
+    void integrateSinglePosition(
+        float elapsed, std::shared_ptr<Transform> t, bool use_player_acceleration) const;
     void cleanUpTransforms();
 };
 

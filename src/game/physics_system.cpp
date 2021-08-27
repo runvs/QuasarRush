@@ -45,7 +45,7 @@ void PhysicsSystem::calculateForcesForSingleTransform(std::shared_ptr<Transform>
         float r = jt::MathHelper::length(dist);
 
         jt::MathHelper::normalizeMe(dist, 5);
-        auto force = dist / r / r * 1000.0f * t1->mass * t2->mass;
+        auto const force = dist / r / r * 1000.0f * t1->mass * t2->mass;
 
         if (!t1->is_fixed) {
             t1->acceleration += force / t1->mass;
@@ -57,24 +57,29 @@ void PhysicsSystem::integratePositions(float elapsed)
 {
     for (auto tptr : m_transforms) {
         auto t = tptr.lock();
-        integrateSinglePosition(elapsed, t);
+        integrateSinglePosition(elapsed, t, true);
     }
 }
-void PhysicsSystem::integrateSinglePosition(float elapsed, std::shared_ptr<Transform> t) const
+void PhysicsSystem::integrateSinglePosition(
+    float elapsed, std::shared_ptr<Transform> t, bool use_player_acceleration) const
 {
     if (!t->is_fixed) {
-
-        t->velocity += t->acceleration * elapsed;
+        if (use_player_acceleration) {
+            t->velocity += (t->acceleration + t->player_acceleration) * elapsed;
+        }
+        else
+        {
+            t->velocity += (t->acceleration ) * elapsed;
+        }
         t->position += t->velocity * elapsed;
     }
 }
 
 void PhysicsSystem::update(float elapsed)
 {
-    std::cout << m_transforms.size() << std::endl;
     cleanUpTransforms();
     calculate_forces();
-    integratePositions(elapsed * 0.75f);
+    integratePositions(elapsed * 0.5f);
 }
 
 void PhysicsSystem::cleanUpTransforms()
@@ -100,7 +105,7 @@ std::vector<jt::Vector2> PhysicsSystem::precalculate_path(std::shared_ptr<Transf
     for (int i = 0; i != N; ++i) {
         transform->acceleration = jt::Vector2 { 0.0f, 0.0f };
         calculateForcesForSingleTransform(transform);
-        integrateSinglePosition(0.02f, transform);
+        integrateSinglePosition(0.02f, transform, false);
         if (i % draw_resolution == 0) {
             updated_positions.push_back(transform->position);
         }

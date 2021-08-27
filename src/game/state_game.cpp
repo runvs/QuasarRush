@@ -136,7 +136,9 @@ void StateGame::doInternalUpdate(float const elapsed)
             }
         }
 
-        m_physics_system->update(elapsed * 2.0f);
+        m_physics_system->update(elapsed );
+        m_physics_system->reset_accelerations();
+        m_physics_system->update(elapsed );
     }
 
     m_background->update(elapsed);

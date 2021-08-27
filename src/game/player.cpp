@@ -42,9 +42,13 @@ void Player::updateMovement(const float elapsed)
         m_sprite->play("fly");
         float const acceleration_factor
             = keyboard->pressed(jt::KeyCode::LShift) ? GP::PlayerAccelerationBoostFactor() : 1.0f;
-        m_transform->acceleration += direction * GP::PlayerAcceleration() * acceleration_factor;
+        m_transform->player_acceleration = direction * GP::PlayerAcceleration() * acceleration_factor;
     } else if (keyboard->justReleased(jt::KeyCode::W)) {
         m_sprite->play("idle");
+    }
+    else
+    {
+        m_transform->player_acceleration = jt::Vector2{0.0f, 0.0f};
     }
 
     float const rotationSpeed = GP::PlayerRotationSpeed();
