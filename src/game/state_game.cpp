@@ -79,7 +79,6 @@ void StateGame::createLevelEntities()
 void StateGame::doInternalUpdate(float const elapsed)
 {
     if (m_running) {
-        m_physics_system->reset_accelerations();
         m_player->update(elapsed);
         m_player->setProjectionPoints(
             m_physics_system->precalculate_path(m_player->getTransform()));
@@ -94,51 +93,42 @@ void StateGame::doInternalUpdate(float const elapsed)
             }
         }
 
-        for (auto sptr : m_shots)
-        {
-            if (sptr.expired())
-            {
+        for (auto sptr : m_shots) {
+            if (sptr.expired()) {
                 continue;
             }
 
             auto s = sptr.lock();
             auto const sp = s->getTransform()->position;
-            for (auto eptr : m_enemies)
-            {
-                if (eptr.expired())
-                {
+            for (auto eptr : m_enemies) {
+                if (eptr.expired()) {
                     continue;
                 }
                 auto e = eptr.lock();
                 auto const ep = e->getTransform()->position;
                 auto const diff = ep - sp;
                 auto const lengthSquared = jt::MathHelper::lengthSquared(diff);
-                if (lengthSquared <= 5*5)
-                {
+                if (lengthSquared <= 5 * 5) {
                     s->kill();
                     e->takeDamage();
                 }
             }
-            for (auto pptr : m_planets)
-            {
-                if (pptr.expired())
-                {
+            for (auto pptr : m_planets) {
+                if (pptr.expired()) {
                     continue;
                 }
                 auto p = pptr.lock();
                 auto const ep = p->getTransform()->position;
                 auto const diff = ep - sp;
                 auto const lengthSquared = jt::MathHelper::lengthSquared(diff);
-                if (lengthSquared <= 5*5)
-                {
+                if (lengthSquared <= 5 * 5) {
                     s->kill();
                 }
             }
         }
 
-        m_physics_system->update(elapsed );
-        m_physics_system->reset_accelerations();
-        m_physics_system->update(elapsed );
+        m_physics_system->update(elapsed);
+        m_physics_system->update(elapsed);
     }
 
     m_background->update(elapsed);
