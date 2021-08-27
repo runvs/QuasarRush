@@ -8,8 +8,12 @@
 
 void Player::doCreate()
 {
-    m_sprite = std::make_shared<jt::Sprite>();
-    m_sprite->loadSprite("assets/ship.png");
+    m_sprite = std::make_shared<jt::Animation>();
+    m_sprite->add("assets/ship.png", "idle", jt::Vector2u { 30, 16 }, { 0 }, 0.15f);
+    m_sprite->add("assets/ship.png", "beginFly", jt::Vector2u { 30, 16 }, { 1, 2, 3, 4 }, 0.05f);
+    m_sprite->add("assets/ship.png", "fly", jt::Vector2u { 30, 16 }, { 5, 6, 7, 8 }, 0.15f);
+    m_sprite->play("idle");
+
     m_transform = std::make_shared<Transform>();
 
     m_projectionShape = jt::dh::createRectShape(jt::Vector2 { 2.0f, 2.0f });
@@ -21,11 +25,11 @@ void Player::doUpdate(float const elapsed)
 
     m_shootTimer -= elapsed;
 
-    m_sprite->setOrigin(jt::Vector2 { 5.0, 5.0 });
+    m_sprite->setOrigin(jt::Vector2 { 15.0, 8.0 });
     m_sprite->setRotation(m_transform->angle);
 
     m_sprite->setPosition(m_transform->position);
-    m_sprite->update(0.0f);
+    m_sprite->update(elapsed);
 }
 
 void Player::updateMovement(const float elapsed)
@@ -35,8 +39,12 @@ void Player::updateMovement(const float elapsed)
 
     auto const& keyboard = getGame()->input()->keyboard();
     if (keyboard->pressed(jt::KeyCode::W)) {
-        float const acceleration_factor = keyboard->pressed(jt::KeyCode::LShift) ? GP::PlayerAccelerationBoostFactor() : 1.0f ;
+        m_sprite->play("fly");
+        float const acceleration_factor
+            = keyboard->pressed(jt::KeyCode::LShift) ? GP::PlayerAccelerationBoostFactor() : 1.0f;
         m_transform->acceleration += direction * GP::PlayerAcceleration() * acceleration_factor;
+    } else if (keyboard->justReleased(jt::KeyCode::W)) {
+        m_sprite->play("idle");
     }
 
     float const rotationSpeed = GP::PlayerRotationSpeed();
@@ -50,7 +58,7 @@ void Player::updateMovement(const float elapsed)
 void Player::doDraw() const
 {
     for (size_t i = 0U; i != m_projectionPoints.size(); ++i) {
-        float const v =  255.0f - static_cast<float>(i) / m_projectionPoints.size() * 255.0f;
+        float const v = 255.0f - static_cast<float>(i) / m_projectionPoints.size() * 255.0f;
         m_projectionShape->setPosition(m_projectionPoints.at(i));
         m_projectionShape->setColor(jt::Color { 255, 255, 255, static_cast<std::uint8_t>(v) });
         m_projectionShape->update(0.1f);
