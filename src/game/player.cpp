@@ -8,9 +8,10 @@
 void Player::doCreate()
 {
     m_sprite = std::make_shared<jt::Animation>();
-    m_sprite->add("assets/ship.png", "idle", jt::Vector2u { 30, 16 }, { 0 }, 0.15f);
-    m_sprite->add("assets/ship.png", "beginFly", jt::Vector2u { 30, 16 }, { 1, 2, 3, 4 }, 0.05f);
-    m_sprite->add("assets/ship.png", "fly", jt::Vector2u { 30, 16 }, { 5, 6, 7, 8 }, 0.15f);
+    m_sprite->add("assets/ship.png", "idle", jt::Vector2u { 34, 16 }, { 0 }, 0.15f);
+    m_sprite->add("assets/ship.png", "beginFly", jt::Vector2u { 34, 16 }, { 1, 2, 3, 4 }, 0.05f);
+    m_sprite->add("assets/ship.png", "fly", jt::Vector2u { 34, 16 }, { 5, 6, 7, 8 }, 0.15f);
+    m_sprite->add("assets/ship.png", "flyBoost", jt::Vector2u { 34, 16 }, { 9, 10, 11, 12 }, 0.15f);
     m_sprite->play("idle");
 
     m_transform = std::make_shared<Transform>();
@@ -24,7 +25,7 @@ void Player::doUpdate(float const elapsed)
 
     m_shootTimer -= elapsed;
 
-    m_sprite->setOrigin(jt::Vector2 { 15.0, 8.0 });
+    m_sprite->setOrigin(jt::Vector2 { 17.0, 8.0 });
     m_sprite->setRotation(m_transform->angle);
 
     m_sprite->setPosition(m_transform->position);
@@ -39,14 +40,18 @@ void Player::updateMovement(const float elapsed)
     auto const& keyboard = getGame()->input()->keyboard();
     if (keyboard->pressed(jt::KeyCode::W)) {
         m_beginFlyTimer -= elapsed;
+        bool flyBoost = keyboard->pressed(jt::KeyCode::LShift);
 
         if (m_beginFlyTimer <= 0.0f) {
-            m_sprite->play("fly");
+            if (flyBoost) {
+                m_sprite->play("flyBoost");
+            } else {
+                m_sprite->play("fly");
+            }
         } else {
             m_sprite->play("beginFly");
         }
-        float const acceleration_factor
-            = keyboard->pressed(jt::KeyCode::LShift) ? GP::PlayerAccelerationBoostFactor() : 1.0f;
+        float const acceleration_factor = flyBoost ? GP::PlayerAccelerationBoostFactor() : 1.0f;
         m_transform->player_acceleration
             = direction * GP::PlayerAcceleration() * acceleration_factor;
     } else if (keyboard->justReleased(jt::KeyCode::W)) {
