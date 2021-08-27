@@ -1,0 +1,16 @@
+{
+	"levels": [
+		{
+			"filename": "empty_space_one_target.json",
+			"display": "Mission 1"
+		},
+		{
+			"filename": "two_stars_with_enemies.json",
+			"display": "Mission 2"
+		},
+		{
+			"filename": "test.json",
+			"display": "Test"
+		}
+	]
+}

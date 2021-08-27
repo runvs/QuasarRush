@@ -17,12 +17,10 @@ Level::Level(std::string const filename)
 void Level::parseEnemies(nlohmann::json const& j)
 {
     auto enemiesIt = j.find("enemies");
-    if (enemiesIt == j.end())
-    {
+    if (enemiesIt == j.end()) {
         return;
     }
-    for (auto e : *enemiesIt)
-    {
+    for (auto e : *enemiesIt) {
         auto t = std::make_shared<Transform>();
         t->position = jt::Vector2 { e["x"].get<float>(), e["y"].get<float>() };
 
@@ -33,8 +31,11 @@ void Level::parseEnemies(nlohmann::json const& j)
 }
 void Level::parseTransforms(nlohmann::json const& j)
 {
-    auto transforms = j["transforms"];
-    for (auto p : transforms) {
+    auto transformsIt = j.find("transforms");
+    if (transformsIt == j.end()) {
+        return;
+    }
+    for (auto p : *transformsIt) {
         auto t = std::make_shared<Transform>();
         t->position = jt::Vector2 { p["x"].get<float>(), p["y"].get<float>() };
 
@@ -54,9 +55,8 @@ void Level::parsePlayer(nlohmann::json const& j)
     m_player_transform->velocity = jt::Vector2 { p["vx"].get<float>(), p["vy"].get<float>() };
 }
 
+void Level::parseTargets(nlohmann::json const& j) { }
+
 std::vector<std::shared_ptr<Transform>> Level::getTransforms() { return m_transforms; }
 std::shared_ptr<Transform> Level::getPlayer() { return m_player_transform; }
-std::vector<std::shared_ptr<Transform>> Level::getEnemies()
-{
-    return m_enemies;
-}
+std::vector<std::shared_ptr<Transform>> Level::getEnemies() { return m_enemies; }

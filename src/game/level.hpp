@@ -19,13 +19,13 @@ public:
 private:
 
     std::shared_ptr<Transform> m_player_transform;
-
     std::vector<std::shared_ptr<Transform>> m_transforms;
-
     std::vector<std::shared_ptr<Transform>> m_enemies;
+
     void parsePlayer(nlohmann::basic_json<> const& j);
     void parseTransforms(nlohmann::json const& j);
     void parseEnemies(nlohmann::json const& j);
+    void parseTargets(nlohmann::json const& j);
 };
 
 #endif // QUASARRUSH_LEVEL_HPP

@@ -1,9 +1,11 @@
 ﻿#include "state_menu.hpp"
+#include "button.hpp"
 #include "color.hpp"
 #include "drawable_helpers.hpp"
 #include "game_interface.hpp"
 #include "game_properties.hpp"
 #include "input_manager.hpp"
+#include "json.hpp"
 #include "key_codes.hpp"
 #include "math_helper.hpp"
 #include "shape.hpp"
@@ -12,17 +14,43 @@
 #include "text.hpp"
 #include "tween_alpha.hpp"
 #include "tween_position.hpp"
-#include "tween_scale.hpp"
 #include <algorithm>
+#include <fstream>
 
 StateMenu::StateMenu() = default;
 
 void StateMenu::doInternalCreate()
 {
     createMenuText();
+
+    nlohmann::json j;
+
+    std::ifstream file { "assets/levels/__all_levels.json" };
+    file >> j;
+
+    auto levels = j["levels"];
+    int counter = 0;
+    for (auto l : levels) {
+        std::string filename = l["filename"];
+        std::string displayName = l["display"];
+
+        auto button = std::make_shared<jt::Button>(jt::Vector2u { 90, 18 });
+        add(button);
+        button->addCallback([this, filename]() {
+            startTransitionToStateGame(filename);
+        });
+        button->setPosition(jt::Vector2 { 100.0, 100.0f + counter * 24.0f });
+        auto const text = jt::dh::createText(getGame()->getRenderTarget(), displayName, 12);
+        text->setOrigin(jt::Vector2{-4.0f, -2.0f});
+        text->SetTextAlign(jt::Text::TextAlign::LEFT);
+        button->setDrawable(text);
+
+        m_buttons.push_back(button);
+
+        counter++;
+    }
     createShapes();
     createVignette();
-
     createTweens();
 }
 
@@ -41,7 +69,6 @@ void StateMenu::createShapes()
 void StateMenu::createMenuText()
 {
     createTextTitle();
-    createTextExplanation();
     createTextCredits();
 }
 
@@ -54,16 +81,6 @@ void StateMenu::createTextCredits()
     m_text_Credits->setPosition({ 10, GP::GetScreenSize().y() - 30 });
     m_text_Credits->setShadow(GP::PaletteFontShadow(), jt::Vector2 { 1, 1 });
 }
-
-void StateMenu::createTextExplanation()
-{
-    float half_width = GP::GetScreenSize().x() / 2;
-    m_text_Explanation = jt::dh::createText(
-        getGame()->getRenderTarget(), "Press Space to start the game", 16U, GP::PaletteColor8());
-    m_text_Explanation->setPosition({ half_width, 150 });
-    m_text_Explanation->setShadow(GP::PaletteFontShadow(), jt::Vector2 { 3, 3 });
-}
-
 void StateMenu::createTextTitle()
 {
     float half_width = GP::GetScreenSize().x() / 2;
@@ -78,41 +95,6 @@ void StateMenu::createTweens()
     createTweenOverlayAlpha();
     createTweenTitleAlpha();
     createTweenCreditsPosition();
-    createTweenExplanationScale();
-}
-
-void StateMenu::createInstructionTweenScaleUp()
-{
-    auto ts = jt::TweenScale<jt::Text>::create(
-        m_text_Explanation, 0.75f, jt::Vector2 { 1.0f, 1.0f }, jt::Vector2 { 1.05f, 1.05f });
-    ts->setAgePercentConversion([](float age) {
-        return jt::Lerp::cosine(0.0f, 1.0f, jt::MathHelper::clamp(age, 0.0f, 1.0f));
-    });
-    ts->addCompleteCallback([this]() { createInstructionTweenScaleDown(); });
-    add(ts);
-}
-void StateMenu::createInstructionTweenScaleDown()
-{
-    auto ts = jt::TweenScale<jt::Text>::create(
-        m_text_Explanation, 0.75f, jt::Vector2 { 1.05f, 1.05f }, jt::Vector2 { 1.0f, 1.0f });
-    ts->setAgePercentConversion([](float age) {
-        return jt::Lerp::cosine(0.0f, 1.0f, jt::MathHelper::clamp(age, 0.0f, 1.0f));
-    });
-    ts->addCompleteCallback([this]() { createInstructionTweenScaleUp(); });
-    add(ts);
-}
-
-void StateMenu::createTweenExplanationScale()
-{
-    auto s2 = m_text_Explanation->getPosition() + jt::Vector2 { -1000, 0 };
-    auto e2 = m_text_Explanation->getPosition();
-
-    auto tween = jt::TweenPosition<jt::Text>::create(m_text_Explanation, 0.5f, s2, e2);
-    tween->setStartDelay(0.3f);
-    tween->setSkipFrames();
-
-    tween->addCompleteCallback([this]() { createInstructionTweenScaleUp(); });
-    add(tween);
 }
 
 void StateMenu::createTweenTitleAlpha()
@@ -145,34 +127,24 @@ void StateMenu::createTweenCreditsPosition()
 void StateMenu::doInternalUpdate(float const elapsed)
 {
     updateDrawables(elapsed);
-    checkForTransitionToStateGame();
 }
 
 void StateMenu::updateDrawables(const float& elapsed)
 {
     m_background->update(elapsed);
     m_text_Title->update(elapsed);
-    m_text_Explanation->update(elapsed);
     m_text_Credits->update(elapsed);
     m_overlay->update(elapsed);
     m_vignette->update(elapsed);
+
 }
 
-void StateMenu::checkForTransitionToStateGame()
-{
-    auto const keysToTriggerTransition = { jt::KeyCode::Space, jt::KeyCode::Enter };
 
-    if (std::any_of(keysToTriggerTransition.begin(), keysToTriggerTransition.end(),
-            [this](auto const k) { return getGame()->input()->keyboard()->justPressed(k); })) {
-        startTransitionToStateGame();
-    }
-}
-
-void StateMenu::startTransitionToStateGame()
+void StateMenu::startTransitionToStateGame(std::string const& levelFilename)
 {
     if (!m_started) {
         m_started = true;
-
+        m_levelFilename = levelFilename;
         createTweenTransition();
     }
 }
@@ -184,8 +156,9 @@ void StateMenu::createTweenTransition()
     tw->setSkipFrames();
     tw->addCompleteCallback([this]() {
         std::shared_ptr<StateGame> newState = std::make_shared<StateGame>();
-        newState->setLevel("two_stars_with_enemies.json");
-        getGame()->switchState(newState); });
+        newState->setLevel(m_levelFilename);
+        getGame()->switchState(newState);
+    });
     add(tw);
 }
 
@@ -194,8 +167,11 @@ void StateMenu::doInternalDraw() const
     m_background->draw(getGame()->getRenderTarget());
 
     m_text_Title->draw(getGame()->getRenderTarget());
-    m_text_Explanation->draw(getGame()->getRenderTarget());
     m_text_Credits->draw(getGame()->getRenderTarget());
+
+    for (auto& button : m_buttons) {
+        button->draw();
+    }
 
     m_overlay->draw(getGame()->getRenderTarget());
     m_vignette->draw(getGame()->getRenderTarget());

@@ -2,6 +2,7 @@
 #define GAME_STATE_MENU_HPP_INCLUDEGUARD
 
 #include "game_state.hpp"
+#include <string>
 
 namespace jt {
 
@@ -9,6 +10,7 @@ class Text;
 class Shape;
 class Animation;
 class Sprite;
+class Button;
 
 } // namespace jt
 
@@ -22,11 +24,15 @@ private:
     std::shared_ptr<jt::Shape> m_background;
 
     std::shared_ptr<jt::Text> m_text_Title;
-    std::shared_ptr<jt::Text> m_text_Explanation;
     std::shared_ptr<jt::Text> m_text_Credits;
 
     std::shared_ptr<jt::Shape> m_overlay;
     std::shared_ptr<jt::Sprite> m_vignette;
+
+    std::vector<std::shared_ptr<jt::Button>> m_buttons;
+
+    std::string m_levelFilename{""};
+
 
     bool m_started { false };
 
@@ -37,23 +43,18 @@ private:
 
     void createMenuText();
     void createTextCredits();
-    void createTextExplanation();
     void createTextTitle();
 
     void createTweens();
-    void createInstructionTweenScaleUp();
-    void createInstructionTweenScaleDown();
     void createTweenTitleAlpha();
     void createTweenOverlayAlpha();
     void createTweenCreditsPosition();
-    void createTweenExplanationScale();
 
     void createTweenTransition();
 
     void doInternalUpdate(float const elapsed) override;
     void updateDrawables(const float& elapsed);
-    void checkForTransitionToStateGame();
-    void startTransitionToStateGame();
+    void startTransitionToStateGame(std::string const& levelFilename);
 
     void doInternalDraw() const override;
 };
