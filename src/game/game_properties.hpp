@@ -39,9 +39,10 @@ public:
     static float PlayerAcceleration() { return 2.0; }
     static float PlayerAccelerationBoostFactor() { return 3.0; }
     static float PlayerShootTimer() { return 0.3f; }
+    static float PlayerBeginFlyTimer() { return 0.20f; }
     static float EnemyShootTimer() { return 0.7f; }
 
-    static float ShotSpeed() {return 40.0f;}
+    static float ShotSpeed() { return 40.0f; }
 };
 
 #endif

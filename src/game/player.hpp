@@ -3,6 +3,7 @@
 
 #include "animation.hpp"
 #include "game_object.hpp"
+#include "game_properties.hpp"
 #include "shape.hpp"
 #include "transform.hpp"
 #include <memory>
@@ -15,6 +16,7 @@ private:
     std::vector<jt::Vector2> m_projectionPoints;
 
     float m_shootTimer = 0.0f;
+    float m_beginFlyTimer = GP::PlayerBeginFlyTimer();
 
     void updateMovement(const float elapsed);
 

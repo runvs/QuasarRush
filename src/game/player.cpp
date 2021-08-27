@@ -2,7 +2,6 @@
 #include "drawable_helpers.hpp"
 #include "game.hpp"
 #include "game_interface.hpp"
-#include "game_properties.hpp"
 #include "math_helper.hpp"
 #include <utility>
 
@@ -39,16 +38,22 @@ void Player::updateMovement(const float elapsed)
 
     auto const& keyboard = getGame()->input()->keyboard();
     if (keyboard->pressed(jt::KeyCode::W)) {
-        m_sprite->play("fly");
+        m_beginFlyTimer -= elapsed;
+
+        if (m_beginFlyTimer <= 0.0f) {
+            m_sprite->play("fly");
+        } else {
+            m_sprite->play("beginFly");
+        }
         float const acceleration_factor
             = keyboard->pressed(jt::KeyCode::LShift) ? GP::PlayerAccelerationBoostFactor() : 1.0f;
-        m_transform->player_acceleration = direction * GP::PlayerAcceleration() * acceleration_factor;
+        m_transform->player_acceleration
+            = direction * GP::PlayerAcceleration() * acceleration_factor;
     } else if (keyboard->justReleased(jt::KeyCode::W)) {
         m_sprite->play("idle");
-    }
-    else
-    {
-        m_transform->player_acceleration = jt::Vector2{0.0f, 0.0f};
+        m_beginFlyTimer = GP::PlayerBeginFlyTimer();
+    } else {
+        m_transform->player_acceleration = jt::Vector2 { 0.0f, 0.0f };
     }
 
     float const rotationSpeed = GP::PlayerRotationSpeed();
