@@ -93,39 +93,7 @@ void StateGame::doInternalUpdate(float const elapsed)
             }
         }
 
-        for (auto sptr : m_shots) {
-            if (sptr.expired()) {
-                continue;
-            }
-
-            auto s = sptr.lock();
-            auto const sp = s->getTransform()->position;
-            for (auto eptr : m_enemies) {
-                if (eptr.expired()) {
-                    continue;
-                }
-                auto e = eptr.lock();
-                auto const ep = e->getTransform()->position;
-                auto const diff = ep - sp;
-                auto const lengthSquared = jt::MathHelper::lengthSquared(diff);
-                if (lengthSquared <= 5 * 5) {
-                    s->kill();
-                    e->takeDamage();
-                }
-            }
-            for (auto pptr : m_planets) {
-                if (pptr.expired()) {
-                    continue;
-                }
-                auto p = pptr.lock();
-                auto const ep = p->getTransform()->position;
-                auto const diff = ep - sp;
-                auto const lengthSquared = jt::MathHelper::lengthSquared(diff);
-                if (lengthSquared <= 5 * 5) {
-                    s->kill();
-                }
-            }
-        }
+        handleShotCollisions();
 
         m_physics_system->update(elapsed);
         m_physics_system->update(elapsed);
@@ -134,6 +102,44 @@ void StateGame::doInternalUpdate(float const elapsed)
     m_background->update(elapsed);
     m_vignette->update(elapsed);
     m_overlay->update(elapsed);
+}
+void StateGame::handleShotCollisions()
+{
+    for (auto sptr : m_shots) {
+        if (sptr.expired()) {
+            continue;
+        }
+
+        auto s = sptr.lock();
+        auto const sp = s->getTransform()->position;
+        for (auto eptr : m_enemies) {
+            if (eptr.expired()) {
+                continue;
+            }
+            auto e = eptr.lock();
+            auto const ep = e->getTransform()->position;
+            auto const diff = ep - sp;
+            auto const lengthSquared = jt::MathHelper::lengthSquared(diff);
+
+            if (lengthSquared <= GP::EnemyHalfSize() * GP::EnemyHalfSize()) {
+                s->kill();
+                e->takeDamage();
+            }
+        }
+        for (auto pptr : m_planets) {
+            if (pptr.expired()) {
+                continue;
+            }
+            auto p = pptr.lock();
+            jt::Vector2 const& planteOffset = jt::Vector2 { -0.5f, -0.5f };
+            auto const ep = p->getTransform()->position + planteOffset;
+            auto const diff = ep - sp;
+            auto const lengthSquared = jt::MathHelper::lengthSquared(diff);
+            if (lengthSquared <= GP::PlanetHalfSize() * GP::PlanetHalfSize()) {
+                s->kill();
+            }
+        }
+    }
 }
 void StateGame::spawnShot()
 {
