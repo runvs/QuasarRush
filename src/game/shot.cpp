@@ -6,28 +6,27 @@
 void Shot::doCreate()
 {
     m_transform = std::make_shared<Transform>();
-    m_shape = jt::dh::createRectShape(jt::Vector2 { 2.0f, 2.0f }, jt::colors::Cyan);
+    m_sprite = std::make_shared<jt::Sprite>();
+    m_sprite->loadSprite("assets/shot.png");
 }
 
 void Shot::doUpdate(float const elapsed)
 {
-    m_shape->setPosition(m_transform->position);
-    m_shape->update(elapsed);
+    m_sprite->setPosition(m_transform->position);
+    m_sprite->setRotation(-m_transform->angle);
+    m_sprite->update(elapsed);
 
-    if (m_transform->position.x() < 0 || m_transform->position.x() > GP::GetScreenSize().x())
-    {
+    if (m_transform->position.x() < 0 || m_transform->position.x() > GP::GetScreenSize().x()) {
         kill();
     }
-    if (m_transform->position.y() < 0 || m_transform->position.y() > GP::GetScreenSize().y())
-    {
+    if (m_transform->position.y() < 0 || m_transform->position.y() > GP::GetScreenSize().y()) {
         kill();
     }
-    if (getAge() > 60.0f)
-    {
+    if (getAge() > 60.0f) {
         kill();
     }
 }
-void Shot::doDraw() const { m_shape->draw(getGame()->getRenderTarget()); }
+void Shot::doDraw() const { m_sprite->draw(getGame()->getRenderTarget()); }
 void Shot::doKill() { }
 
 std::shared_ptr<Transform> Shot::getTransform() { return m_transform; }

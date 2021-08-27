@@ -2,13 +2,13 @@
 #define SHOT_GUARD_HPP
 
 #include "game_object.hpp"
-#include "shape.hpp"
+#include "sprite.hpp"
 #include "transform.hpp"
 #include <memory>
 
 class Shot : public jt::GameObject {
 private:
-    std::shared_ptr<jt::Shape> m_shape;
+    std::shared_ptr<jt::Sprite> m_sprite;
     std::shared_ptr<Transform> m_transform;
 
 public:

@@ -118,11 +118,10 @@ void StateGame::handlePlayerPlanetCollision()
         auto const diff = planetPos - playerPos;
         auto const lsquared = jt::MathHelper::lengthSquared(diff);
 
-        if (lsquared <= (GP::PlayerHalfSize() + GP::PlanetHalfSize()) * (GP::PlayerHalfSize() + GP::PlanetHalfSize()) )
-        {
+        if (lsquared <= (GP::PlayerHalfSize() + GP::PlanetHalfSize())
+                * (GP::PlayerHalfSize() + GP::PlanetHalfSize())) {
             std::cout << "player planet collision\n";
         }
-
     }
 }
 void StateGame::handleShotCollisions()
@@ -179,6 +178,7 @@ void StateGame::spawnShot()
     transform->position
         = jt::Vector2 { playerTransform->position.x(), playerTransform->position.y() }
         + aim_direction * 7.0f;
+    transform->angle = jt::MathHelper::rad2deg(atan2f(aim_direction.y(), aim_direction.x()));
     transform->mass = 0.000001f;
     transform->is_force_emitter = false;
 
