@@ -28,7 +28,12 @@ void Player::doUpdate(float const elapsed)
     m_sprite->setOrigin(jt::Vector2 { 17.0, 8.0 });
     m_sprite->setRotation(m_transform->angle);
 
-    m_sprite->setPosition(m_transform->position);
+    auto const px = jt::MathHelper::clamp(
+        m_transform->position.x(), 0.0f, GP::GetScreenSize().x() - GP::PlayerHalfSize() * 2.0f);
+    auto const py = jt::MathHelper::clamp(
+        m_transform->position.y(), 0.0f, GP::GetScreenSize().y() - GP::PlayerHalfSize() * 2.0f);
+
+    m_sprite->setPosition(jt::Vector2 { px, py });
     m_sprite->update(elapsed);
 }
 

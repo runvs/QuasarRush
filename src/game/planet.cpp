@@ -10,9 +10,8 @@ void Planet::doCreate()
     m_sprite->play("idle");
     m_sprite->setOrigin(jt::Vector2 {
         static_cast<float>(GP::PlanetHalfSize()), static_cast<float>(GP::PlanetHalfSize()) });
-    
-    m_transform = std::make_shared<Transform>();
 
+    m_transform = std::make_shared<Transform>();
 }
 
 void Planet::doUpdate(float const elapsed)
