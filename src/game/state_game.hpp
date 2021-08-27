@@ -50,6 +50,7 @@ private:
     void spawnShot();
     void createLevelEntities();
     void handleShotCollisions();
+    void handlePlayerPlanetCollision();
 };
 
 #endif

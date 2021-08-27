@@ -43,6 +43,7 @@ public:
     static float EnemyShootTimer() { return 0.7f; }
 
     static float ShotSpeed() { return 40.0f; }
+    static int PlayerHalfSize() {return 9;}
     static int EnemyHalfSize() { return 7; }
     static int const PlanetHalfSize() { return 16; }
 };

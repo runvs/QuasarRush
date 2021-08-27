@@ -95,6 +95,8 @@ void StateGame::doInternalUpdate(float const elapsed)
 
         handleShotCollisions();
 
+        handlePlayerPlanetCollision();
+
         m_physics_system->update(elapsed);
         m_physics_system->update(elapsed);
     }
@@ -102,6 +104,26 @@ void StateGame::doInternalUpdate(float const elapsed)
     m_background->update(elapsed);
     m_vignette->update(elapsed);
     m_overlay->update(elapsed);
+}
+void StateGame::handlePlayerPlanetCollision()
+{
+    auto const playerPos = m_player->getTransform()->position;
+    for (auto pptr : m_planets) {
+        if (pptr.expired()) {
+            continue;
+        }
+        auto p = pptr.lock();
+        auto const planetPos = p->getTransform()->position;
+
+        auto const diff = planetPos - playerPos;
+        auto const lsquared = jt::MathHelper::lengthSquared(diff);
+
+        if (lsquared <= (GP::PlayerHalfSize() + GP::PlanetHalfSize()) * (GP::PlayerHalfSize() + GP::PlanetHalfSize()) )
+        {
+            std::cout << "player planet collision\n";
+        }
+
+    }
 }
 void StateGame::handleShotCollisions()
 {
