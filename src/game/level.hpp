@@ -10,17 +10,17 @@
 class Level {
 public:
     explicit Level(std::string const filename);
-    std::vector<std::shared_ptr<Transform>> getTransforms();
-
+    std::vector<std::shared_ptr<Transform>> getPlanets();
     std::shared_ptr<Transform> getPlayer();
-
     std::vector<std::shared_ptr<Transform>> getEnemies();
+    std::vector<jt::Vector2> getTargets();
 
 private:
 
     std::shared_ptr<Transform> m_player_transform;
     std::vector<std::shared_ptr<Transform>> m_transforms;
     std::vector<std::shared_ptr<Transform>> m_enemies;
+    std::vector<jt::Vector2> m_targets;
 
     void parsePlayer(nlohmann::basic_json<> const& j);
     void parseTransforms(nlohmann::json const& j);

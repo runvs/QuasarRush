@@ -59,7 +59,7 @@ void StateGame::createLevelEntities()
 
     m_physics_system->registerTransform(m_player->getTransform());
 
-    for (auto t : l.getTransforms()) {
+    for (auto t : l.getPlanets()) {
         auto object = std::make_shared<Planet>();
         add(object);
         object->setTransform(t);
@@ -73,6 +73,12 @@ void StateGame::createLevelEntities()
         enemy->setTransform(t);
         m_physics_system->registerTransform(t);
         m_enemies.push_back(enemy);
+    }
+    for (auto p : l.getTargets())
+    {
+        auto t = std::make_shared<Target>(p);
+        add(t);
+        m_targets.push_back(t);
     }
 }
 
@@ -94,8 +100,8 @@ void StateGame::doInternalUpdate(float const elapsed)
         }
 
         handleShotCollisions();
-
         handlePlayerPlanetCollision();
+        handlePlayerTargetCollisions();
 
         m_physics_system->update(elapsed);
         m_physics_system->update(elapsed);
@@ -104,6 +110,27 @@ void StateGame::doInternalUpdate(float const elapsed)
     m_background->update(elapsed);
     m_vignette->update(elapsed);
     m_overlay->update(elapsed);
+}
+void StateGame::handlePlayerTargetCollisions()
+{
+    auto const playerPosition = m_player->getTransform()->position;
+
+    for (auto tptr : m_targets)
+    {
+        if (tptr.expired())
+        {
+            continue;
+        }
+        auto target = tptr.lock();
+        auto const targetPosition = target->getPosition();
+        auto diff = targetPosition - playerPosition;
+        auto lengthSquared = jt::MathHelper::lengthSquared(diff);
+
+        if (lengthSquared <= GP::PlayerHalfSize() * GP::PlayerHalfSize())
+        {
+            target->kill();
+        }
+    }
 }
 void StateGame::handlePlayerPlanetCollision()
 {

@@ -1,13 +1,14 @@
 ﻿#ifndef GAME_STATE_GAME_HPP_INCLUDEGUARD
 #define GAME_STATE_GAME_HPP_INCLUDEGUARD
 
+#include "enemy.hpp"
 #include "game_state.hpp"
+#include "object_group.hpp"
 #include "physics_system.hpp"
 #include "planet.hpp"
 #include "player.hpp"
 #include "shot.hpp"
-#include "enemy.hpp"
-#include "object_group.hpp"
+#include "target.hpp"
 #include <memory>
 
 #include <vector>
@@ -40,6 +41,8 @@ private:
     jt::ObjectGroup<Shot> m_shots;
     jt::ObjectGroup<Enemy> m_enemies;
 
+    jt::ObjectGroup<Target> m_targets;
+
     std::string m_level_filename;
 
     void doInternalCreate() override;
@@ -51,6 +54,7 @@ private:
     void createLevelEntities();
     void handleShotCollisions();
     void handlePlayerPlanetCollision();
+    void handlePlayerTargetCollisions();
 };
 
 #endif

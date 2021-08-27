@@ -12,6 +12,7 @@ Level::Level(std::string const filename)
     parsePlayer(j);
     parseTransforms(j);
     parseEnemies(j);
+    parseTargets(j);
 }
 
 void Level::parseEnemies(nlohmann::json const& j)
@@ -55,8 +56,18 @@ void Level::parsePlayer(nlohmann::json const& j)
     m_player_transform->velocity = jt::Vector2 { p["vx"].get<float>(), p["vy"].get<float>() };
 }
 
-void Level::parseTargets(nlohmann::json const& j) { }
+void Level::parseTargets(nlohmann::json const& j) {
+    auto targetsIt = j.find("targets");
+    if (targetsIt == j.end()) {
+        return;
+    }
+    for (auto t : *targetsIt) {
+        m_targets.push_back(jt::Vector2{t["x"], t["y"]});
+    }
 
-std::vector<std::shared_ptr<Transform>> Level::getTransforms() { return m_transforms; }
+}
+
+std::vector<std::shared_ptr<Transform>> Level::getPlanets() { return m_transforms; }
 std::shared_ptr<Transform> Level::getPlayer() { return m_player_transform; }
 std::vector<std::shared_ptr<Transform>> Level::getEnemies() { return m_enemies; }
+std::vector<jt::Vector2> Level::getTargets() { return m_targets; }
