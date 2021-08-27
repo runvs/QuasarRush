@@ -10,13 +10,13 @@
 
 class Player : public jt::GameObject {
 private:
-    std::shared_ptr<jt::Animation> m_sprite;
+    std::shared_ptr<jt::Animation> m_shipSprite;
+    std::shared_ptr<jt::Animation> m_flameSprite;
     std::shared_ptr<jt::Shape> m_projectionShape;
     std::shared_ptr<Transform> m_transform;
     std::vector<jt::Vector2> m_projectionPoints;
 
     float m_shootTimer = 0.0f;
-    float m_beginFlyTimer = GP::PlayerBeginFlyTimer();
 
     void updateMovement(const float elapsed);
 

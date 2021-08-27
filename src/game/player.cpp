@@ -7,12 +7,20 @@
 
 void Player::doCreate()
 {
-    m_sprite = std::make_shared<jt::Animation>();
-    m_sprite->add("assets/ship.png", "idle", jt::Vector2u { 34, 16 }, { 0 }, 0.15f);
-    m_sprite->add("assets/ship.png", "beginFly", jt::Vector2u { 34, 16 }, { 1, 2, 3, 4 }, 0.05f);
-    m_sprite->add("assets/ship.png", "fly", jt::Vector2u { 34, 16 }, { 5, 6, 7, 8 }, 0.15f);
-    m_sprite->add("assets/ship.png", "flyBoost", jt::Vector2u { 34, 16 }, { 9, 10, 11, 12 }, 0.15f);
-    m_sprite->play("idle");
+    m_shipSprite = std::make_shared<jt::Animation>();
+    m_shipSprite->add("assets/ship.png", "idle", jt::Vector2u { 19, 19 }, { 0 }, 0.15f);
+    m_shipSprite->add("assets/ship.png", "fly", jt::Vector2u { 19, 19 }, { 1, 2, 3, 4 }, 0.15f);
+    m_shipSprite->play("idle");
+    m_shipSprite->setOrigin(jt::Vector2 { 9.5f, 9.5f });
+
+    m_flameSprite = std::make_shared<jt::Animation>();
+    m_flameSprite->add("assets/shipFlame.png", "idle", jt::Vector2u { 16, 16 }, { 0 }, 0.15f);
+    m_flameSprite->add(
+        "assets/shipFlame.png", "fly", jt::Vector2u { 16, 16 }, { 1, 2, 3, 4 }, 0.15f);
+    m_flameSprite->add(
+        "assets/shipFlame.png", "flyBoost", jt::Vector2u { 16, 16 }, { 5, 6, 7, 8 }, 0.15f);
+    m_flameSprite->play("idle");
+    m_flameSprite->setOrigin(jt::Vector2 { 16.0f, 8.0f });
 
     m_transform = std::make_shared<Transform>();
 
@@ -25,11 +33,15 @@ void Player::doUpdate(float const elapsed)
 
     m_shootTimer -= elapsed;
 
-    m_sprite->setOrigin(jt::Vector2 { 17.0, 8.0 });
-    m_sprite->setRotation(m_transform->angle);
+    m_shipSprite->setRotation(m_transform->angle);
+    m_shipSprite->setPosition(m_transform->position);
+    m_shipSprite->update(elapsed);
 
-    m_sprite->setPosition(m_transform->position);
-    m_sprite->update(elapsed);
+    jt::Vector2 flameOffset { -9.5f, 0.0f };
+    flameOffset = jt::MathHelper::rotateBy(flameOffset, -m_transform->angle);
+    m_flameSprite->setPosition(m_transform->position + flameOffset);
+    m_flameSprite->setRotation(m_transform->angle);
+    m_flameSprite->update(elapsed);
 }
 
 void Player::updateMovement(const float elapsed)
@@ -39,24 +51,21 @@ void Player::updateMovement(const float elapsed)
 
     auto const& keyboard = getGame()->input()->keyboard();
     if (keyboard->pressed(jt::KeyCode::W)) {
-        m_beginFlyTimer -= elapsed;
         bool flyBoost = keyboard->pressed(jt::KeyCode::LShift);
 
-        if (m_beginFlyTimer <= 0.0f) {
-            if (flyBoost) {
-                m_sprite->play("flyBoost");
-            } else {
-                m_sprite->play("fly");
-            }
+        m_shipSprite->play("fly");
+        if (flyBoost) {
+            m_flameSprite->play("flyBoost");
         } else {
-            m_sprite->play("beginFly");
+            m_flameSprite->play("fly");
         }
+
         float const acceleration_factor = flyBoost ? GP::PlayerAccelerationBoostFactor() : 1.0f;
         m_transform->player_acceleration
             = direction * GP::PlayerAcceleration() * acceleration_factor;
     } else if (keyboard->justReleased(jt::KeyCode::W)) {
-        m_sprite->play("idle");
-        m_beginFlyTimer = GP::PlayerBeginFlyTimer();
+        m_shipSprite->play("idle");
+        m_flameSprite->play("idle");
     } else {
         m_transform->player_acceleration = jt::Vector2 { 0.0f, 0.0f };
     }
@@ -79,7 +88,8 @@ void Player::doDraw() const
         m_projectionShape->draw(getGame()->getRenderTarget());
     }
 
-    m_sprite->draw(getGame()->getRenderTarget());
+    m_shipSprite->draw(getGame()->getRenderTarget());
+    m_flameSprite->draw(getGame()->getRenderTarget());
 }
 void Player::doKill() { }
 
