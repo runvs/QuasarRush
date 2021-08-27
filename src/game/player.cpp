@@ -33,10 +33,10 @@ void Player::doUpdate(float const elapsed)
 
     m_shootTimer -= elapsed;
 
-    auto const px = jt::MathHelper::clamp(
-        m_transform->position.x(), 0.0f, GP::GetScreenSize().x() - GP::PlayerHalfSize() * 2.0f);
-    auto const py = jt::MathHelper::clamp(
-        m_transform->position.y(), 0.0f, GP::GetScreenSize().y() - GP::PlayerHalfSize() * 2.0f);
+    auto const px = jt::MathHelper::clamp(m_transform->position.x(),
+        static_cast<float>(GP::PlayerHalfSize()), GP::GetScreenSize().x() - GP::PlayerHalfSize());
+    auto const py = jt::MathHelper::clamp(m_transform->position.y(),
+        static_cast<float>(GP::PlayerHalfSize()), GP::GetScreenSize().y() - GP::PlayerHalfSize());
     m_shipSprite->setRotation(m_transform->angle);
     m_shipSprite->setPosition(jt::Vector2 { px, py });
     m_shipSprite->update(elapsed);
