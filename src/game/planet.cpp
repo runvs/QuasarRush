@@ -25,3 +25,7 @@ void Planet::doKill() { }
 
 std::shared_ptr<Transform> Planet::getTransform() { return m_transform; }
 void Planet::setTransform(std::shared_ptr<Transform> t) { m_transform = t; }
+std::shared_ptr<jt::Animation> Planet::getSprite() const
+{
+    return m_sprite;
+}

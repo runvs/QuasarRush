@@ -19,11 +19,11 @@ InfoText::InfoText(
     }
     else if (m_align == eInfoTextAlign::LeftDown)
     {
-        m_diagonalVector= jt::Vector2{-60.0f, -16.0f};
+        m_diagonalVector= jt::Vector2{-60.0f, 16.0f};
     }
     else if (m_align == eInfoTextAlign::LeftUp)
     {
-        m_diagonalVector= jt::Vector2{-60.0f, 16.0f};
+        m_diagonalVector= jt::Vector2{-60.0f, -16.0f};
     }
 }
 

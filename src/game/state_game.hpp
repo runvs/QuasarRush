@@ -62,6 +62,11 @@ private:
     void handlePlayerShots();
     void checkGameOver();
     void createTutorial();
+    void createTutorialForFirstMission();
+    void CreateTutorialForSecondMission();
+
+    void CreateInfoText(std::shared_ptr<jt::DrawableInterface> target, std::string text,
+        float timeOffset, eInfoTextAlign align);
 };
 
 #endif

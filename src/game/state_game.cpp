@@ -4,13 +4,12 @@
 #include "game_properties.hpp"
 #include "hud/hud.hpp"
 #include "level.hpp"
+#include "line.hpp"
 #include "math_helper.hpp"
 #include "shape.hpp"
 #include "sprite.hpp"
 #include "state_menu.hpp"
 #include "tween_alpha.hpp"
-#include "state_menu.hpp"
-#include "line.hpp"
 
 void StateGame::doInternalCreate()
 {
@@ -56,105 +55,51 @@ void StateGame::doInternalCreate()
 }
 void StateGame::createTutorial()
 {
-    if (m_level_filename == "1_empty_space_and_targets.json")
-    {
-
-        // your ship
-        // 0 - 4
-        {
-            auto info_player_ship = std::make_shared<InfoText>(m_player->getSprite(), "Your Ship");
-            add(info_player_ship);
-
-            auto twaInt = jt::TweenAlpha<InfoText>::create(info_player_ship, 0.75f, 0 , 255);
-            twaInt->setStartDelay(0.75f);
-            add(twaInt);
-
-            auto twaOut = jt::TweenAlpha<InfoText>::create(info_player_ship, 0.75f, 255, 0);
-            twaOut->addCompleteCallback([info_player_ship]() { info_player_ship->kill(); });
-            twaOut->setStartDelay(3.25f);
-            add(twaOut);
-        }
-
-        // nav target
-        // 4 - 8
-        {
-            auto info_nav_target = std::make_shared<InfoText>(m_targets.front().lock()->getShape(), "Nav Target", eInfoTextAlign::RightUp);
-            add(info_nav_target);
-
-            auto twaInt = jt::TweenAlpha<InfoText>::create(info_nav_target, 0.75f, 0 , 255);
-            twaInt->setStartDelay(4.0f);
-            add(twaInt);
-
-            auto twaOut = jt::TweenAlpha<InfoText>::create(info_nav_target, 0.75f, 255, 0);
-            twaOut->addCompleteCallback([info_nav_target]() { info_nav_target->kill(); });
-            twaOut->setStartDelay(7.25f);
-            add(twaOut);
-        }
-
-        // accelerate
-        // 8 - 12
-        {
-            auto info_nav_target = std::make_shared<InfoText>(m_player->getSprite(), "Accelerate with 'W'", eInfoTextAlign::RightUp);
-            add(info_nav_target);
-
-            auto twaInt = jt::TweenAlpha<InfoText>::create(info_nav_target, 0.75f, 0 , 255);
-            twaInt->setStartDelay(8.0f);
-            add(twaInt);
-
-            auto twaOut = jt::TweenAlpha<InfoText>::create(info_nav_target, 0.75f, 255, 0);
-            twaOut->addCompleteCallback([info_nav_target]() { info_nav_target->kill(); });
-            twaOut->setStartDelay(11.25f);
-            add(twaOut);
-        }
-
-        // steer
-        // 12 - 16
-        {
-            auto info_nav_target = std::make_shared<InfoText>(m_player->getSprite(), "Rotate with 'A'/'D'", eInfoTextAlign::RightUp);
-            add(info_nav_target);
-
-            auto twaInt = jt::TweenAlpha<InfoText>::create(info_nav_target, 0.75f, 0 , 255);
-            twaInt->setStartDelay(12.0f);
-            add(twaInt);
-
-            auto twaOut = jt::TweenAlpha<InfoText>::create(info_nav_target, 0.75f, 255, 0);
-            twaOut->addCompleteCallback([info_nav_target]() { info_nav_target->kill(); });
-            twaOut->setStartDelay(15.25f);
-            add(twaOut);
-        }
-
-        // Correct Course
-        // 16 - 20
-        {
-            auto info_nav_target = std::make_shared<InfoText>(m_targets.at(1).lock()->getShape(), "Correct Course", eInfoTextAlign::LeftUp);
-            add(info_nav_target);
-
-            auto twaInt = jt::TweenAlpha<InfoText>::create(info_nav_target, 0.75f, 0 , 255);
-            twaInt->setStartDelay(16.0f);
-            add(twaInt);
-
-            auto twaOut = jt::TweenAlpha<InfoText>::create(info_nav_target, 0.75f, 255, 0);
-            twaOut->addCompleteCallback([info_nav_target]() { info_nav_target->kill(); });
-            twaOut->setStartDelay(19.25f);
-            add(twaOut);
-        }
-
-        // Mission End
-        // 20 - 24
-        {
-            auto info_nav_target = std::make_shared<InfoText>(m_targets.back().lock()->getShape(), "Mission End", eInfoTextAlign::LeftUp);
-            add(info_nav_target);
-
-            auto twaInt = jt::TweenAlpha<InfoText>::create(info_nav_target, 0.75f, 0 , 255);
-            twaInt->setStartDelay(20.0f);
-            add(twaInt);
-
-            auto twaOut = jt::TweenAlpha<InfoText>::create(info_nav_target, 0.75f, 255, 0);
-            twaOut->addCompleteCallback([info_nav_target]() { info_nav_target->kill(); });
-            twaOut->setStartDelay(23.25f);
-            add(twaOut);
-        }
+    if (m_level_filename == "1_empty_space_and_targets.json") {
+        createTutorialForFirstMission();
+    } else if (m_level_filename == "2_planet_and_targets.json") {
+        CreateTutorialForSecondMission();
     }
+    else if (m_level_filename == "3_planet_and_enemy.json") {
+        CreateInfoText(m_enemies.back().lock()->getSprite(), "Enemy !", 0.0f, RightUp);
+        CreateInfoText(m_player->getSprite(), "Aim and Shoot with mouse", 4.0f, LeftDown);
+    }
+
+}
+void StateGame::CreateTutorialForSecondMission()
+{
+    CreateInfoText(m_planets.front().lock()->getSprite(), "Gravity Well", 0.0f, RightDown);
+
+    CreateInfoText(m_targets.back().lock()->getShape(), "Mission End", 7.0f, LeftUp);
+    CreateInfoText(m_player->getSprite(), "Those two were easy", 11.0f, RightDown);
+
+}
+
+void StateGame::CreateInfoText(std::shared_ptr<jt::DrawableInterface> target, std::string text,
+    float timeOffset, eInfoTextAlign align)
+{
+    auto info = std::make_shared<InfoText>(target, text, align);
+    add(info);
+
+    auto twaInt = jt::TweenAlpha<InfoText>::create(info, 0.75f, 0, 255);
+    twaInt->setStartDelay(timeOffset + 0.75f);
+    add(twaInt);
+
+    auto twaOut = jt::TweenAlpha<InfoText>::create(info, 0.75f, 255, 0);
+    twaOut->addCompleteCallback([info]() { info->kill(); });
+    twaOut->setStartDelay(timeOffset + 3.25f);
+    add(twaOut);
+}
+
+void StateGame::createTutorialForFirstMission()
+{
+    CreateInfoText(m_player->getSprite(), "Your Ship", 0.0f, RightDown);
+    CreateInfoText(m_targets.front().lock()->getShape(), "Nav Target", 4.0f, RightUp);
+    CreateInfoText(m_player->getSprite(), "Accelerate with 'W'", 8.0f, RightUp);
+    CreateInfoText(m_player->getSprite(), "Rotate with 'A'/'D'", 12.0f, RightUp);
+    CreateInfoText(m_targets.at(1).lock()->getShape(), "Correct Course", 16.0f, LeftDown);
+    CreateInfoText(m_targets.back().lock()->getShape(), "Mission End", 20.0f, LeftUp);
+
 }
 
 void StateGame::createLevelEntities()
@@ -181,8 +126,7 @@ void StateGame::createLevelEntities()
         m_physics_system->registerTransform(t);
         m_enemies.push_back(enemy);
     }
-    for (auto p : l.getTargets())
-    {
+    for (auto p : l.getTargets()) {
         auto t = std::make_shared<Target>(p);
         add(t);
         m_targets.push_back(t);
@@ -209,7 +153,6 @@ void StateGame::doInternalUpdate(float const elapsed)
 
         m_enemies.update(elapsed);
         m_targets.update(elapsed);
-
     }
 
     m_background->update(elapsed);
@@ -228,28 +171,22 @@ void StateGame::handlePlayerTargetCollisions()
 {
     auto const playerPosition = m_player->getTransform()->position;
 
-    for (auto tptr : m_targets)
-    {
-        if (tptr.expired())
-        {
+    for (auto tptr : m_targets) {
+        if (tptr.expired()) {
             continue;
         }
         auto target = tptr.lock();
-        if (target->hasBeenHit())
-        {
+        if (target->hasBeenHit()) {
             continue;
         }
         auto const targetPosition = target->getPosition();
         auto diff = targetPosition - playerPosition;
         auto lengthSquared = jt::MathHelper::lengthSquared(diff);
 
-        if (lengthSquared <= GP::PlayerHalfSize() * GP::PlayerHalfSize())
-        {
-            for(auto tw : target->hit())
-            {
+        if (lengthSquared <= GP::PlayerHalfSize() * GP::PlayerHalfSize()) {
+            for (auto tw : target->hit()) {
                 add(tw);
             }
-
         }
     }
 }
@@ -261,7 +198,7 @@ void StateGame::handlePlayerPlanetCollision()
             continue;
         }
         auto p = pptr.lock();
-        auto const planetPos = p->getTransform()->position - jt::Vector2{4.0f, 0.0f};
+        auto const planetPos = p->getTransform()->position - jt::Vector2 { 4.0f, 0.0f };
 
         auto const diff = planetPos - playerPos;
         auto const lsquared = jt::MathHelper::lengthSquared(diff);
@@ -341,8 +278,7 @@ void StateGame::doInternalDraw() const
     m_vignette->draw(getGame()->getRenderTarget());
     m_hud->draw();
 
-    for (auto& t : m_infoTexts)
-    {
+    for (auto& t : m_infoTexts) {
         t->draw();
     }
 
@@ -367,9 +303,9 @@ void StateGame::endGame()
 
 void StateGame::setLevel(std::string const& level_filename) { m_level_filename = level_filename; }
 
-void StateGame::checkGameOver() {
-    if (m_targets.empty() && m_enemies.empty())
-    {
+void StateGame::checkGameOver()
+{
+    if (m_targets.empty() && m_enemies.empty()) {
         endGame();
     }
 }

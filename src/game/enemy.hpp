@@ -28,6 +28,8 @@ public:
     void setTransform(std::shared_ptr<Transform> t);
 
     void takeDamage();
+
+    std::shared_ptr<jt::Animation> getSprite() const;
 };
 
 #endif // QUASARRUSH_ENEMY_HPP

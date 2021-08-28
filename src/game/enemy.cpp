@@ -54,3 +54,4 @@ void Enemy::takeDamage()
         kill();
     }
 }
+std::shared_ptr<jt::Animation> Enemy::getSprite() const { return m_shipSprite; }

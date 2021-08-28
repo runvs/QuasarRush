@@ -19,6 +19,8 @@ public:
 
     std::shared_ptr<Transform> getTransform();
     void setTransform(std::shared_ptr<Transform> t);
+
+    std::shared_ptr<jt::Animation> getSprite() const;
 };
 
 #endif // PLANET_GUARD_HPP
