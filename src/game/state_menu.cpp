@@ -34,10 +34,17 @@ void StateMenu::doInternalCreate()
         std::string filename = l["filename"];
         std::string displayName = l["display"];
 
+        float xPos = 74.0f;
+        float yPos = 80.0f + 24.0f * (int)(counter/2);
+        if (counter %2 == 1)
+        {
+            xPos += 134.0f;
+        }
+
         auto button = std::make_shared<jt::Button>(jt::Vector2u { 128, 18 });
         add(button);
         button->addCallback([this, filename]() { startTransitionToStateGame(filename); });
-        button->setPosition(jt::Vector2 { 100.0, 100.0f + counter * 24.0f });
+        button->setPosition(jt::Vector2 { xPos,yPos});
         auto const text = jt::dh::createText(getGame()->getRenderTarget(), displayName, 12);
         text->setOrigin(jt::Vector2 { -4.0f, -2.0f });
         text->SetTextAlign(jt::Text::TextAlign::LEFT);
@@ -74,11 +81,12 @@ void StateMenu::createTextCredits()
 {
     m_text_Credits = jt::dh::createText(getGame()->getRenderTarget(),
         "Created by " + GP::AuthorName() + " for " + GP::JamName() + "\n" + GP::JamDate()
+            + "\nCover 'QUASAR RUSH' by William Hackworth for Famicase2021"
             + "\nThis game uses OpenAl, licensed under LGPL v2.\nPlease see https://openal.org/ "
               "for details",
         10U, GP::PaletteColor5());
     m_text_Credits->SetTextAlign(jt::Text::TextAlign::LEFT);
-    m_text_Credits->setPosition({ 10, GP::GetScreenSize().y() - 40 });
+    m_text_Credits->setPosition({ 10, GP::GetScreenSize().y() - 68 });
     m_text_Credits->setShadow(GP::PaletteFontShadow(), jt::Vector2 { 1, 1 });
 }
 void StateMenu::createTextTitle()

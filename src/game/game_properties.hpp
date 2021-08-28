@@ -35,12 +35,15 @@ public:
     static float PlayerAcceleration() { return 2.0; }
     static float PlayerAccelerationBoostFactor() { return 3.2f; }
     static float PlayerShootTimer() { return 0.2f; }
-    static float EnemyShootTimer() { return 0.7f; }
+
 
     static float ShotSpeed() { return 50.0f; }
     static int PlayerHalfSize() { return 9; }
-    static int EnemyHalfSize() { return 7; }
+
     static int const PlanetHalfSize() { return 16; }
+
+    static float EnemyShootTimer() { return 0.7f; }
+    static int EnemyHalfSize() { return 8; }
 };
 
 #endif
