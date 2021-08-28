@@ -129,13 +129,20 @@ void StateGame::handlePlayerTargetCollisions()
             continue;
         }
         auto target = tptr.lock();
+        if (target->hasBeenHit())
+        {
+            continue;
+        }
         auto const targetPosition = target->getPosition();
         auto diff = targetPosition - playerPosition;
         auto lengthSquared = jt::MathHelper::lengthSquared(diff);
 
         if (lengthSquared <= GP::PlayerHalfSize() * GP::PlayerHalfSize())
         {
-            target->kill();
+            for(auto tw : target->hit())
+            {
+                add(tw);
+            }
 
         }
     }
