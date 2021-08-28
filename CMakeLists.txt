@@ -5,9 +5,6 @@ cmake_minimum_required (VERSION 3.10)
 #####################################################
 set (PROJECTNAME "QuasarRush") 
 
-set (ENABLE_UNITTESTS OFF CACHE BOOL "enable unittests")
-set (ENABLE_COVERAGE OFF CACHE BOOL "enable coverage")
-set (ENABLE_STRESSTESTS OFF CACHE BOOL "enable stresstests")
 set (ENABLE_WEB OFF CACHE BOOL "enable web build using SDL and em++")
 set (ENABLE_DISPLAY_TESTS ON CACHE BOOL "enable unittests that require a display")
 # Apple users: set to /usr/local/Cellar/sfml/2.4.2_1/lib/ or respectively
@@ -87,10 +84,6 @@ set (CXX_STANDARD_REQUIRED ON)
 set (CMAKE_CXX_STANDARD 17)
 set (CXX_STANDARD 17)
 add_compile_definitions(DISABLE_CPP17_FILESYSTEM)
-
-if(ENABLE_DISPLAY_TESTS)
-	add_definitions(-DENABLE_DISPLAY_TESTS)
-endif()
 
 if(ENABLE_WEB)
 	add_compile_definitions(MUSIC_OGG)
@@ -209,68 +202,6 @@ if(NOT ENABLE_WEB)
 endif()
 
 target_link_libraries(JamTemplate Box2D)
-
-#####################################################
-## setup StressTest
-#####################################################
-if (ENABLE_STRESSTESTS)
-	file(GLOB_RECURSE STRESSTESTFILES src/stresstests/*)
-	
-	add_executable(StressTests ${STRESSTESTFILES})
-	if(ENABLE_WEB)
-		set(CMAKE_EXECUTABLE_SUFFIX ".html")
-	endif()
-	target_link_libraries(StressTests JamTemplate)
-	jt_use_assets(StressTests)
-endif()
-
-#####################################################
-## setup UnitTests
-#####################################################
-if (ENABLE_UNITTESTS)
-	
-	file(GLOB_RECURSE UNITTESTFILES src/unittests/*)
-	if ( (NOT ENABLE_DISPLAY_TESTS) OR ENABLE_WEB)
-		list(REMOVE_ITEM UNITTESTFILES 
-			"${CMAKE_CURRENT_SOURCE_DIR}/src/unittests/sound_test.cpp")
-	endif()
-	
-	# Download and unpack googletest at configure time
-	configure_file(ext/googletest/CMakeLists.txt.in ${CMAKE_CURRENT_BINARY_DIR}/ext/googletest/googletest-download/CMakeLists.txt)
-	execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
-	RESULT_VARIABLE result
-	WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/ext/googletest/googletest-download )
-	if(result)
-	    message(FATAL_ERROR "CMake step for googletest failed: ${result}")
-	endif()
-	execute_process(COMMAND ${CMAKE_COMMAND} --build .
-	RESULT_VARIABLE result
-	WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/ext/googletest/googletest-download )
-	if(result)
-	    message(FATAL_ERROR "Build step for googletest failed: ${result}")
-	endif()
-	
-	# Prevent overriding the parent project's compiler/linker
-	# settings on Windows
-	set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-	
-	# Add googletest directly to our build. This defines
-	# the gtest and gtest_main targets.
-	add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/ext/googletest/googletest-src
-					 ${CMAKE_CURRENT_BINARY_DIR}/ext/googletest/googletest-build
-					 EXCLUDE_FROM_ALL)
-	
-	add_executable(UnitTests ${UNITTESTFILES})
-	if(ENABLE_WEB)
-		set(CMAKE_EXECUTABLE_SUFFIX ".html")
-	endif()
-	target_link_libraries(UnitTests gtest_main)
-	target_link_libraries(UnitTests gmock)
-	target_link_libraries(UnitTests JamTemplate)
-	
-	jt_use_assets(UnitTests)
-	add_test( UnitTests UnitTests )
-endif()
 
 #####################################################
 ## setup Game executable
