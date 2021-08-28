@@ -36,12 +36,10 @@ void StateMenu::doInternalCreate()
 
         auto button = std::make_shared<jt::Button>(jt::Vector2u { 128, 18 });
         add(button);
-        button->addCallback([this, filename]() {
-            startTransitionToStateGame(filename);
-        });
+        button->addCallback([this, filename]() { startTransitionToStateGame(filename); });
         button->setPosition(jt::Vector2 { 100.0, 100.0f + counter * 24.0f });
         auto const text = jt::dh::createText(getGame()->getRenderTarget(), displayName, 12);
-        text->setOrigin(jt::Vector2{-4.0f, -2.0f});
+        text->setOrigin(jt::Vector2 { -4.0f, -2.0f });
         text->SetTextAlign(jt::Text::TextAlign::LEFT);
         button->setDrawable(text);
 
@@ -75,10 +73,12 @@ void StateMenu::createMenuText()
 void StateMenu::createTextCredits()
 {
     m_text_Credits = jt::dh::createText(getGame()->getRenderTarget(),
-        "Created by " + GP::AuthorName() + " for " + GP::JamName() + "\n" + GP::JamDate(), 10U,
-        GP::PaletteColor5());
+        "Created by " + GP::AuthorName() + " for " + GP::JamName() + "\n" + GP::JamDate()
+            + "\nThis game uses OpenAl, licensed under LGPL v2.\nPlease see https://openal.org/ "
+              "for details",
+        10U, GP::PaletteColor5());
     m_text_Credits->SetTextAlign(jt::Text::TextAlign::LEFT);
-    m_text_Credits->setPosition({ 10, GP::GetScreenSize().y() - 30 });
+    m_text_Credits->setPosition({ 10, GP::GetScreenSize().y() - 40 });
     m_text_Credits->setShadow(GP::PaletteFontShadow(), jt::Vector2 { 1, 1 });
 }
 void StateMenu::createTextTitle()
@@ -124,10 +124,7 @@ void StateMenu::createTweenCreditsPosition()
     add(tween);
 }
 
-void StateMenu::doInternalUpdate(float const elapsed)
-{
-    updateDrawables(elapsed);
-}
+void StateMenu::doInternalUpdate(float const elapsed) { updateDrawables(elapsed); }
 
 void StateMenu::updateDrawables(const float& elapsed)
 {
@@ -136,9 +133,7 @@ void StateMenu::updateDrawables(const float& elapsed)
     m_text_Credits->update(elapsed);
     m_overlay->update(elapsed);
     m_vignette->update(elapsed);
-
 }
-
 
 void StateMenu::startTransitionToStateGame(std::string const& levelFilename)
 {
