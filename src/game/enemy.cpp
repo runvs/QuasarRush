@@ -49,6 +49,7 @@ void Enemy::shoot() { m_shootTimer = GP::EnemyShootTimer(); }
 void Enemy::takeDamage()
 {
     m_health -= 1;
+    m_shipSprite->flash(0.25f, jt::colors::White);
     if (m_health <= 0) {
         kill();
     }

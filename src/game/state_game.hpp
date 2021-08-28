@@ -30,6 +30,7 @@ private:
     std::shared_ptr<jt::Sprite> m_vignette;
     std::shared_ptr<Hud> m_hud;
 
+
     bool m_running { false };
     bool m_hasEnded { false };
 
@@ -45,6 +46,7 @@ private:
 
     std::string m_level_filename;
 
+
     void doInternalCreate() override;
     void doInternalUpdate(float const elapsed) override;
     void doInternalDraw() const override;
@@ -55,6 +57,8 @@ private:
     void handleShotCollisions();
     void handlePlayerPlanetCollision();
     void handlePlayerTargetCollisions();
+    void handlePlayerShots();
+    void checkGameOver();
 };
 
 #endif

@@ -9,6 +9,7 @@
 #include "sprite.hpp"
 #include "state_menu.hpp"
 #include "tween_alpha.hpp"
+#include "state_menu.hpp"
 
 void StateGame::doInternalCreate()
 {
@@ -85,31 +86,37 @@ void StateGame::createLevelEntities()
 void StateGame::doInternalUpdate(float const elapsed)
 {
     if (m_running) {
-        m_player->update(elapsed);
+
         m_player->setProjectionPoints(
             m_physics_system->precalculate_path(m_player->getTransform()));
 
-        for (auto p : m_planets) {
-            p.lock()->update(elapsed);
-        }
-
-        if (getGame()->input()->mouse()->pressed(jt::MouseButtonCode::MBLeft)) {
-            if (m_player->canShoot()) {
-                spawnShot();
-            }
-        }
+        handlePlayerShots();
 
         handleShotCollisions();
         handlePlayerPlanetCollision();
         handlePlayerTargetCollisions();
 
+        checkGameOver();
+
         m_physics_system->update(elapsed);
         m_physics_system->update(elapsed);
+
+        m_enemies.update(elapsed);
+        m_targets.update(elapsed);
+
     }
 
     m_background->update(elapsed);
     m_vignette->update(elapsed);
     m_overlay->update(elapsed);
+}
+void StateGame::handlePlayerShots()
+{
+    if (getGame()->input()->mouse()->pressed(jt::MouseButtonCode::MBLeft)) {
+        if (m_player->canShoot()) {
+            spawnShot();
+        }
+    }
 }
 void StateGame::handlePlayerTargetCollisions()
 {
@@ -129,6 +136,7 @@ void StateGame::handlePlayerTargetCollisions()
         if (lengthSquared <= GP::PlayerHalfSize() * GP::PlayerHalfSize())
         {
             target->kill();
+
         }
     }
 }
@@ -140,14 +148,14 @@ void StateGame::handlePlayerPlanetCollision()
             continue;
         }
         auto p = pptr.lock();
-        auto const planetPos = p->getTransform()->position;
+        auto const planetPos = p->getTransform()->position - jt::Vector2{4.0f, 0.0f};
 
         auto const diff = planetPos - playerPos;
         auto const lsquared = jt::MathHelper::lengthSquared(diff);
 
         if (lsquared <= (GP::PlayerHalfSize() + GP::PlanetHalfSize())
                 * (GP::PlayerHalfSize() + GP::PlanetHalfSize())) {
-            std::cout << "player planet collision\n";
+            endGame();
         }
     }
 }
@@ -239,3 +247,10 @@ void StateGame::endGame()
 }
 
 void StateGame::setLevel(std::string const& level_filename) { m_level_filename = level_filename; }
+
+void StateGame::checkGameOver() {
+    if (m_targets.empty() && m_enemies.empty())
+    {
+        endGame();
+    }
+}
