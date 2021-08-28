@@ -9,6 +9,10 @@
       "display": "Gravity Practice"
     },
     {
+      "filename": "3_planet_and_enemy.json",
+      "display": "Orbiting"
+    },
+    {
       "filename": "4_two_stars_with_enemy.json",
       "display": "Target Practice"
     },
