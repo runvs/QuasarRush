@@ -16,7 +16,6 @@ public:
     std::vector<jt::Vector2> getTargets();
 
 private:
-
     std::shared_ptr<Transform> m_player_transform;
     std::vector<std::shared_ptr<Transform>> m_transforms;
     std::vector<std::shared_ptr<Transform>> m_enemies;

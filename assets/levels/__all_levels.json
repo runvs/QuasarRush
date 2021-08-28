@@ -1,16 +1,20 @@
 {
   "levels": [
     {
-      "filename": "empty_space_one_target.json",
-      "display": "Mission 1"
+      "filename": "1_empty_space_and_targets.json",
+      "display": "Fly Practice"
     },
     {
-      "filename": "two_stars_with_enemies.json",
-      "display": "Mission 2"
+      "filename": "2_planet_and_targets.json",
+      "display": "Gravity Practice"
     },
     {
-      "filename": "test.json",
-      "display": "Test"
+      "filename": "4_two_stars_with_enemy.json",
+      "display": "Target Practice"
+    },
+    {
+      "filename": "5_many_enemies.json",
+      "display": "It's a trap"
     }
   ]
 }

@@ -34,7 +34,7 @@ void StateMenu::doInternalCreate()
         std::string filename = l["filename"];
         std::string displayName = l["display"];
 
-        auto button = std::make_shared<jt::Button>(jt::Vector2u { 90, 18 });
+        auto button = std::make_shared<jt::Button>(jt::Vector2u { 128, 18 });
         add(button);
         button->addCallback([this, filename]() {
             startTransitionToStateGame(filename);

@@ -54,6 +54,7 @@ void Level::parsePlayer(nlohmann::json const& j)
     auto p = j["player"];
     m_player_transform->position = jt::Vector2 { p["x"].get<float>(), p["y"].get<float>() };
     m_player_transform->velocity = jt::Vector2 { p["vx"].get<float>(), p["vy"].get<float>() };
+    m_player_transform->angle = p.value("angle", 0.0f);
 }
 
 void Level::parseTargets(nlohmann::json const& j) {
