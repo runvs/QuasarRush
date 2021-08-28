@@ -106,3 +106,4 @@ void Player::setProjectionPoints(std::vector<jt::Vector2>&& points)
 }
 bool Player::canShoot() { return m_shootTimer <= 0; }
 void Player::shoot() { m_shootTimer = GP::PlayerShootTimer(); }
+std::shared_ptr<jt::Animation> Player::getSprite() const { return m_shipSprite; }

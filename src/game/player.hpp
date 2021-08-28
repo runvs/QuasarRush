@@ -29,6 +29,8 @@ public:
     bool canShoot();
     void shoot();
 
+    std::shared_ptr<jt::Animation> getSprite() const;
+
     std::shared_ptr<Transform> getTransform();
     void setTransform(std::shared_ptr<Transform> t);
 

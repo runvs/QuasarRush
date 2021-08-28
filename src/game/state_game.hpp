@@ -3,6 +3,7 @@
 
 #include "enemy.hpp"
 #include "game_state.hpp"
+#include "info_text.hpp"
 #include "object_group.hpp"
 #include "physics_system.hpp"
 #include "planet.hpp"
@@ -29,6 +30,7 @@ private:
     std::shared_ptr<jt::Shape> m_overlay;
     std::shared_ptr<jt::Sprite> m_vignette;
     std::shared_ptr<Hud> m_hud;
+    std::vector<std::shared_ptr<InfoText>> m_infoTexts;
 
 
     bool m_running { false };
@@ -59,6 +61,7 @@ private:
     void handlePlayerTargetCollisions();
     void handlePlayerShots();
     void checkGameOver();
+    void createTutorial();
 };
 
 #endif

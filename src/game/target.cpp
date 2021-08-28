@@ -13,9 +13,25 @@ void Target::doCreate()
     m_shape = jt::dh::createRectShape(jt::Vector2 { 8.0, 8.0 }, jt::colors::Yellow);
     m_shape->setPosition(m_position);
     m_shape->setOrigin(jt::Vector2{4.0f, 4.0f});
+
+    m_glow = std::make_shared<jt::Sprite>();
+    m_glow->loadSprite("#g#64#64");
+    m_glow->setOrigin(jt::Vector2{32,32});
+
+    auto color = jt::colors::Yellow;
+    color.a() = 120;
+    m_glow->setColor( color );
+    m_glow->setPosition(m_position);
 }
-void Target::doUpdate(float const elapsed) { m_shape->update(elapsed); }
-void Target::doDraw() const { m_shape->draw(getGame()->getRenderTarget()); }
+
+void Target::doUpdate(float const elapsed) {
+    m_shape->update(elapsed);
+    m_glow->update(elapsed);
+}
+void Target::doDraw() const {
+    m_shape->draw(getGame()->getRenderTarget());
+    m_glow->draw(getGame()->getRenderTarget());
+}
 void Target::doKill() { }
 
 std::vector<std::shared_ptr<jt::TweenBase>> Target::hit() {
@@ -33,3 +49,4 @@ std::vector<std::shared_ptr<jt::TweenBase>> Target::hit() {
 
 }
 bool Target::hasBeenHit() const { return m_hasBeenHit; }
+std::shared_ptr<jt::Shape> Target::getShape() const { return m_shape; }
