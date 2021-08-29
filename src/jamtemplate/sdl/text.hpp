@@ -64,6 +64,7 @@ private:
     jt::Color m_flashColor { jt::colors::White };
     jt::Vector2 m_origin { 0.0f, 0.0f };
     jt::Vector2 m_scale { 1.0f, 1.0f };
+    jt::Vector2 m_offsetFromOrigin {0.0f, 0.0f};
 
     // optimization, so the text rendering logic does not have to happen in every frame, but only
     // when the text changes.

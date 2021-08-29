@@ -86,7 +86,7 @@ void InfoText::doDraw() const
     lineDiag.setColor(m_color);
     lineDiag.draw(getGame()->getRenderTarget());
 
-    jt::Line lineUnder(jt::Vector2 { m_text->getGlobalBounds().width(), 0 });
+    jt::Line lineUnder(jt::Vector2 { m_text->getLocalBounds().width(), 0 });
     lineUnder.setPosition(m_text->getPosition() + jt::Vector2 { 0.0f, 12.0f });
     lineUnder.update(0.1f);
     lineUnder.setColor(m_color);

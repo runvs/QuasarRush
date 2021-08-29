@@ -55,18 +55,22 @@ const jt::Color Text::getFlashColor() const { return m_flashColor; }
 
 jt::Rect const Text::getGlobalBounds() const
 {
-    return jt::Rect { m_position.x(), m_position.y(), m_textTextureSizeX * m_scale.x(),
-        m_textTextureSizeY * m_scale.y() };
+    return jt::Rect { m_position.x(), m_position.y(), m_textTextureSizeX * m_scale.x() / getUpscaleFactor(),
+        m_textTextureSizeY * m_scale.y() /getUpscaleFactor() };
 }
 jt::Rect const Text::getLocalBounds() const
 {
-    return jt::Rect { 0, 0, m_textTextureSizeX * m_scale.x(), m_textTextureSizeY * m_scale.y() };
+    return jt::Rect { 0, 0, m_textTextureSizeX * m_scale.x()/getUpscaleFactor(), m_textTextureSizeY * m_scale.y() / getUpscaleFactor() };
 }
 
 void Text::setScale(jt::Vector2 const& scale) { m_scale = scale; }
 const jt::Vector2 Text::getScale() const { return m_scale; }
 
-void Text::setOrigin(jt::Vector2 const& origin) { m_origin = origin; }
+void Text::setOrigin(jt::Vector2 const& origin)
+{
+    m_origin = origin;
+    m_offsetFromOrigin = -1.0f * origin;
+}
 jt::Vector2 const Text::getOrigin() const { return m_origin; }
 
 void Text::SetTextAlign(Text::TextAlign ta)
@@ -236,7 +240,7 @@ SDL_Rect Text::getDestRect(jt::Vector2 const& positionOffset) const
     }
 
     jt::Vector2 pos = m_position + getShakeOffset() + getOffset() + getCamOffset() + alignOffset
-        + positionOffset;
+        + positionOffset + m_offsetFromOrigin;
 
     SDL_Rect destRect; // create a rect
     destRect.x = pos.x(); // controls the rect's x coordinate

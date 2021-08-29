@@ -95,7 +95,7 @@ void Sprite::doDraw(std::shared_ptr<jt::renderTarget> const sptr) const
     SDL_Point const p { static_cast<int>(m_origin.x()), static_cast<int>(m_origin.y()) };
     SDL_SetRenderDrawBlendMode(sptr.get(), SDL_BLENDMODE_BLEND);
     setSDLColor(m_color);
-    SDL_RenderCopyEx(sptr.get(), m_text.get(), &sourceRect, &destRect, getRotation(), &p, flip);
+    SDL_RenderCopyEx(sptr.get(), m_text.get(), &sourceRect, &destRect, -getRotation(), &p, flip);
 }
 
 void Sprite::doDrawShadow(std::shared_ptr<jt::renderTarget> const sptr) const
