@@ -13,6 +13,8 @@ Level::Level(std::string const filename)
     parseTransforms(j);
     parseEnemies(j);
     parseTargets(j);
+
+    m_backgroundFilePath = "assets/backgrounds/" + j.value("background", "background_00.png");
 }
 
 void Level::parseEnemies(nlohmann::json const& j)
@@ -57,18 +59,19 @@ void Level::parsePlayer(nlohmann::json const& j)
     m_player_transform->angle = p.value("angle", 0.0f);
 }
 
-void Level::parseTargets(nlohmann::json const& j) {
+void Level::parseTargets(nlohmann::json const& j)
+{
     auto targetsIt = j.find("targets");
     if (targetsIt == j.end()) {
         return;
     }
     for (auto t : *targetsIt) {
-        m_targets.push_back(jt::Vector2{t["x"], t["y"]});
+        m_targets.push_back(jt::Vector2 { t["x"], t["y"] });
     }
-
 }
 
 std::vector<std::shared_ptr<Transform>> Level::getPlanets() { return m_transforms; }
 std::shared_ptr<Transform> Level::getPlayer() { return m_player_transform; }
 std::vector<std::shared_ptr<Transform>> Level::getEnemies() { return m_enemies; }
 std::vector<jt::Vector2> Level::getTargets() { return m_targets; }
+std::string Level::getBackgroundFilePath() { return m_backgroundFilePath; }

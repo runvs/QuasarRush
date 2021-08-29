@@ -19,9 +19,7 @@ void StateGame::doInternalCreate()
     using jt::Shape;
     using jt::TweenAlpha;
 
-    m_background = std::make_shared<Shape>();
-    m_background->makeRect({ w, h });
-    m_background->setColor(GP::PaletteBackground());
+    m_background = std::make_shared<jt::Sprite>();
     m_background->setIgnoreCamMovement(true);
     m_background->update(0.0f);
 
@@ -59,12 +57,10 @@ void StateGame::createTutorial()
         createTutorialForFirstMission();
     } else if (m_level_filename == "2_planet_and_targets.json") {
         CreateTutorialForSecondMission();
-    }
-    else if (m_level_filename == "3_planet_and_enemy.json") {
+    } else if (m_level_filename == "3_planet_and_enemy.json") {
         CreateInfoText(m_enemies.back().lock()->getSprite(), "Enemy !", 0.0f, RightUp);
         CreateInfoText(m_player->getSprite(), "Aim and Shoot with mouse", 4.0f, LeftDown);
     }
-
 }
 void StateGame::CreateTutorialForSecondMission()
 {
@@ -72,7 +68,6 @@ void StateGame::CreateTutorialForSecondMission()
 
     CreateInfoText(m_targets.back().lock()->getShape(), "Mission End", 7.0f, LeftUp);
     CreateInfoText(m_player->getSprite(), "Those two were easy", 11.0f, RightDown);
-
 }
 
 void StateGame::CreateInfoText(std::shared_ptr<jt::DrawableInterface> target, std::string text,
@@ -99,7 +94,6 @@ void StateGame::createTutorialForFirstMission()
     CreateInfoText(m_player->getSprite(), "Rotate with 'A'/'D'", 12.0f, RightUp);
     CreateInfoText(m_targets.at(1).lock()->getShape(), "Correct Course", 16.0f, LeftDown);
     CreateInfoText(m_targets.back().lock()->getShape(), "Mission End", 20.0f, LeftUp);
-
 }
 
 void StateGame::createLevelEntities()
@@ -131,6 +125,9 @@ void StateGame::createLevelEntities()
         add(t);
         m_targets.push_back(t);
     }
+
+    m_background->loadSprite(l.getBackgroundFilePath());
+    m_background->setScale(jt::Vector2 { 0.5f, 0.5f });
 }
 
 void StateGame::doInternalUpdate(float const elapsed)
