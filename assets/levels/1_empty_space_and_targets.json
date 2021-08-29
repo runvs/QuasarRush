@@ -1,4 +1,5 @@
 {
+  "background": "background_01.png",
   "player": {
     "x": 20.0,
     "y": 100.0,

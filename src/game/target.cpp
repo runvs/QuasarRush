@@ -41,14 +41,14 @@ std::vector<std::shared_ptr<jt::TweenBase>> Target::hit()
     m_hasBeenHit = true;
     std::vector<std::shared_ptr<jt::TweenBase>> tweens;
     auto ts = jt::TweenScale<jt::Shape>::create(
-        m_shape, 0.65f, jt::Vector2 { 1.0f, 1.0f }, jt::Vector2 { 2.5f, 2.5f });
+        m_shape, 0.4f, jt::Vector2 { 1.0f, 1.0f }, jt::Vector2 { 2.5f, 2.5f });
     ts->addCompleteCallback([this]() { kill(); });
     tweens.push_back(ts);
 
-    auto ta = jt::TweenAlpha<jt::Shape>::create(m_shape, 0.65f, 255U, 0U);
+    auto ta = jt::TweenAlpha<jt::Shape>::create(m_shape, 0.4f, 255U, 0U);
     tweens.push_back(ta);
 
-    auto ta2 = jt::TweenAlpha<jt::Sprite>::create(m_glow, 0.65f, m_glow->getColor().a(), 0U);
+    auto ta2 = jt::TweenAlpha<jt::Sprite>::create(m_glow, 0.4f, m_glow->getColor().a(), 0U);
     tweens.push_back(ta2);
 
     return tweens;

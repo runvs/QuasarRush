@@ -21,9 +21,7 @@ void StateGame::doInternalCreate()
     using jt::Shape;
     using jt::TweenAlpha;
 
-    m_background = std::make_shared<Shape>();
-    m_background->makeRect({ w, h });
-    m_background->setColor(GP::PaletteBackground());
+    m_background = std::make_shared<jt::Sprite>();
     m_background->setIgnoreCamMovement(true);
     m_background->update(0.0f);
 
@@ -133,6 +131,9 @@ void StateGame::createLevelEntities()
         add(t);
         m_targets.push_back(t);
     }
+
+    m_background->loadSprite(l.getBackgroundFilePath());
+    m_background->setScale(jt::Vector2 { 0.5f, 0.5f });
 }
 
 void StateGame::doInternalUpdate(float const elapsed)

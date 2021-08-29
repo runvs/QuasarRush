@@ -31,7 +31,7 @@ public:
     static jt::Color PaletteColor7() { return jt::Color { 64, 23, 58 }; }
     static jt::Color PaletteColor8() { return jt::Color { 157, 64, 43 }; }
 
-    static float PlayerRotationSpeed() { return 55.0; }
+    static float PlayerRotationSpeed() { return 80.0; }
     static float PlayerAcceleration() { return 2.0; }
     static float PlayerAccelerationBoostFactor() { return 3.2f; }
     static float PlayerShootTimer() { return 0.2f; }

@@ -25,13 +25,13 @@ class Hud;
 class StateGame : public jt::GameState {
 public:
     void setLevel(std::string const& level_filename);
+
 private:
-    std::shared_ptr<jt::Shape> m_background;
+    std::shared_ptr<jt::Sprite> m_background;
     std::shared_ptr<jt::Shape> m_overlay;
     std::shared_ptr<jt::Sprite> m_vignette;
     std::shared_ptr<Hud> m_hud;
     std::vector<std::shared_ptr<InfoText>> m_infoTexts;
-
 
     bool m_running { false };
     bool m_hasEnded { false };
@@ -47,7 +47,6 @@ private:
     jt::ObjectGroup<Target> m_targets;
 
     std::string m_level_filename;
-
 
     void doInternalCreate() override;
     void doInternalUpdate(float const elapsed) override;
