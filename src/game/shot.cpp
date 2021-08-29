@@ -2,6 +2,7 @@
 #include "drawable_helpers.hpp"
 #include "game_interface.hpp"
 #include "game_properties.hpp"
+#include "math_helper.hpp"
 
 void Shot::doCreate()
 {
@@ -13,6 +14,7 @@ void Shot::doCreate()
 void Shot::doUpdate(float const elapsed)
 {
     m_sprite->setPosition(m_transform->position);
+    m_transform->angle = jt::MathHelper::angleOf(m_transform->velocity);
     m_sprite->setRotation(-m_transform->angle);
     m_sprite->update(elapsed);
 
