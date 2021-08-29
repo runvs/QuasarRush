@@ -41,7 +41,7 @@ public:
 
     static int PlanetHalfSize() { return 16; }
 
-    static float EnemyShootTimer() { return 0.7f; }
+    static float EnemyShootTimer() { return 2.5f; }
     static int EnemyHalfSize() { return 8; }
 };
 

@@ -1,5 +1,7 @@
 ﻿#include "state_game.hpp"
 #include "color.hpp"
+#include "enemy_flight_ai_stay.hpp"
+#include "enemy_shoot_ai_mg.hpp"
 #include "game_interface.hpp"
 #include "game_properties.hpp"
 #include "hud/hud.hpp"
@@ -59,12 +61,10 @@ void StateGame::createTutorial()
         createTutorialForFirstMission();
     } else if (m_level_filename == "2_planet_and_targets.json") {
         CreateTutorialForSecondMission();
-    }
-    else if (m_level_filename == "3_planet_and_enemy.json") {
+    } else if (m_level_filename == "3_planet_and_enemy.json") {
         CreateInfoText(m_enemies.back().lock()->getSprite(), "Enemy !", 0.0f, RightUp);
         CreateInfoText(m_player->getSprite(), "Aim and Shoot with mouse", 4.0f, LeftDown);
     }
-
 }
 void StateGame::CreateTutorialForSecondMission()
 {
@@ -72,7 +72,6 @@ void StateGame::CreateTutorialForSecondMission()
 
     CreateInfoText(m_targets.back().lock()->getShape(), "Mission End", 7.0f, LeftUp);
     CreateInfoText(m_player->getSprite(), "Those two were easy", 11.0f, RightDown);
-
 }
 
 void StateGame::CreateInfoText(std::shared_ptr<jt::DrawableInterface> target, std::string text,
@@ -99,7 +98,6 @@ void StateGame::createTutorialForFirstMission()
     CreateInfoText(m_player->getSprite(), "Rotate with 'A'/'D'", 12.0f, RightUp);
     CreateInfoText(m_targets.at(1).lock()->getShape(), "Correct Course", 16.0f, LeftDown);
     CreateInfoText(m_targets.back().lock()->getShape(), "Mission End", 20.0f, LeftUp);
-
 }
 
 void StateGame::createLevelEntities()
@@ -123,6 +121,10 @@ void StateGame::createLevelEntities()
         auto enemy = std::make_shared<Enemy>();
         add(enemy);
         enemy->setTransform(t);
+
+        enemy->setFlightAi(std::make_shared<EnemyFlightAiStay>(t->position));
+        enemy->setShootAi(std::make_shared<EnemyShootAiMg>(*this, m_player));
+
         m_physics_system->registerTransform(t);
         m_enemies.push_back(enemy);
     }
@@ -263,7 +265,7 @@ void StateGame::spawnShot()
     transform->position
         = jt::Vector2 { playerTransform->position.x(), playerTransform->position.y() }
         + aim_direction * 7.0f;
-    transform->angle = jt::MathHelper::rad2deg(atan2f(aim_direction.y(), aim_direction.x()));
+    transform->angle = jt::MathHelper::angleOf(aim_direction);
     transform->mass = 0.000001f;
     transform->is_force_emitter = false;
 

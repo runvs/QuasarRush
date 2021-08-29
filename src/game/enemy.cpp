@@ -1,8 +1,12 @@
 #include "enemy.hpp"
 #include "drawable_helpers.hpp"
+#include "enemy_ai.hpp"
 #include "game_interface.hpp"
 #include "game_properties.hpp"
 #include "math_helper.hpp"
+
+void Enemy::setFlightAi(std::shared_ptr<EnemyAI> ai) { m_flightAi = ai; }
+void Enemy::setShootAi(std::shared_ptr<EnemyAI> ai) { m_shootAi = ai; }
 
 void Enemy::doCreate()
 {
@@ -35,6 +39,9 @@ void Enemy::doUpdate(float const elapsed)
     m_flameSprite->setPosition(m_shipSprite->getPosition() + flameOffset);
     m_flameSprite->setRotation(m_transform->angle);
     m_flameSprite->update(elapsed);
+
+    m_flightAi->act(*this, elapsed);
+    m_shootAi->act(*this, elapsed);
 }
 
 void Enemy::doDraw() const { m_shipSprite->draw(getGame()->getRenderTarget()); }
@@ -55,3 +62,4 @@ void Enemy::takeDamage()
     }
 }
 std::shared_ptr<jt::Animation> Enemy::getSprite() const { return m_shipSprite; }
+

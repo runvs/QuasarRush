@@ -6,16 +6,25 @@
 #include "shape.hpp"
 #include "transform.hpp"
 
+class EnemyAI;
+
 class Enemy : public jt::GameObject {
     std::shared_ptr<jt::Animation> m_shipSprite;
     std::shared_ptr<jt::Animation> m_flameSprite;
     std::shared_ptr<Transform> m_transform;
+
+    std::shared_ptr<EnemyAI> m_flightAi;
+    std::shared_ptr<EnemyAI> m_shootAi;
 
     float m_shootTimer = 0.0f;
 
     float m_health = 5.0f;
 
 public:
+
+    void setFlightAi(std::shared_ptr<EnemyAI> ai);
+    void setShootAi(std::shared_ptr<EnemyAI> ai);
+
     void doCreate() override;
     void doUpdate(float const /*elapsed*/) override;
     void doDraw() const override;
