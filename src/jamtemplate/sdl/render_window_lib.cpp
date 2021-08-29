@@ -6,6 +6,7 @@ namespace jt {
 RenderWindow::RenderWindow(unsigned int width, unsigned int height, std::string const& title)
 {
     m_size = jt::Vector2 { static_cast<float>(width), static_cast<float>(height) };
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
     m_window = std::shared_ptr<SDL_Window>(SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED,
                                                SDL_WINDOWPOS_CENTERED, width, height, 0),
         [](SDL_Window* w) { SDL_DestroyWindow(w); });

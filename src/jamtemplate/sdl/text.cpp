@@ -133,6 +133,7 @@ void Text::renderOneLineOfText(std::shared_ptr<jt::renderTarget> const sptr, std
     // render text on full white, so coloring can be done afterwards
     SDL_Color const col { 255U, 255U, 255U, 255U };
     SDL_Surface* textSurface = TTF_RenderText_Solid(m_font, text.c_str(), col);
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
     SDL_Texture* textTexture = SDL_CreateTextureFromSurface(
         sptr.get(), textSurface); // now you can convert it into a texture
 
@@ -165,6 +166,7 @@ jt::Vector2u Text::getSizeForLine(
 {
     SDL_Color const col { 255U, 255U, 255U, 255U };
     SDL_Surface* textSurface = TTF_RenderText_Solid(m_font, text.c_str(), col);
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
     SDL_Texture* textTexture = SDL_CreateTextureFromSurface(
         sptr.get(), textSurface); // now you can convert it into a texture
     int w { 0 };
@@ -195,6 +197,7 @@ void Text::recreateTextTexture(std::shared_ptr<jt::renderTarget> const sptr)
 
     auto oldT = SDL_GetRenderTarget(sptr.get());
     // std::cout << oldT << std::endl;
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
     m_textTexture = std::shared_ptr<SDL_Texture>(
         SDL_CreateTexture(sptr.get(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
             m_textTextureSizeX * getUpscaleFactor(), m_textTextureSizeY * getUpscaleFactor()),

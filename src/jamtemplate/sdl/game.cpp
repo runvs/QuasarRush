@@ -81,6 +81,7 @@ void Game::doUpdate(float const elapsed)
 void Game::doDraw() const
 {
     // for reasons this can not be a member.
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
     auto const t = SDL_CreateTexture(getRenderTarget().get(), SDL_PIXELFORMAT_RGBA8888,
         SDL_TEXTUREACCESS_TARGET, static_cast<int>(m_srcRect.width()),
         static_cast<int>(m_srcRect.height()));

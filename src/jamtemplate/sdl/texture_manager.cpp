@@ -127,6 +127,7 @@ std::shared_ptr<SDL_Texture> createFlashImage(
         }
     }
 
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
     return std::shared_ptr<SDL_Texture>(SDL_CreateTextureFromSurface(rt.get(), image.get()),
         [](SDL_Texture* t) { SDL_DestroyTexture(t); });
 }
