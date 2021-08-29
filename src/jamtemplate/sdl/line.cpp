@@ -1,5 +1,6 @@
 #include "line.hpp"
-#include <SFML/Graphics.hpp>
+#include "math_helper.hpp"
+#include <SDL.h>
 
 jt::Line::Line(jt::Vector2 lineVector)
     : m_lineVector { lineVector }
@@ -15,15 +16,16 @@ void jt::Line::doDraw(std::shared_ptr<jt::renderTarget> const sptr) const
     auto const startPosition = getPosition() + getShakeOffset() + getOffset() + getCamOffset();
     auto const endPosition = startPosition + m_lineVector;
 
-    sf::Vertex line[]
-        = { sf::Vertex { startPosition, m_color }, sf::Vertex { endPosition, m_color } };
-    sptr->draw(line, 2, sf::Lines);
+    SDL_SetRenderDrawColor(sptr.get(), m_color.r(), m_color.g(), m_color.b(), m_color.a());
+    SDL_RenderDrawLine(sptr.get(), static_cast<int>(startPosition.x()),
+        static_cast<int>(startPosition.y()), static_cast<int>(endPosition.x()),
+        static_cast<int>(endPosition.y()));
 }
 
 void jt::Line::doDrawFlash(std::shared_ptr<jt::renderTarget> const /*sptr*/) const { }
 void jt::Line::doDrawShadow(std::shared_ptr<jt::renderTarget> const /*sptr*/) const { }
 
-void jt::Line::doRotate(float d) { }
+void jt::Line::doRotate(float d) { m_lineVector = jt::MathHelper::rotateBy(m_lineVector, d); }
 
 void jt::Line::setColor(jt::Color const& col) { m_color = col; }
 const jt::Color jt::Line::getColor() const { return m_color; }

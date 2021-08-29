@@ -73,7 +73,7 @@ void GameState::updateObjects(float elapsed)
     }
 }
 
-void GameState::basicUpdateObjects(float elapsed)
+void GameState::basicUpdateObjects(float /*elapsed*/)
 {
     cleanUpObjects();
     addNewObjects();

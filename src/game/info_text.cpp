@@ -8,22 +8,17 @@ InfoText::InfoText(
     std::shared_ptr<jt::DrawableInterface> drawable, std::string text, eInfoTextAlign align)
     : m_objectToTrack { drawable }
     , m_textstring { text }
+    , m_align { align }
     , m_diagonalVector { 60.0f, 16.0f }
-    , m_align{align}
     , m_color { jt::colors::White }
 
 {
-    if (m_align == eInfoTextAlign::RightUp)
-    {
-        m_diagonalVector= jt::Vector2{60.0f, -16.0f};
-    }
-    else if (m_align == eInfoTextAlign::LeftDown)
-    {
-        m_diagonalVector= jt::Vector2{-60.0f, 16.0f};
-    }
-    else if (m_align == eInfoTextAlign::LeftUp)
-    {
-        m_diagonalVector= jt::Vector2{-60.0f, -16.0f};
+    if (m_align == eInfoTextAlign::RightUp) {
+        m_diagonalVector = jt::Vector2 { 60.0f, -16.0f };
+    } else if (m_align == eInfoTextAlign::LeftDown) {
+        m_diagonalVector = jt::Vector2 { -60.0f, 16.0f };
+    } else if (m_align == eInfoTextAlign::LeftUp) {
+        m_diagonalVector = jt::Vector2 { -60.0f, -16.0f };
     }
 }
 
@@ -46,26 +41,18 @@ void InfoText::doUpdate(float const elapsed)
 
     auto const targetPosition = target->getPosition();
 
-    jt::Vector2 offset ;
-    if(m_align == eInfoTextAlign::RightDown)
-    {
+    jt::Vector2 offset;
+    if (m_align == eInfoTextAlign::RightDown) {
         offset = jt::Vector2 { 10.0f, 0.0f };
-    }
-    else if (m_align == eInfoTextAlign::RightUp)
-    {
+    } else if (m_align == eInfoTextAlign::RightUp) {
         offset = jt::Vector2 { 10.0f, -24.0f };
-    }
-    else if (m_align == eInfoTextAlign::LeftDown)
-    {
+    } else if (m_align == eInfoTextAlign::LeftDown) {
         offset = jt::Vector2 { -10.0f, 0.0f };
-    }
-    else if (m_align == eInfoTextAlign::LeftUp)
-    {
+    } else if (m_align == eInfoTextAlign::LeftUp) {
         offset = jt::Vector2 { -10.0f, -24.0f };
     }
     auto textPosition = targetPosition + m_diagonalVector + offset;
-    if (m_align == eInfoTextAlign::LeftDown || m_align == eInfoTextAlign::LeftUp)
-    {
+    if (m_align == eInfoTextAlign::LeftDown || m_align == eInfoTextAlign::LeftUp) {
         textPosition.x() -= m_text->getLocalBounds().width();
     }
 
@@ -81,21 +68,14 @@ void InfoText::doDraw() const
 
     auto target = m_objectToTrack.lock();
 
-    jt::Vector2 offset ;
-    if(m_align == eInfoTextAlign::RightDown)
-    {
+    jt::Vector2 offset;
+    if (m_align == eInfoTextAlign::RightDown) {
         offset = jt::Vector2 { 10.0f, 12.0f };
-    }
-    else if (m_align == eInfoTextAlign::RightUp)
-    {
+    } else if (m_align == eInfoTextAlign::RightUp) {
         offset = jt::Vector2 { 10.0f, -12.0f };
-    }
-    else if (m_align == eInfoTextAlign::LeftDown)
-    {
+    } else if (m_align == eInfoTextAlign::LeftDown) {
         offset = jt::Vector2 { -10.0f, 12.0f };
-    }
-    else if (m_align == eInfoTextAlign::LeftUp)
-    {
+    } else if (m_align == eInfoTextAlign::LeftUp) {
         offset = jt::Vector2 { -10.0f, -12.0f };
     }
     auto const targetPosition = target->getPosition() + offset;

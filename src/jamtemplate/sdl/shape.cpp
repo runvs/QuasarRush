@@ -42,14 +42,14 @@ jt::Rect const Shape::getLocalBounds() const
 void Shape::setScale(jt::Vector2 const& scale) { m_scale = scale; }
 const jt::Vector2 Shape::getScale() const { return m_scale; }
 
-void Shape::setOrigin(jt::Vector2 const& origin) { m_origin = origin; }
+void Shape::setOrigin(jt::Vector2 const& origin) { m_origin = origin; m_offsetFromOrigin = -1.0f * origin; }
 const jt::Vector2 Shape::getOrigin() const { return m_origin; }
 
 void Shape::doDraw(std::shared_ptr<jt::renderTarget> const sptr) const
 {
     SDL_Rect const destRect = getDestRect();
     auto const flip = jt::getFlipFromScale(m_scale);
-    SDL_Point const p { static_cast<int>(m_origin.x()), static_cast<int>(m_origin.y()) };
+    SDL_Point const p { static_cast<int>(m_origin.x() ), static_cast<int>(m_origin.y()) };
     SDL_SetRenderDrawBlendMode(sptr.get(), SDL_BLENDMODE_BLEND);
     setSDLColor(m_color);
     SDL_RenderCopyEx(sptr.get(), m_text.get(), nullptr, &destRect, getRotation(), &p, flip);
@@ -80,7 +80,7 @@ void Shape::doRotate(float /*rot*/) { }
 
 SDL_Rect Shape::getDestRect(jt::Vector2 const& positionOffset) const
 {
-    auto const pos = m_position + getShakeOffset() + getOffset() + getCamOffset() + positionOffset;
+    auto const pos = m_position + getShakeOffset() + getOffset() + getCamOffset() + positionOffset + m_offsetFromOrigin;
     SDL_Rect const destRect { static_cast<int>(pos.x()), static_cast<int>(pos.y()),
         static_cast<int>(m_sourceRect.width() * fabs(m_scale.x())),
         static_cast<int>(m_sourceRect.height() * fabs(m_scale.y())) };

@@ -56,7 +56,12 @@ jt::Rect const Sprite::getLocalBounds() const
 void Sprite::setScale(jt::Vector2 const& scale) { m_scale = scale; }
 const jt::Vector2 Sprite::getScale() const { return m_scale; }
 
-void Sprite::setOrigin(jt::Vector2 const& origin) { m_origin = origin; }
+void Sprite::setOrigin(jt::Vector2 const& origin)
+{
+    m_origin = origin;
+    m_offsetFromOrigin = -1.0f * origin;
+}
+
 jt::Vector2 const Sprite::getOrigin() const { return m_origin; }
 
 jt::Color Sprite::getColorAtPixel(jt::Vector2u pixelPos) const
@@ -123,7 +128,7 @@ void Sprite::doRotate(float /*rot*/) { }
 SDL_Rect Sprite::getDestRect(jt::Vector2 const& positionOffset) const
 {
     // std::cout << "Sprite.CamOffset.x " << getCamOffset().x() << std::endl;
-    auto const pos = m_position + getShakeOffset() + getOffset() + getCamOffset() + positionOffset;
+    auto const pos = m_position + getShakeOffset() + getOffset() + getCamOffset() + positionOffset + m_offsetFromOrigin;
     // std::cout << "Sprite.final position.x " << pos.x() << std::endl;
     SDL_Rect const destRect { static_cast<int>(pos.x()), static_cast<int>(pos.y()),
         static_cast<int>(m_sourceRect.width() * fabs(m_scale.x())),
