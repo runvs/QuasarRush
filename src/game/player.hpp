@@ -34,10 +34,14 @@ private:
     std::shared_ptr<jt::Shape> m_projectionShape;
     std::shared_ptr<Transform> m_transform;
     std::vector<jt::Vector2> m_projectionPoints;
+    std::shared_ptr<jt::Sprite> m_glowOverlayFlame;
 
     float m_shootTimer = 0.0f;
 
     void updateMovement(const float elapsed);
+    void updateShooting(float const elapsed);
+    void updateSprite(float const elapsed);
+    void updateFlame(float const elapsed);
 };
 
 #endif

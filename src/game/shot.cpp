@@ -34,3 +34,5 @@ void Shot::doKill() { }
 std::shared_ptr<Transform> Shot::getTransform() { return m_transform; }
 
 void Shot::setTransform(std::shared_ptr<Transform> t) { m_transform = t; }
+bool Shot::getFiredByPlayer() const { return m_fired_by_player; }
+void Shot::setFiredByPlayer(bool value) {  m_fired_by_player = value; }

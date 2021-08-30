@@ -212,6 +212,19 @@ void StateGame::handleShotCollisions()
 
         auto s = sptr.lock();
         auto const sp = s->getTransform()->position;
+
+        if (!s->getFiredByPlayer())
+        {
+            auto const pp = m_player->getTransform()->position;
+            auto const diff = pp - sp;
+            auto const lengthSquared = jt::MathHelper::lengthSquared(diff);
+            if (lengthSquared <= GP::EnemyHalfSize() * GP::EnemyHalfSize()) {
+                s->kill();
+            }
+            continue;
+        }
+
+
         for (auto eptr : m_enemies) {
             if (eptr.expired()) {
                 continue;
@@ -242,10 +255,11 @@ void StateGame::handleShotCollisions()
     }
 }
 
-void StateGame::spawnShot(jt::Vector2 const& pos, jt::Vector2 dir)
+void StateGame::spawnShot(jt::Vector2 const& pos, jt::Vector2 dir, bool byPlayer)
 {
     auto shot = std::make_shared<Shot>();
     add(shot);
+    shot->setFiredByPlayer(byPlayer);
     auto transform = shot->getTransform();
     transform->velocity = dir * GP::ShotSpeed();
     transform->position = pos + dir * 7.0f;

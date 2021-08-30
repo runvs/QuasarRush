@@ -10,6 +10,7 @@ class Shot : public jt::GameObject {
 private:
     std::shared_ptr<jt::Sprite> m_sprite;
     std::shared_ptr<Transform> m_transform;
+    bool m_fired_by_player{true};
 
 public:
     void doCreate() override;
@@ -19,6 +20,8 @@ public:
 
     std::shared_ptr<Transform> getTransform();
     void setTransform(std::shared_ptr<Transform> t);
+    void setFiredByPlayer(bool value);
+    bool getFiredByPlayer() const;
 };
 
 #endif

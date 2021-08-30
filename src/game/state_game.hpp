@@ -26,7 +26,7 @@ class Hud;
 class StateGame : public jt::GameState, public ShotSpawnInterface {
 public:
     void setLevel(std::string const& level_filename);
-    void spawnShot(jt::Vector2 const& pos, jt::Vector2 dir) override;
+    void spawnShot(jt::Vector2 const& pos, jt::Vector2 dir, bool byPlayer) override;
 
 private:
     std::shared_ptr<jt::Sprite> m_background;

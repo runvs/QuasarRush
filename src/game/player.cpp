@@ -3,6 +3,7 @@
 #include "game.hpp"
 #include "game_interface.hpp"
 #include "math_helper.hpp"
+#include "sprite.hpp"
 #include <utility>
 
 Player::Player(ShotSpawnInterface& shotSpawnInterface)
@@ -30,28 +31,57 @@ void Player::doCreate()
     m_transform = std::make_shared<Transform>();
 
     m_projectionShape = jt::dh::createRectShape(jt::Vector2 { 2.0f, 2.0f });
+
+    m_glowOverlayFlame = std::make_shared<jt::Sprite>();
+    m_glowOverlayFlame->loadSprite("#g#32#100",jt::Recti{0,0,16,32});
+    m_glowOverlayFlame->setOrigin(jt::Vector2{16.0f,16.0f});
+    m_glowOverlayFlame->setOffset(jt::Vector2{16.0f, 16.0f});
 }
 
 void Player::doUpdate(float const elapsed)
 {
     updateMovement(elapsed);
+    updateShooting(elapsed);
 
-    m_shootTimer -= elapsed;
+    updateSprite(elapsed);
 
-    auto const px = jt::MathHelper::clamp(m_transform->position.x(),
-        static_cast<float>(GP::PlayerHalfSize()), GP::GetScreenSize().x() - GP::PlayerHalfSize());
-    auto const py = jt::MathHelper::clamp(m_transform->position.y(),
-        static_cast<float>(GP::PlayerHalfSize()), GP::GetScreenSize().y() - GP::PlayerHalfSize());
-    m_shipSprite->setRotation(m_transform->angle);
-    m_shipSprite->setPosition(jt::Vector2 { px, py });
-    m_shipSprite->update(elapsed);
-
+    updateFlame(elapsed);
+}
+void Player::updateFlame(float const elapsed)
+{
     jt::Vector2 flameOffset { -9.5f, 0.0f };
     flameOffset = jt::MathHelper::rotateBy(flameOffset, -m_transform->angle);
     m_flameSprite->setPosition(m_shipSprite->getPosition() + flameOffset);
     m_flameSprite->setRotation(m_transform->angle);
     m_flameSprite->update(elapsed);
 
+    m_glowOverlayFlame->setPosition(m_flameSprite->getPosition() - jt::Vector2{ m_flameSprite->getLocalBounds().width(), m_flameSprite->getLocalBounds().height()});
+    m_glowOverlayFlame->setColor(jt::Color{255,255,255,255});
+    m_glowOverlayFlame->setRotation(m_flameSprite->getRotation());
+    m_glowOverlayFlame->update(elapsed);
+
+    float const t = getAge();
+    float a = ( abs(cos(sin(t * 8.0f) + t * 9.0f)) * 0.75f + 0.25f) * ((getGame()->input()->keyboard()->pressed(jt::KeyCode::W))?1.0f : 0.0f);
+    std::cout << a << std::endl;
+    jt::Color col{255,255,255, static_cast<std::uint8_t>(a * 255)};
+    m_glowOverlayFlame->setColor(col);
+}
+
+void Player::updateSprite(float const elapsed)
+{
+    auto const px = jt::MathHelper::clamp(m_transform->position.x(),
+        static_cast<float>(GP::PlayerHalfSize()), GP::GetScreenSize().x() - GP::PlayerHalfSize());
+    auto const py = jt::MathHelper::clamp(m_transform->position.y(),
+        static_cast<float>(GP::PlayerHalfSize()), GP::GetScreenSize().y() - GP::PlayerHalfSize());
+
+    m_shipSprite->setRotation(m_transform->angle);
+    m_shipSprite->setPosition(jt::Vector2 { px, py });
+    m_shipSprite->update(elapsed);
+}
+
+void Player::updateShooting(float const elapsed)
+{
+    m_shootTimer -= elapsed;
     if (getGame()->input()->mouse()->pressed(jt::MouseButtonCode::MBLeft)) {
         if (canShoot()) {
             shoot();
@@ -105,6 +135,7 @@ void Player::doDraw() const
 
     m_shipSprite->draw(getGame()->getRenderTarget());
     m_flameSprite->draw(getGame()->getRenderTarget());
+    m_glowOverlayFlame->draw(getGame()->getRenderTarget());
 }
 void Player::doKill() { }
 
@@ -122,6 +153,6 @@ void Player::shoot()
     auto const mouse_position = getGame()->input()->mouse()->getMousePositionScreen();
     auto aim_direction = mouse_position - m_transform->position;
     jt::MathHelper::normalizeMe(aim_direction);
-    m_shotSpawnInterface.spawnShot(m_transform->position, aim_direction);
+    m_shotSpawnInterface.spawnShot(m_transform->position, aim_direction, true);
 }
 std::shared_ptr<jt::Animation> Player::getSprite() const { return m_shipSprite; }
