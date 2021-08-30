@@ -101,7 +101,7 @@ void StateGame::createTutorialForFirstMission()
 void StateGame::createLevelEntities()
 {
     Level l("assets/levels/" + m_level_filename);
-    m_player = std::make_shared<Player>();
+    m_player = std::make_shared<Player>(*this);
     add(m_player);
     m_player->setTransform(l.getPlayer());
 
@@ -143,8 +143,6 @@ void StateGame::doInternalUpdate(float const elapsed)
         m_player->setProjectionPoints(
             m_physics_system->precalculate_path(m_player->getTransform()));
 
-        handlePlayerShots();
-
         handleShotCollisions();
         handlePlayerPlanetCollision();
         handlePlayerTargetCollisions();
@@ -162,14 +160,7 @@ void StateGame::doInternalUpdate(float const elapsed)
     m_vignette->update(elapsed);
     m_overlay->update(elapsed);
 }
-void StateGame::handlePlayerShots()
-{
-    if (getGame()->input()->mouse()->pressed(jt::MouseButtonCode::MBLeft)) {
-        if (m_player->canShoot()) {
-            spawnShot();
-        }
-    }
-}
+
 void StateGame::handlePlayerTargetCollisions()
 {
     auto const playerPosition = m_player->getTransform()->position;
@@ -250,28 +241,18 @@ void StateGame::handleShotCollisions()
         }
     }
 }
-void StateGame::spawnShot()
-{
-    m_player->shoot();
 
+void StateGame::spawnShot(jt::Vector2 const& pos, jt::Vector2 dir)
+{
     auto shot = std::make_shared<Shot>();
     add(shot);
-    auto const playerTransform = m_player->getTransform();
-
-    auto const mouse_position = getGame()->input()->mouse()->getMousePositionScreen();
-    auto aim_direction = mouse_position - playerTransform->position;
-    jt::MathHelper::normalizeMe(aim_direction);
     auto transform = shot->getTransform();
-    transform->velocity = aim_direction * GP::ShotSpeed();
-    transform->position
-        = jt::Vector2 { playerTransform->position.x(), playerTransform->position.y() }
-        + aim_direction * 7.0f;
-    transform->angle = jt::MathHelper::angleOf(aim_direction);
+    transform->velocity = dir * GP::ShotSpeed();
+    transform->position = pos + dir * 7.0f;
     transform->mass = 0.000001f;
     transform->is_force_emitter = false;
-
-    m_physics_system->registerTransform(transform);
     m_shots.push_back(shot);
+    m_physics_system->registerTransform(transform);
 }
 
 void StateGame::doInternalDraw() const

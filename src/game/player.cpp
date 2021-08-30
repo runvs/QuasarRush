@@ -5,6 +5,11 @@
 #include "math_helper.hpp"
 #include <utility>
 
+Player::Player(ShotSpawnInterface& shotSpawnInterface)
+    : m_shotSpawnInterface { shotSpawnInterface }
+{
+}
+
 void Player::doCreate()
 {
     m_shipSprite = std::make_shared<jt::Animation>();
@@ -46,6 +51,12 @@ void Player::doUpdate(float const elapsed)
     m_flameSprite->setPosition(m_shipSprite->getPosition() + flameOffset);
     m_flameSprite->setRotation(m_transform->angle);
     m_flameSprite->update(elapsed);
+
+    if (getGame()->input()->mouse()->pressed(jt::MouseButtonCode::MBLeft)) {
+        if (canShoot()) {
+            shoot();
+        }
+    }
 }
 
 void Player::updateMovement(const float elapsed)
@@ -105,5 +116,12 @@ void Player::setProjectionPoints(std::vector<jt::Vector2>&& points)
     m_projectionPoints = std::move(points);
 }
 bool Player::canShoot() { return m_shootTimer <= 0; }
-void Player::shoot() { m_shootTimer = GP::PlayerShootTimer(); }
+void Player::shoot()
+{
+    m_shootTimer = GP::PlayerShootTimer();
+    auto const mouse_position = getGame()->input()->mouse()->getMousePositionScreen();
+    auto aim_direction = mouse_position - m_transform->position;
+    jt::MathHelper::normalizeMe(aim_direction);
+    m_shotSpawnInterface.spawnShot(m_transform->position, aim_direction);
+}
 std::shared_ptr<jt::Animation> Player::getSprite() const { return m_shipSprite; }

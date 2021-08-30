@@ -9,6 +9,7 @@
 #include "planet.hpp"
 #include "player.hpp"
 #include "shot.hpp"
+#include "shot_spawn_interface.hpp"
 #include "target.hpp"
 #include <memory>
 
@@ -22,9 +23,10 @@ class Sprite;
 
 class Hud;
 
-class StateGame : public jt::GameState {
+class StateGame : public jt::GameState, public ShotSpawnInterface {
 public:
     void setLevel(std::string const& level_filename);
+    void spawnShot(jt::Vector2 const& pos, jt::Vector2 dir) override;
 
 private:
     std::shared_ptr<jt::Sprite> m_background;
@@ -53,12 +55,11 @@ private:
     void doInternalDraw() const override;
 
     void endGame();
-    void spawnShot();
+
     void createLevelEntities();
     void handleShotCollisions();
     void handlePlayerPlanetCollision();
     void handlePlayerTargetCollisions();
-    void handlePlayerShots();
     void checkGameOver();
     void createTutorial();
     void createTutorialForFirstMission();
