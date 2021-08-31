@@ -1,0 +1,7 @@
+#ifndef QUASARRUSH_MISSILE_HPP
+#define QUASARRUSH_MISSILE_HPP
+
+class ShotMissile {
+};
+
+#endif // QUASARRUSH_MISSILE_HPP

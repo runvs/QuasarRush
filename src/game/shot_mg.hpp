@@ -4,9 +4,10 @@
 #include "game_object.hpp"
 #include "sprite.hpp"
 #include "transform.hpp"
+#include "shot_interface.hpp"
 #include <memory>
 
-class Shot : public jt::GameObject {
+class ShotMg : public jt::GameObject,  public ShotInterface {
 private:
     std::shared_ptr<jt::Sprite> m_sprite;
     std::shared_ptr<Transform> m_transform;
@@ -18,10 +19,13 @@ public:
     void doDraw() const override;
     void doKill() override;
 
-    std::shared_ptr<Transform> getTransform();
+    std::shared_ptr<Transform> getTransform() override;
     void setTransform(std::shared_ptr<Transform> t);
     void setFiredByPlayer(bool value);
-    bool getFiredByPlayer() const;
+    bool getFiredByPlayer() const override;
+
+private:
+    void hit() override;
 };
 
 #endif

@@ -9,7 +9,7 @@
 #include "physics_system.hpp"
 #include "planet.hpp"
 #include "player.hpp"
-#include "shot.hpp"
+#include "shot_mg.hpp"
 #include "shot_spawn_interface.hpp"
 #include "target.hpp"
 #include <memory>
@@ -44,7 +44,7 @@ private:
     jt::ObjectGroup<Planet> m_planets;
     std::unique_ptr<PhysicsSystem> m_physics_system;
 
-    jt::ObjectGroup<Shot> m_shots;
+    jt::ObjectGroup<ShotMg> m_shots;
     jt::ObjectGroup<Enemy> m_enemies;
 
     jt::ObjectGroup<Target> m_targets;

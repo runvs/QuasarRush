@@ -285,7 +285,7 @@ void StateGame::handleShotCollisions()
 
 void StateGame::spawnShot(jt::Vector2 const& pos, jt::Vector2 dir, bool byPlayer)
 {
-    auto shot = std::make_shared<Shot>();
+    auto shot = std::make_shared<ShotMg>();
     add(shot);
     shot->setFiredByPlayer(byPlayer);
     auto transform = shot->getTransform();
