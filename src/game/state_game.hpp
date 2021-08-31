@@ -27,7 +27,8 @@ class Hud;
 class StateGame : public jt::GameState, public ShotSpawnInterface {
 public:
     void setLevel(std::string const& level_filename);
-    void spawnShot(jt::Vector2 const& pos, jt::Vector2 dir, bool byPlayer) override;
+    void spawnShotMg(jt::Vector2 const& pos, jt::Vector2 const& dir, bool byPlayer) override;
+    void spawnShotMissile(jt::Vector2 const& pos, jt::Vector2 const& dir, bool byPlayer) override;
 
 private:
     std::shared_ptr<jt::Sprite> m_background;
@@ -44,7 +45,8 @@ private:
     jt::ObjectGroup<Planet> m_planets;
     std::unique_ptr<PhysicsSystem> m_physics_system;
 
-    jt::ObjectGroup<ShotMg> m_shots;
+    jt::ObjectGroup<ShotInterface> m_shots;
+
     jt::ObjectGroup<Enemy> m_enemies;
 
     jt::ObjectGroup<Target> m_targets;

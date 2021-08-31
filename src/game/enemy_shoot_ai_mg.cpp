@@ -20,6 +20,6 @@ void EnemyShootAiMg::act(Enemy& enemy, float elapsed) {
         auto dir = playerPosition - enemyPosition;
         jt::MathHelper::normalizeMe(dir);
 
-        m_shotSpawnInterface.spawnShot(enemyPosition + 4.0f * dir, dir, false);
+        m_shotSpawnInterface.spawnShotMg(enemyPosition + 4.0f * dir, dir, false);
     }
 }

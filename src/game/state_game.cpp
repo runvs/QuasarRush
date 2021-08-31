@@ -13,6 +13,7 @@
 #include "sprite.hpp"
 #include "state_menu.hpp"
 #include "tween_alpha.hpp"
+#include "shot_missile.hpp"
 
 void StateGame::doInternalCreate()
 {
@@ -247,7 +248,7 @@ void StateGame::handleShotCollisions()
             auto const diff = pp - sp;
             auto const lengthSquared = jt::MathHelper::lengthSquared(diff);
             if (lengthSquared <= GP::EnemyHalfSize() * GP::EnemyHalfSize()) {
-                s->kill();
+                s->hit();
             }
         }
         else {
@@ -261,7 +262,7 @@ void StateGame::handleShotCollisions()
                 auto const lengthSquared = jt::MathHelper::lengthSquared(diff);
 
                 if (lengthSquared <= GP::EnemyHalfSize() * GP::EnemyHalfSize()) {
-                    s->kill();
+                    s->hit();
                     e->takeDamage();
                 }
             }
@@ -277,13 +278,13 @@ void StateGame::handleShotCollisions()
             auto const diff = ep - sp;
             auto const lengthSquared = jt::MathHelper::lengthSquared(diff);
             if (lengthSquared <= GP::PlanetHalfSize() * GP::PlanetHalfSize()) {
-                s->kill();
+                s->hit();
             }
         }
     }
 }
 
-void StateGame::spawnShot(jt::Vector2 const& pos, jt::Vector2 dir, bool byPlayer)
+void StateGame::spawnShotMg(jt::Vector2 const& pos, jt::Vector2 const& dir, bool byPlayer)
 {
     auto shot = std::make_shared<ShotMg>();
     add(shot);
@@ -295,6 +296,30 @@ void StateGame::spawnShot(jt::Vector2 const& pos, jt::Vector2 dir, bool byPlayer
     transform->is_force_emitter = false;
     m_shots.push_back(shot);
     m_physics_system->registerTransform(transform);
+}
+
+void StateGame::spawnShotMissile(jt::Vector2 const& pos, jt::Vector2 const& dir, bool byPlayer) {
+
+    for (int i = 0; i != 5; ++i) {
+        auto shot = std::make_shared<ShotMissile>();
+        add(shot);
+        shot->setFiredByPlayer(byPlayer);
+        if (m_enemies.empty()) {
+            // TODO
+            return;
+        }
+
+        shot->setTarget(m_enemies.at(0).lock()->getTransform());
+        auto transform = shot->getTransform();
+
+        transform->velocity = jt::MathHelper::rotateBy(dir, jt::Random::getFloatGauss(0.0f, 25.0f)) * GP::ShotSpeed();
+        transform->position = pos + dir * 7.0f;
+        transform->mass = 0.1f;
+        transform->is_force_emitter = false;
+        m_shots.push_back(shot);
+        m_physics_system->registerTransform(transform);
+    }
+
 }
 
 void StateGame::doInternalDraw() const
@@ -335,3 +360,4 @@ void StateGame::checkGameOver()
         endGame();
     }
 }
+

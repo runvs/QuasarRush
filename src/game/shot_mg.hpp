@@ -17,7 +17,6 @@ public:
     void doCreate() override;
     void doUpdate(float const /*elapsed*/) override;
     void doDraw() const override;
-    void doKill() override;
 
     std::shared_ptr<Transform> getTransform() override;
     void setTransform(std::shared_ptr<Transform> t);

@@ -29,7 +29,6 @@ void ShotMg::doUpdate(float const elapsed)
     }
 }
 void ShotMg::doDraw() const { m_sprite->draw(getGame()->getRenderTarget()); }
-void ShotMg::doKill() { }
 
 std::shared_ptr<Transform> ShotMg::getTransform() { return m_transform; }
 

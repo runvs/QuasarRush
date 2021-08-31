@@ -153,6 +153,7 @@ void Player::shoot()
     auto const mouse_position = getGame()->input()->mouse()->getMousePositionScreen();
     auto aim_direction = mouse_position - m_transform->position;
     jt::MathHelper::normalizeMe(aim_direction);
-    m_shotSpawnInterface.spawnShot(m_transform->position, aim_direction, true);
+//    m_shotSpawnInterface.spawnShotMg(m_transform->position, aim_direction, true);
+    m_shotSpawnInterface.spawnShotMissile(m_transform->position, aim_direction, true);
 }
 std::shared_ptr<jt::Animation> Player::getSprite() const { return m_shipSprite; }
