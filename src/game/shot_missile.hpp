@@ -12,7 +12,7 @@ private:
     bool m_firedByPlayer;
     std::shared_ptr<Transform> m_transform;
     std::weak_ptr<Transform> m_target;
-
+    jt::Vector2 m_targetOffset;
 
 
 public:

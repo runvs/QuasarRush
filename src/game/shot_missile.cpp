@@ -8,6 +8,8 @@ void ShotMissile::doCreate() {
 
     m_sprite = std::make_shared<jt::Sprite>();
     m_sprite->loadSprite("assets/shot.png");
+
+    m_targetOffset = jt::Random::getRandomPointin(jt::Rect{-15, -15, 30, 30});
 }
 
 void ShotMissile::doUpdate(float const elapsed) {
@@ -17,14 +19,13 @@ void ShotMissile::doUpdate(float const elapsed) {
     m_sprite->update(elapsed);
 
 
-    if (getAge() < 2.0f)
+    if (getAge() < 0.5f)
     {
         m_transform->angle = jt::MathHelper::angleOf(m_transform->velocity);
         auto v = m_transform->velocity;
         auto vN = v;
         jt::MathHelper::normalizeMe(vN);
-        v -= elapsed * vN * (GP::ShotSpeed()* 0.99f)/2.0f;
-        auto const l = jt::MathHelper::length(v);
+        v -= elapsed * vN * (GP::ShotSpeed()* 0.99f)/1.0f;
         m_transform->velocity = v;
     }
     else
@@ -39,13 +40,18 @@ void ShotMissile::doUpdate(float const elapsed) {
         m_transform->angle = jt::MathHelper::angleOf(m_transform->velocity);
 
         auto const mp = m_transform->position;
-        auto const tt = t->position;
+        auto const tt = t->position + m_targetOffset;
 
         auto dif = tt-mp;
 
         jt::MathHelper::normalizeMe(dif);
+        auto v = m_transform->velocity;
+        auto vN = v;
+        v = v * 0.995f;
+        m_transform->velocity = v;
 
-        m_transform->player_acceleration = dif * 10.0f;
+        m_transform->player_acceleration = dif * 100.0f;
+
     }
 
 

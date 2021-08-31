@@ -319,7 +319,7 @@ void StateGame::spawnShotMissile(jt::Vector2 const& pos, jt::Vector2 const& dir,
         shot->setTarget(m_enemies.at(0).lock()->getTransform());
         auto transform = shot->getTransform();
 
-        transform->velocity = jt::MathHelper::rotateBy(dir, jt::Random::getFloatGauss(0.0f, 25.0f)) * GP::ShotSpeed();
+        transform->velocity = jt::MathHelper::rotateBy(dir, jt::Random::getFloatGauss(0.0f, 35.0f)) * GP::ShotSpeed() * 1.25f;
         transform->position = pos + dir * 7.0f;
         transform->mass = 0.1f;
         transform->is_force_emitter = false;
