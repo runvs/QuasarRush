@@ -24,12 +24,17 @@ void Level::parseEnemies(nlohmann::json const& j)
         return;
     }
     for (auto e : *enemiesIt) {
+        EnemyLoadInfo info;
         auto t = std::make_shared<Transform>();
+        info.transform = t;
         t->position = jt::Vector2 { e["x"].get<float>(), e["y"].get<float>() };
 
         // optional values
         t->velocity = jt::Vector2 { e.value("vx", 0.0f), e.value("vy", 0.0f) };
-        m_enemies.push_back(t);
+        info.flightAi = e.value("flight", "idle");
+        info.shootAi = e.value("shoot", "idle");
+
+        m_enemies.push_back(info);
     }
 }
 void Level::parseTransforms(nlohmann::json const& j)
@@ -72,6 +77,6 @@ void Level::parseTargets(nlohmann::json const& j)
 
 std::vector<std::shared_ptr<Transform>> Level::getPlanets() { return m_transforms; }
 std::shared_ptr<Transform> Level::getPlayer() { return m_player_transform; }
-std::vector<std::shared_ptr<Transform>> Level::getEnemies() { return m_enemies; }
+std::vector<EnemyLoadInfo> Level::getEnemies() { return m_enemies; }
 std::vector<jt::Vector2> Level::getTargets() { return m_targets; }
 std::string Level::getBackgroundFilePath() { return m_backgroundFilePath; }

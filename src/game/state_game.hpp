@@ -2,6 +2,7 @@
 #define GAME_STATE_GAME_HPP_INCLUDEGUARD
 
 #include "enemy.hpp"
+#include "enemy_load_info.hpp"
 #include "game_state.hpp"
 #include "info_text.hpp"
 #include "object_group.hpp"
@@ -67,6 +68,8 @@ private:
 
     void CreateInfoText(std::shared_ptr<jt::DrawableInterface> target, std::string text,
         float timeOffset, eInfoTextAlign align);
+    std::shared_ptr<EnemyAI> createFlightAi(EnemyLoadInfo& e) const;
+    std::shared_ptr<EnemyAI> createShootAi(EnemyLoadInfo e);
 };
 
 #endif

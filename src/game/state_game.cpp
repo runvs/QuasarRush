@@ -1,5 +1,6 @@
 ﻿#include "state_game.hpp"
 #include "color.hpp"
+#include "enemy_ai_idle.hpp"
 #include "enemy_flight_ai_stay.hpp"
 #include "enemy_shoot_ai_mg.hpp"
 #include "game_interface.hpp"
@@ -115,15 +116,15 @@ void StateGame::createLevelEntities()
         m_planets.push_back(object);
     }
 
-    for (auto t : l.getEnemies()) {
+    for (auto e : l.getEnemies()) {
         auto enemy = std::make_shared<Enemy>();
         add(enemy);
-        enemy->setTransform(t);
+        enemy->setTransform(e.transform);
 
-        enemy->setFlightAi(std::make_shared<EnemyFlightAiStay>(t->position));
-        enemy->setShootAi(std::make_shared<EnemyShootAiMg>(*this, m_player));
+        enemy->setFlightAi(createFlightAi(e));
+        enemy->setShootAi(createShootAi(e));
 
-        m_physics_system->registerTransform(t);
+        m_physics_system->registerTransform(enemy->getTransform());
         m_enemies.push_back(enemy);
     }
     for (auto p : l.getTargets()) {
@@ -134,6 +135,34 @@ void StateGame::createLevelEntities()
 
     m_background->loadSprite(l.getBackgroundFilePath());
     m_background->setScale(jt::Vector2 { 0.5f, 0.5f });
+}
+std::shared_ptr<EnemyAI> StateGame::createShootAi(EnemyLoadInfo e)
+{
+    std::shared_ptr<EnemyAI> shootAi;
+    if (e.shootAi == "idle") {
+        shootAi = std::make_shared<EnemyAIIdle>();
+    } else if (e.shootAi == "shootMG") {
+        shootAi = std::make_shared<EnemyShootAiMg>(*this, m_player);
+    } else {
+        std::cout << "invalid shoot ai type: " << e.shootAi << std::endl;
+        throw std::invalid_argument { "invalid shoot ai type: " + e.shootAi };
+    }
+
+    return shootAi;
+}
+
+std::shared_ptr<EnemyAI> StateGame::createFlightAi(EnemyLoadInfo& e) const
+{
+    std::shared_ptr<EnemyAI> flightAi;
+    if (e.flightAi == "stay") {
+        flightAi = std::make_shared<EnemyFlightAiStay>(e.transform->position);
+    } else if (e.flightAi == "idle") {
+        flightAi = std::make_shared<EnemyAIIdle>();
+    } else {
+        std::cout << "invalid flight ai type: " << e.flightAi << std::endl;
+        throw std::invalid_argument { "invalid flight ai type: " + e.flightAi };
+    }
+    return flightAi;
 }
 
 void StateGame::doInternalUpdate(float const elapsed)
@@ -213,32 +242,31 @@ void StateGame::handleShotCollisions()
         auto s = sptr.lock();
         auto const sp = s->getTransform()->position;
 
-        if (!s->getFiredByPlayer())
-        {
+        if (!s->getFiredByPlayer()) {
             auto const pp = m_player->getTransform()->position;
             auto const diff = pp - sp;
             auto const lengthSquared = jt::MathHelper::lengthSquared(diff);
             if (lengthSquared <= GP::EnemyHalfSize() * GP::EnemyHalfSize()) {
                 s->kill();
             }
-            continue;
+        }
+        else {
+            for (auto eptr : m_enemies) {
+                if (eptr.expired()) {
+                    continue;
+                }
+                auto e = eptr.lock();
+                auto const ep = e->getTransform()->position;
+                auto const diff = ep - sp;
+                auto const lengthSquared = jt::MathHelper::lengthSquared(diff);
+
+                if (lengthSquared <= GP::EnemyHalfSize() * GP::EnemyHalfSize()) {
+                    s->kill();
+                    e->takeDamage();
+                }
+            }
         }
 
-
-        for (auto eptr : m_enemies) {
-            if (eptr.expired()) {
-                continue;
-            }
-            auto e = eptr.lock();
-            auto const ep = e->getTransform()->position;
-            auto const diff = ep - sp;
-            auto const lengthSquared = jt::MathHelper::lengthSquared(diff);
-
-            if (lengthSquared <= GP::EnemyHalfSize() * GP::EnemyHalfSize()) {
-                s->kill();
-                e->takeDamage();
-            }
-        }
         for (auto pptr : m_planets) {
             if (pptr.expired()) {
                 continue;

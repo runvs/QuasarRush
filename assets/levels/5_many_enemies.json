@@ -11,49 +11,65 @@
       "x": 10.0,
       "y": 10.0,
       "vx": 0,
-      "vy": 0.0
+      "vy": 0.0,
+      "flight": "stay",
+      "shoot": "shootMG"
     },
     {
       "x": 10.0,
       "y": 90.0,
       "vx": 0,
-      "vy": 0.0
+      "vy": 0.0,
+      "flight": "stay",
+      "shoot": "shootMG"
     },
     {
       "x": 10.0,
       "y": 170.0,
       "vx": 0,
-      "vy": 0.0
+      "vy": 0.0,
+      "flight": "stay",
+      "shoot": "shootMG"
     },
     {
       "x": 10.0,
       "y": 250.0,
       "vx": 0,
-      "vy": 0.0
+      "vy": 0.0,
+      "flight": "stay",
+      "shoot": "shootMG"
     },
     {
       "x": 380.0,
       "y": 10.0,
       "vx": 0,
-      "vy": 0.0
+      "vy": 0.0,
+      "flight": "stay",
+      "shoot": "shootMG"
     },
     {
       "x": 380.0,
       "y": 90.0,
       "vx": 0,
-      "vy": 0.0
+      "vy": 0.0,
+      "flight": "stay",
+      "shoot": "shootMG"
     },
     {
       "x": 380.0,
       "y": 170.0,
       "vx": 0,
-      "vy": 0.0
+      "vy": 0.0,
+      "flight": "stay",
+      "shoot": "shootMG"
     },
     {
       "x": 380.0,
       "y": 250.0,
       "vx": 0,
-      "vy": 0.0
+      "vy": 0.0,
+      "flight": "stay",
+      "shoot": "shootMG"
     }
   ]
 }

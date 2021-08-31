@@ -146,6 +146,7 @@ void Player::setProjectionPoints(std::vector<jt::Vector2>&& points)
     m_projectionPoints = std::move(points);
 }
 bool Player::canShoot() { return m_shootTimer <= 0; }
+
 void Player::shoot()
 {
     m_shootTimer = GP::PlayerShootTimer();

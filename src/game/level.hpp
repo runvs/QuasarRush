@@ -2,6 +2,7 @@
 #define QUASARRUSH_LEVEL_HPP
 
 #include "transform.hpp"
+#include "enemy_load_info.hpp"
 #include <json.hpp>
 #include <memory>
 #include <string>
@@ -12,14 +13,14 @@ public:
     explicit Level(std::string const filename);
     std::vector<std::shared_ptr<Transform>> getPlanets();
     std::shared_ptr<Transform> getPlayer();
-    std::vector<std::shared_ptr<Transform>> getEnemies();
+    std::vector<EnemyLoadInfo> getEnemies();
     std::vector<jt::Vector2> getTargets();
     std::string getBackgroundFilePath();
 
 private:
     std::shared_ptr<Transform> m_player_transform;
     std::vector<std::shared_ptr<Transform>> m_transforms;
-    std::vector<std::shared_ptr<Transform>> m_enemies;
+    std::vector<EnemyLoadInfo> m_enemies;
     std::vector<jt::Vector2> m_targets;
     std::string m_backgroundFilePath;
 
