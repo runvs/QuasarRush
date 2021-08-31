@@ -25,7 +25,6 @@ void ShotMissile::doUpdate(float const elapsed) {
         jt::MathHelper::normalizeMe(vN);
         v -= elapsed * vN * (GP::ShotSpeed()* 0.99f)/2.0f;
         auto const l = jt::MathHelper::length(v);
-        std::cout << l << std::endl;
         m_transform->velocity = v;
     }
     else
