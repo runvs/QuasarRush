@@ -3,6 +3,7 @@
 #include "enemy_ai_idle.hpp"
 #include "enemy_flight_ai_stay.hpp"
 #include "enemy_shoot_ai_mg.hpp"
+#include "explosion.hpp"
 #include "game_interface.hpp"
 #include "game_properties.hpp"
 #include "hud/hud.hpp"
@@ -118,7 +119,7 @@ void StateGame::createLevelEntities()
     }
 
     for (auto e : l.getEnemies()) {
-        auto enemy = std::make_shared<Enemy>();
+        auto enemy = std::make_shared<Enemy>(*this);
         add(enemy);
         enemy->setTransform(e.transform);
 
@@ -250,8 +251,7 @@ void StateGame::handleShotCollisions()
             if (lengthSquared <= GP::EnemyHalfSize() * GP::EnemyHalfSize()) {
                 s->hit();
             }
-        }
-        else {
+        } else {
             for (auto eptr : m_enemies) {
                 if (eptr.expired()) {
                     continue;
@@ -298,6 +298,13 @@ void StateGame::spawnShotMg(jt::Vector2 const& pos, jt::Vector2 const& dir, bool
     m_physics_system->registerTransform(transform);
 }
 
+void StateGame::spawnExplosion(jt::Vector2 const& position)
+{
+    auto explosion = std::make_shared<Explosion>();
+    add(explosion);
+    explosion->getAnimation()->setPosition(position);
+}
+
 void StateGame::spawnShotMissile(jt::Vector2 const& pos, jt::Vector2 const& dir, bool byPlayer) {
 
     for (int i = 0; i != 5; ++i) {
@@ -320,9 +327,7 @@ void StateGame::spawnShotMissile(jt::Vector2 const& pos, jt::Vector2 const& dir,
         m_physics_system->registerTransform(transform);
     }
 
-}
-
-void StateGame::doInternalDraw() const
+}void StateGame::doInternalDraw() const
 {
     m_background->draw(getGame()->getRenderTarget());
     drawObjects();

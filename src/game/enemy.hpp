@@ -2,6 +2,7 @@
 #define QUASARRUSH_ENEMY_HPP
 
 #include "animation.hpp"
+#include "explosion_spawn_interface.hpp"
 #include "game_object.hpp"
 #include "shape.hpp"
 #include "transform.hpp"
@@ -20,7 +21,10 @@ class Enemy : public jt::GameObject {
 
     float m_health = 5.0f;
 
+    ExplosionSpawnInterface& m_explosionSpawnInterface;
+
 public:
+    Enemy(ExplosionSpawnInterface& explosionSpawnInterface);
 
     void setFlightAi(std::shared_ptr<EnemyAI> ai);
     void setShootAi(std::shared_ptr<EnemyAI> ai);
