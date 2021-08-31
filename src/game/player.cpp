@@ -33,7 +33,7 @@ void Player::doCreate()
     m_projectionShape = jt::dh::createRectShape(jt::Vector2 { 2.0f, 2.0f });
 
     m_glowOverlayFlame = std::make_shared<jt::Sprite>();
-    m_glowOverlayFlame->loadSprite("#g#32#100",jt::Recti{0,0,16,32});
+    m_glowOverlayFlame->loadSprite("#g#32#100");
     m_glowOverlayFlame->setOrigin(jt::Vector2{16.0f,16.0f});
     m_glowOverlayFlame->setOffset(jt::Vector2{16.0f, 16.0f});
 }
@@ -62,7 +62,6 @@ void Player::updateFlame(float const elapsed)
 
     float const t = getAge();
     float a = ( abs(cos(sin(t * 8.0f) + t * 9.0f)) * 0.75f + 0.25f) * ((getGame()->input()->keyboard()->pressed(jt::KeyCode::W))?1.0f : 0.0f);
-    std::cout << a << std::endl;
     jt::Color col{255,255,255, static_cast<std::uint8_t>(a * 255)};
     m_glowOverlayFlame->setColor(col);
 }
