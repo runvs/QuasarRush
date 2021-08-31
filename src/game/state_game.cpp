@@ -3,6 +3,7 @@
 #include "enemy_ai_idle.hpp"
 #include "enemy_flight_ai_stay.hpp"
 #include "enemy_shoot_ai_mg.hpp"
+#include "explosion.hpp"
 #include "game_interface.hpp"
 #include "game_properties.hpp"
 #include "hud/hud.hpp"
@@ -117,7 +118,7 @@ void StateGame::createLevelEntities()
     }
 
     for (auto e : l.getEnemies()) {
-        auto enemy = std::make_shared<Enemy>();
+        auto enemy = std::make_shared<Enemy>(*this);
         add(enemy);
         enemy->setTransform(e.transform);
 
@@ -249,8 +250,7 @@ void StateGame::handleShotCollisions()
             if (lengthSquared <= GP::EnemyHalfSize() * GP::EnemyHalfSize()) {
                 s->kill();
             }
-        }
-        else {
+        } else {
             for (auto eptr : m_enemies) {
                 if (eptr.expired()) {
                     continue;
@@ -295,6 +295,13 @@ void StateGame::spawnShot(jt::Vector2 const& pos, jt::Vector2 dir, bool byPlayer
     transform->is_force_emitter = false;
     m_shots.push_back(shot);
     m_physics_system->registerTransform(transform);
+}
+
+void StateGame::spawnExplosion(jt::Vector2 const& position)
+{
+    auto explosion = std::make_shared<Explosion>();
+    add(explosion);
+    explosion->getAnimation()->setPosition(position);
 }
 
 void StateGame::doInternalDraw() const

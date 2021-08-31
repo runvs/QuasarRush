@@ -5,6 +5,11 @@
 #include "game_properties.hpp"
 #include "math_helper.hpp"
 
+Enemy::Enemy(ExplosionSpawnInterface& explosionSpawnInterface)
+    : m_explosionSpawnInterface { explosionSpawnInterface }
+{
+}
+
 void Enemy::setFlightAi(std::shared_ptr<EnemyAI> ai) { m_flightAi = ai; }
 void Enemy::setShootAi(std::shared_ptr<EnemyAI> ai) { m_shootAi = ai; }
 
@@ -45,7 +50,7 @@ void Enemy::doUpdate(float const elapsed)
 }
 
 void Enemy::doDraw() const { m_shipSprite->draw(getGame()->getRenderTarget()); }
-void Enemy::doKill() { }
+void Enemy::doKill() { m_explosionSpawnInterface.spawnExplosion(m_transform->position); }
 
 std::shared_ptr<Transform> Enemy::getTransform() { return m_transform; }
 void Enemy::setTransform(std::shared_ptr<Transform> t) { m_transform = t; }
@@ -62,4 +67,3 @@ void Enemy::takeDamage()
     }
 }
 std::shared_ptr<jt::Animation> Enemy::getSprite() const { return m_shipSprite; }
-
