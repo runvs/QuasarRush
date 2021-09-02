@@ -59,6 +59,7 @@ private:
     void startTransitionToStateGame(std::string const& levelFilename);
 
     void doInternalDraw() const override;
+    void createLevelButtons();
 };
 
 #endif

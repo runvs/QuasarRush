@@ -15,6 +15,7 @@
 #include "state_menu.hpp"
 #include "tween_alpha.hpp"
 #include "shot_missile.hpp"
+#include <algorithm>
 
 void StateGame::doInternalCreate()
 {
@@ -355,7 +356,12 @@ void StateGame::endGame()
     tw->setSkipFrames();
     tw->addCompleteCallback([this]() {
         auto newState = std::make_shared<StateMenu>();
+
+        int maxCurrentLevel = *std::max_element(m_playerConfig.availableLevels.begin(), m_playerConfig.availableLevels.end());
+        m_playerConfig.availableLevels.insert(maxCurrentLevel+1);
+
         newState->setPlayerConfig(m_playerConfig);  // keep playerConfig consistent
+
         getGame()->switchState(newState);
 
     });

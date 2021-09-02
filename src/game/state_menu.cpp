@@ -22,13 +22,20 @@ void StateMenu::doInternalCreate()
 {
     createMenuText();
 
+    createLevelButtons();
+    createShapes();
+    createVignette();
+    createTweens();
+}
+void StateMenu::createLevelButtons()
+{
     nlohmann::json j;
-
     std::ifstream file { "assets/levels/__all_levels.json" };
     file >> j;
 
     auto levels = j["levels"];
     int counter = 0;
+
     for (auto l : levels) {
         std::string filename = l["filename"];
         std::string displayName = l["display"];
@@ -42,6 +49,10 @@ void StateMenu::doInternalCreate()
 
         auto button = std::make_shared<jt::Button>(jt::Vector2u { 128, 18 });
         add(button);
+        if (m_playerConfig.availableLevels.find(counter) == m_playerConfig.availableLevels.end())
+        {
+            button->setVisible(false);
+        }
         button->addCallback([this, filename]() { startTransitionToStateGame(filename); });
         button->setPosition(jt::Vector2 { xPos,yPos});
         auto const text = jt::dh::createText(getGame()->getRenderTarget(), displayName, 12);
@@ -53,9 +64,6 @@ void StateMenu::doInternalCreate()
 
         counter++;
     }
-    createShapes();
-    createVignette();
-    createTweens();
 }
 
 void StateMenu::createVignette()
@@ -159,8 +167,7 @@ void StateMenu::createTweenTransition()
     tw->addCompleteCallback([this]() {
         std::shared_ptr<StateGame> newState = std::make_shared<StateGame>();
         newState->setLevel(m_levelFilename);
-        PlayerConfig pc{};
-        newState->setPlayerConfig(pc);
+        newState->setPlayerConfig(m_playerConfig);
         getGame()->switchState(newState);
     });
     add(tw);
