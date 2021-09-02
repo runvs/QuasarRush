@@ -148,19 +148,23 @@ bool Player::canShoot() { return m_shootTimer <= 0; }
 
 void Player::shoot()
 {
-
-
     auto const mouse_position = getGame()->input()->mouse()->getMousePositionScreen();
     auto aim_direction = mouse_position - m_transform->position;
     jt::MathHelper::normalizeMe(aim_direction);
+    m_shotCounter++;
 
     if (m_playerConfig.weapon == WeaponMg) {
-        m_shotSpawnInterface.spawnShotMg(m_transform->position, aim_direction, true);
         m_shootTimer = GP::PlayerShootTimerMg();
+
+        jt::Vector2 const orthogonal_aim_direction{aim_direction.y(), -aim_direction.x()};
+        auto startPos = m_transform->position + 8.0f * orthogonal_aim_direction * ((m_shotCounter%2 == 0) ? -1.0f : 1.0f);
+        m_shotSpawnInterface.spawnShotMg(startPos, aim_direction, true);
+
     }
     else if (m_playerConfig.weapon == WeaponMg) {
-        m_shotSpawnInterface.spawnShotMissile(m_transform->position, aim_direction, true);
         m_shootTimer = GP::PlayerShootTimerMissile();
+        m_shotSpawnInterface.spawnShotMissile(m_transform->position, aim_direction, true);
+
     }
     else
     {

@@ -37,7 +37,8 @@ private:
     std::vector<jt::Vector2> m_projectionPoints;
     std::shared_ptr<jt::Sprite> m_glowOverlayFlame;
 
-    float m_shootTimer = 0.0f;
+    float m_shootTimer {0.0f};
+    std::size_t m_shotCounter{0};
 
     // only store a reference, as we do not want to keep a copy and state_game contains player, so
     // the reference will always be valid.
