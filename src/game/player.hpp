@@ -7,12 +7,14 @@
 #include "player_config.hpp"
 #include "shape.hpp"
 #include "shot_spawn_interface.hpp"
+#include "spawn_trail_interface.hpp"
 #include "transform.hpp"
 #include <memory>
 
 class Player : public jt::GameObject {
 public:
-    Player(ShotSpawnInterface& shotSpawnInterface, PlayerConfig& pc);
+    Player(ShotSpawnInterface& shotSpawnInterface, SpawnTrailInterface& spawnTrailInterface,
+        PlayerConfig& pc);
     void doCreate() override;
     void doUpdate(float const /*elapsed*/) override;
     void doDraw() const override;
@@ -30,6 +32,8 @@ public:
 
 private:
     ShotSpawnInterface& m_shotSpawnInterface;
+    SpawnTrailInterface& m_spawnTrailInterface;
+
     std::shared_ptr<jt::Animation> m_shipSprite;
     std::shared_ptr<jt::Animation> m_flameSprite;
     std::shared_ptr<jt::Shape> m_projectionShape;
@@ -37,8 +41,8 @@ private:
     std::vector<jt::Vector2> m_projectionPoints;
     std::shared_ptr<jt::Sprite> m_glowOverlayFlame;
 
-    float m_shootTimer {0.0f};
-    std::size_t m_shotCounter{0};
+    float m_shootTimer { 0.0f };
+    std::size_t m_shotCounter { 0 };
 
     // only store a reference, as we do not want to keep a copy and state_game contains player, so
     // the reference will always be valid.

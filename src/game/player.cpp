@@ -5,8 +5,9 @@
 #include "sprite.hpp"
 #include <utility>
 
-Player::Player(ShotSpawnInterface& shotSpawnInterface, PlayerConfig& pc)
-    : m_shotSpawnInterface { shotSpawnInterface }, m_playerConfig{pc}
+Player::Player(ShotSpawnInterface& shotSpawnInterface, SpawnTrailInterface& spawnTrailInterface,
+    PlayerConfig& pc)
+    : m_shotSpawnInterface { shotSpawnInterface }, m_spawnTrailInterface{spawnTrailInterface}, m_playerConfig{pc}
 {
 }
 
@@ -97,6 +98,9 @@ void Player::updateMovement(const float elapsed)
         bool flyBoost = keyboard->pressed(jt::KeyCode::LShift);
 
         m_shipSprite->play("fly");
+        jt::Vector2 flameOffset { -9.5f, 0.0f };
+        flameOffset = jt::MathHelper::rotateBy(flameOffset, -m_transform->angle);
+        m_spawnTrailInterface.spawnTrail(m_transform->position + flameOffset);
         if (flyBoost) {
             m_flameSprite->play("flyBoost");
         } else {
@@ -161,7 +165,7 @@ void Player::shoot()
         m_shotSpawnInterface.spawnShotMg(startPos, aim_direction, true);
 
     }
-    else if (m_playerConfig.weapon == WeaponMg) {
+    else if (m_playerConfig.weapon == WeaponRockets) {
         m_shootTimer = GP::PlayerShootTimerMissile();
         m_shotSpawnInterface.spawnShotMissile(m_transform->position, aim_direction, true);
 

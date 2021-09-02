@@ -11,10 +11,10 @@ enum eWeaponType
 
 struct PlayerConfig
 {
-    eWeaponType weapon{WeaponMg};
+    eWeaponType weapon{WeaponRockets};
     int sensorLevel{1};
 
-    std::set<int> availableLevels {0};
+    std::set<int> availableLevels {0,1,2,3,4};
 
 };
 

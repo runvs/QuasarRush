@@ -13,7 +13,9 @@
 #include "player_config.hpp"
 #include "shot_mg.hpp"
 #include "shot_spawn_interface.hpp"
+#include "spawn_trail_interface.hpp"
 #include "target.hpp"
+#include "particle_system.hpp"
 #include <memory>
 #include <vector>
 
@@ -25,13 +27,14 @@ class Sprite;
 
 class Hud;
 
-class StateGame : public jt::GameState, public ShotSpawnInterface, public ExplosionSpawnInterface {
+class StateGame : public jt::GameState, public ShotSpawnInterface, public ExplosionSpawnInterface, public SpawnTrailInterface {
 public:
     void setLevel(std::string const& level_filename);
     void setPlayerConfig(PlayerConfig const& pc);
     void spawnShotMg(jt::Vector2 const& pos, jt::Vector2 const& dir, bool byPlayer) override;
     void spawnShotMissile(jt::Vector2 const& pos, jt::Vector2 const& dir, bool byPlayer) override;
     void spawnExplosion(jt::Vector2 const& position) override;
+    void spawnTrail(jt::Vector2 pos) override;
 
 private:
     std::shared_ptr<jt::Sprite> m_background;
@@ -56,6 +59,9 @@ private:
     jt::ObjectGroup<Target> m_targets;
 
     std::string m_level_filename;
+
+    jt::Vector2 m_trailSpawnPosition;
+    std::shared_ptr<jt::ParticleSystem<jt::Shape, 100>> m_trailParticles;
 
     void doInternalCreate() override;
     void doInternalUpdate(float const elapsed) override;
