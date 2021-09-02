@@ -14,7 +14,7 @@ public:
 
     void update(float elapsed);
 
-    std::vector<jt::Vector2> precalculate_path(std::shared_ptr<Transform> transform);
+    std::vector<jt::Vector2> precalculate_path(std::shared_ptr<Transform> transform, int steps);
 
 private:
     std::vector<std::weak_ptr<Transform>> m_transforms;

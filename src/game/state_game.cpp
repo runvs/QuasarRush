@@ -172,7 +172,7 @@ void StateGame::doInternalUpdate(float const elapsed)
     if (m_running) {
 
         m_player->setProjectionPoints(
-            m_physics_system->precalculate_path(m_player->getTransform()));
+            m_physics_system->precalculate_path(m_player->getTransform(), m_playerConfig.sensorLevel));
 
         handleShotCollisions();
         handlePlayerPlanetCollision();

@@ -13,8 +13,7 @@ void PhysicsSystem::registerTransform(std::shared_ptr<Transform> transform)
 void PhysicsSystem::reset_accelerations()
 {
     for (auto tptr : m_transforms) {
-        if (tptr.expired())
-        {
+        if (tptr.expired()) {
             continue;
         }
         auto t = tptr.lock();
@@ -25,8 +24,7 @@ void PhysicsSystem::reset_accelerations()
 void PhysicsSystem::calculate_forces()
 {
     for (auto tptr1 : m_transforms) {
-        if (tptr1.expired())
-        {
+        if (tptr1.expired()) {
             continue;
         }
         auto t1 = tptr1.lock();
@@ -38,8 +36,7 @@ void PhysicsSystem::calculateForcesForSingleTransform(std::shared_ptr<Transform>
 {
     auto const p1 = t1->position;
     for (auto tptr2 : m_transforms) {
-        if (tptr2.expired())
-        {
+        if (tptr2.expired()) {
             continue;
         }
         auto t2 = tptr2.lock();
@@ -67,8 +64,7 @@ void PhysicsSystem::calculateForcesForSingleTransform(std::shared_ptr<Transform>
 void PhysicsSystem::integratePositions(float elapsed)
 {
     for (auto tptr : m_transforms) {
-        if (tptr.expired())
-        {
+        if (tptr.expired()) {
             continue;
         }
         auto t = tptr.lock();
@@ -81,10 +77,8 @@ void PhysicsSystem::integrateSinglePosition(
     if (!t->is_fixed) {
         if (use_player_acceleration) {
             t->velocity += (t->acceleration + t->player_acceleration) * elapsed;
-        }
-        else
-        {
-            t->velocity += (t->acceleration ) * elapsed;
+        } else {
+            t->velocity += (t->acceleration) * elapsed;
         }
         t->position += t->velocity * elapsed;
     }
@@ -110,14 +104,15 @@ std::shared_ptr<Transform> createDeepTransformCopy(std::shared_ptr<Transform> co
     return std::make_shared<Transform>(*transform);
 }
 
-std::vector<jt::Vector2> PhysicsSystem::precalculate_path(std::shared_ptr<Transform> transform)
+std::vector<jt::Vector2> PhysicsSystem::precalculate_path(
+    std::shared_ptr<Transform> transform, int steps)
 {
     std::vector<jt::Vector2> updated_positions {};
 
     auto backup = createDeepTransformCopy(transform);
 
-    int N = 1000;
-    int draw_resolution = 100;
+    int const draw_resolution = 60;
+    int const N = draw_resolution * 2 * steps + 1;
     for (int i = 0; i != N; ++i) {
         transform->acceleration = jt::Vector2 { 0.0f, 0.0f };
         calculateForcesForSingleTransform(transform);
