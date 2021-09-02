@@ -1,6 +1,7 @@
 #ifndef QUASARRUSH_MISSILE_HPP
 #define QUASARRUSH_MISSILE_HPP
 
+#include "explosion_spawn_interface.hpp"
 #include "game_object.hpp"
 #include "shot_interface.hpp"
 #include "spawn_trail_interface.hpp"
@@ -15,10 +16,12 @@ private:
     std::weak_ptr<Transform> m_target;
     jt::Vector2 m_targetOffset;
     SpawnTrailInterface& m_spawnTrailInterface;
+    ExplosionSpawnInterface& m_explosionSpawnInterface;
+    std::shared_ptr<jt::Sprite> m_glowOverlayFlame;
 
 
 public:
-    explicit ShotMissile(SpawnTrailInterface& spawnTrailInterface);
+    explicit ShotMissile(SpawnTrailInterface& spawnTrailInterface, ExplosionSpawnInterface& explosionSpawnInterface);
     std::shared_ptr<Transform> getTransform() override;
     bool getFiredByPlayer() const override;
     void hit() override;

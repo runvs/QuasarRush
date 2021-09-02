@@ -50,7 +50,7 @@ void Enemy::doUpdate(float const elapsed)
 }
 
 void Enemy::doDraw() const { m_shipSprite->draw(getGame()->getRenderTarget()); }
-void Enemy::doKill() { m_explosionSpawnInterface.spawnExplosion(m_transform->position); }
+void Enemy::doKill() { m_explosionSpawnInterface.spawnBigExplosion(m_transform->position); }
 
 std::shared_ptr<Transform> Enemy::getTransform() { return m_transform; }
 void Enemy::setTransform(std::shared_ptr<Transform> t) { m_transform = t; }

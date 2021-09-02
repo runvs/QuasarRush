@@ -5,7 +5,8 @@
 
 class ExplosionSpawnInterface {
 public:
-    virtual void spawnExplosion(jt::Vector2 const& position) = 0;
+    virtual void spawnBigExplosion(jt::Vector2 const& position) = 0;
+    virtual void spawnSmallExplosion(jt::Vector2 const& position) = 0;
 };
 
 #endif // EXPLOSION_SPAWN_INTERFACE_GUARD_HPP

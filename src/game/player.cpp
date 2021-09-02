@@ -56,8 +56,6 @@ void Player::updateFlame(float const elapsed)
     m_flameSprite->update(elapsed);
 
     m_glowOverlayFlame->setPosition(m_flameSprite->getPosition() - jt::Vector2{ m_flameSprite->getLocalBounds().width(), m_flameSprite->getLocalBounds().height()});
-    m_glowOverlayFlame->setColor(jt::Color{255,255,255,255});
-    m_glowOverlayFlame->setRotation(m_flameSprite->getRotation());
     m_glowOverlayFlame->update(elapsed);
 
     float const t = getAge();

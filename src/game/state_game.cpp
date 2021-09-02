@@ -326,18 +326,26 @@ void StateGame::spawnShotMg(jt::Vector2 const& pos, jt::Vector2 const& dir, bool
     m_physics_system->registerTransform(transform);
 }
 
-void StateGame::spawnExplosion(jt::Vector2 const& position)
+void StateGame::spawnBigExplosion(jt::Vector2 const& position)
 {
     auto explosion = std::make_shared<Explosion>();
     add(explosion);
     explosion->getAnimation()->setPosition(position);
+    getGame()->getCamera()->shake(0.15f, 2.5f);
+}
+
+void StateGame::spawnSmallExplosion(jt::Vector2 const& position) {
+    auto explosion = std::make_shared<Explosion>();
+    add(explosion);
+    explosion->getAnimation()->setPosition(position);
+    getGame()->getCamera()->shake(0.15f, 1.5f);
 }
 
 void StateGame::spawnShotMissile(jt::Vector2 const& pos, jt::Vector2 const& dir, bool byPlayer)
 {
 
     for (int i = 0; i != 5; ++i) {
-        auto shot = std::make_shared<ShotMissile>(*this);
+        auto shot = std::make_shared<ShotMissile>(*this, *this);
         add(shot);
         shot->setFiredByPlayer(byPlayer);
         if (m_enemies.empty()) {
@@ -416,3 +424,4 @@ void StateGame::spawnTrail(jt::Vector2 pos)
         m_trailParticles->Fire();
     }
 }
+

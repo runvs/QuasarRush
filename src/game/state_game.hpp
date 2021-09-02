@@ -33,7 +33,7 @@ public:
     void setPlayerConfig(PlayerConfig const& pc);
     void spawnShotMg(jt::Vector2 const& pos, jt::Vector2 const& dir, bool byPlayer) override;
     void spawnShotMissile(jt::Vector2 const& pos, jt::Vector2 const& dir, bool byPlayer) override;
-    void spawnExplosion(jt::Vector2 const& position) override;
+    void spawnBigExplosion(jt::Vector2 const& position) override;
     void spawnTrail(jt::Vector2 pos) override;
 
 private:
@@ -63,6 +63,10 @@ private:
     jt::Vector2 m_trailSpawnPosition;
     std::shared_ptr<jt::ParticleSystem<jt::Shape, 100>> m_trailParticles;
 
+public:
+    void spawnSmallExplosion(jt::Vector2 const& position) override;
+
+private:
     void doInternalCreate() override;
     void doInternalUpdate(float const elapsed) override;
     void doInternalDraw() const override;
