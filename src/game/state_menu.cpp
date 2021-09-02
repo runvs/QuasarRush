@@ -9,12 +9,11 @@
 #include "key_codes.hpp"
 #include "math_helper.hpp"
 #include "shape.hpp"
-#include "sprite.hpp"
 #include "state_game.hpp"
 #include "text.hpp"
 #include "tween_alpha.hpp"
 #include "tween_position.hpp"
-#include <algorithm>
+#include "player_config.hpp"
 #include <fstream>
 
 StateMenu::StateMenu() = default;
@@ -160,6 +159,8 @@ void StateMenu::createTweenTransition()
     tw->addCompleteCallback([this]() {
         std::shared_ptr<StateGame> newState = std::make_shared<StateGame>();
         newState->setLevel(m_levelFilename);
+        PlayerConfig pc{};
+        newState->setPlayerConfig(pc);
         getGame()->switchState(newState);
     });
     add(tw);
@@ -178,4 +179,8 @@ void StateMenu::doInternalDraw() const
 
     m_overlay->draw(getGame()->getRenderTarget());
     m_vignette->draw(getGame()->getRenderTarget());
+}
+
+void StateMenu::setPlayerConfig(PlayerConfig const& pc) {
+    m_playerConfig = pc;
 }

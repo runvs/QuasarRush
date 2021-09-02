@@ -104,7 +104,7 @@ void StateGame::createTutorialForFirstMission()
 void StateGame::createLevelEntities()
 {
     Level l("assets/levels/" + m_level_filename);
-    m_player = std::make_shared<Player>(*this);
+    m_player = std::make_shared<Player>(*this, m_playerConfig);
     add(m_player);
     m_player->setTransform(l.getPlayer());
 
@@ -353,7 +353,12 @@ void StateGame::endGame()
     auto tw = jt::TweenAlpha<jt::Shape>::create(
         m_overlay, 0.5f, std::uint8_t { 0 }, std::uint8_t { 255 });
     tw->setSkipFrames();
-    tw->addCompleteCallback([this]() { getGame()->switchState(std::make_shared<StateMenu>()); });
+    tw->addCompleteCallback([this]() {
+        auto newState = std::make_shared<StateMenu>();
+        newState->setPlayerConfig(m_playerConfig);  // keep playerConfig consistent
+        getGame()->switchState(newState);
+
+    });
     add(tw);
 }
 
@@ -365,4 +370,6 @@ void StateGame::checkGameOver()
         endGame();
     }
 }
-
+void StateGame::setPlayerConfig(PlayerConfig const& pc) {
+    m_playerConfig = pc;
+}

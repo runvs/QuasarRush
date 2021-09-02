@@ -1,13 +1,12 @@
 #include "player.hpp"
 #include "drawable_helpers.hpp"
-#include "game.hpp"
 #include "game_interface.hpp"
 #include "math_helper.hpp"
 #include "sprite.hpp"
 #include <utility>
 
-Player::Player(ShotSpawnInterface& shotSpawnInterface)
-    : m_shotSpawnInterface { shotSpawnInterface }
+Player::Player(ShotSpawnInterface& shotSpawnInterface, PlayerConfig& pc)
+    : m_shotSpawnInterface { shotSpawnInterface }, m_playerConfig{pc}
 {
 }
 
@@ -149,11 +148,23 @@ bool Player::canShoot() { return m_shootTimer <= 0; }
 
 void Player::shoot()
 {
-    m_shootTimer = GP::PlayerShootTimer();
+
+
     auto const mouse_position = getGame()->input()->mouse()->getMousePositionScreen();
     auto aim_direction = mouse_position - m_transform->position;
     jt::MathHelper::normalizeMe(aim_direction);
-//    m_shotSpawnInterface.spawnShotMg(m_transform->position, aim_direction, true);
-    m_shotSpawnInterface.spawnShotMissile(m_transform->position, aim_direction, true);
+
+    if (m_playerConfig.weapon == WeaponMg) {
+        m_shotSpawnInterface.spawnShotMg(m_transform->position, aim_direction, true);
+        m_shootTimer = GP::PlayerShootTimerMg();
+    }
+    else if (m_playerConfig.weapon == WeaponMg) {
+        m_shotSpawnInterface.spawnShotMissile(m_transform->position, aim_direction, true);
+        m_shootTimer = GP::PlayerShootTimerMissile();
+    }
+    else
+    {
+        std::cerr << "unsupported weapon" << m_playerConfig.weapon << std::endl;
+    }
 }
 std::shared_ptr<jt::Animation> Player::getSprite() const { return m_shipSprite; }

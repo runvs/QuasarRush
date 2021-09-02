@@ -25,7 +25,7 @@ void ShotMissile::doUpdate(float const elapsed) {
     auto v = m_transform->velocity;
     v =v * velocityDrag;
     m_transform->velocity = v;
-    
+
     if (getAge() > missileTargetAcquisitionTime)
     {
         if (m_target.expired())

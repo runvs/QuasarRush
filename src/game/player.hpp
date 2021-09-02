@@ -4,6 +4,7 @@
 #include "animation.hpp"
 #include "game_object.hpp"
 #include "game_properties.hpp"
+#include "player_config.hpp"
 #include "shape.hpp"
 #include "shot_spawn_interface.hpp"
 #include "transform.hpp"
@@ -11,7 +12,7 @@
 
 class Player : public jt::GameObject {
 public:
-    Player(ShotSpawnInterface& shotSpawnInterface);
+    Player(ShotSpawnInterface& shotSpawnInterface, PlayerConfig& pc);
     void doCreate() override;
     void doUpdate(float const /*elapsed*/) override;
     void doDraw() const override;
@@ -37,6 +38,10 @@ private:
     std::shared_ptr<jt::Sprite> m_glowOverlayFlame;
 
     float m_shootTimer = 0.0f;
+
+    // only store a reference, as we do not want to keep a copy and state_game contains player, so
+    // the reference will always be valid.
+    PlayerConfig& m_playerConfig;
 
     void updateMovement(const float elapsed);
     void updateShooting(float const elapsed);

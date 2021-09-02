@@ -2,6 +2,7 @@
 #define GAME_STATE_MENU_HPP_INCLUDEGUARD
 
 #include "game_state.hpp"
+#include "player_config.hpp"
 #include <string>
 
 namespace jt {
@@ -19,6 +20,7 @@ public:
     StateMenu();
 
     void setScore(int /*s*/) {};
+    void setPlayerConfig(PlayerConfig const& pc);
 
 private:
     std::shared_ptr<jt::Shape> m_background;
@@ -32,7 +34,7 @@ private:
     std::vector<std::shared_ptr<jt::Button>> m_buttons;
 
     std::string m_levelFilename{""};
-
+    PlayerConfig m_playerConfig;
 
     bool m_started { false };
 

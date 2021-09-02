@@ -10,11 +10,11 @@
 #include "physics_system.hpp"
 #include "planet.hpp"
 #include "player.hpp"
+#include "player_config.hpp"
 #include "shot_mg.hpp"
 #include "shot_spawn_interface.hpp"
 #include "target.hpp"
 #include <memory>
-
 #include <vector>
 
 // fwd decls
@@ -28,6 +28,7 @@ class Hud;
 class StateGame : public jt::GameState, public ShotSpawnInterface, public ExplosionSpawnInterface {
 public:
     void setLevel(std::string const& level_filename);
+    void setPlayerConfig(PlayerConfig const& pc);
     void spawnShotMg(jt::Vector2 const& pos, jt::Vector2 const& dir, bool byPlayer) override;
     void spawnShotMissile(jt::Vector2 const& pos, jt::Vector2 const& dir, bool byPlayer) override;
     void spawnExplosion(jt::Vector2 const& position) override;
@@ -43,6 +44,7 @@ private:
     bool m_hasEnded { false };
 
     std::shared_ptr<Player> m_player;
+    PlayerConfig m_playerConfig;
 
     jt::ObjectGroup<Planet> m_planets;
     std::unique_ptr<PhysicsSystem> m_physics_system;
