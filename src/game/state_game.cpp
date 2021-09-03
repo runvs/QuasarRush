@@ -7,6 +7,7 @@
 #include "game_interface.hpp"
 #include "game_properties.hpp"
 #include "hud/hud.hpp"
+#include "impact_explosion.hpp"
 #include "level.hpp"
 #include "line.hpp"
 #include "math_helper.hpp"
@@ -68,7 +69,7 @@ void StateGame::doInternalCreate()
                 s, 0.8f, m_trailSpawnPosition, m_trailSpawnPosition + offset);
             add(tp);
 
-            auto ts = jt::TweenScale<jt::Shape>::create(s,0.4f,{1.0f, 1.0f}, {1.5f, 1.5f});
+            auto ts = jt::TweenScale<jt::Shape>::create(s, 0.4f, { 1.0f, 1.0f }, { 1.5f, 1.5f });
             ts->setStartDelay(0.4f);
             add(ts);
         });
@@ -314,7 +315,7 @@ void StateGame::handleShotCollisions()
 
 void StateGame::spawnShotMg(jt::Vector2 const& pos, jt::Vector2 const& dir, bool byPlayer)
 {
-    auto shot = std::make_shared<ShotMg>();
+    auto shot = std::make_shared<ShotMg>(*this);
     add(shot);
     shot->setFiredByPlayer(byPlayer);
     auto transform = shot->getTransform();
@@ -334,11 +335,19 @@ void StateGame::spawnBigExplosion(jt::Vector2 const& position)
     getGame()->getCamera()->shake(0.15f, 2.5f);
 }
 
-void StateGame::spawnSmallExplosion(jt::Vector2 const& position) {
+void StateGame::spawnSmallExplosion(jt::Vector2 const& position)
+{
     auto explosion = std::make_shared<Explosion>();
     add(explosion);
     explosion->getAnimation()->setPosition(position);
     getGame()->getCamera()->shake(0.15f, 1.5f);
+}
+
+void StateGame::spawnImpactExplosion(jt::Vector2 const& position)
+{
+    auto impact = std::make_shared<ImpactExplosion>();
+    add(impact);
+    impact->getAnimation()->setPosition(position);
 }
 
 void StateGame::spawnShotMissile(jt::Vector2 const& pos, jt::Vector2 const& dir, bool byPlayer)
@@ -424,4 +433,3 @@ void StateGame::spawnTrail(jt::Vector2 pos)
         m_trailParticles->Fire();
     }
 }
-
