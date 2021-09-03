@@ -7,6 +7,7 @@
 #include "game_state.hpp"
 #include "info_text.hpp"
 #include "object_group.hpp"
+#include "particle_system.hpp"
 #include "physics_system.hpp"
 #include "planet.hpp"
 #include "player.hpp"
@@ -15,7 +16,6 @@
 #include "shot_spawn_interface.hpp"
 #include "spawn_trail_interface.hpp"
 #include "target.hpp"
-#include "particle_system.hpp"
 #include <memory>
 #include <vector>
 
@@ -27,13 +27,17 @@ class Sprite;
 
 class Hud;
 
-class StateGame : public jt::GameState, public ShotSpawnInterface, public ExplosionSpawnInterface, public SpawnTrailInterface {
+class StateGame : public jt::GameState,
+                  public ShotSpawnInterface,
+                  public ExplosionSpawnInterface,
+                  public SpawnTrailInterface {
 public:
     void setLevel(std::string const& level_filename);
     void setPlayerConfig(PlayerConfig const& pc);
     void spawnShotMg(jt::Vector2 const& pos, jt::Vector2 const& dir, bool byPlayer) override;
     void spawnShotMissile(jt::Vector2 const& pos, jt::Vector2 const& dir, bool byPlayer) override;
     void spawnBigExplosion(jt::Vector2 const& position) override;
+    void spawnImpactExplosion(jt::Vector2 const& position) override;
     void spawnTrail(jt::Vector2 pos) override;
 
 private:

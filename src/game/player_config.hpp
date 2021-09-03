@@ -6,7 +6,7 @@
 enum eWeaponType { WeaponMg, WeaponRockets };
 
 struct PlayerConfig {
-    eWeaponType weapon { WeaponRockets };
+    eWeaponType weapon { WeaponMg };
     int sensorLevel { 1 };
     int engineLevel { 1 };
 
