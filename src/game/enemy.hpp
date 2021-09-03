@@ -40,7 +40,7 @@ public:
     std::shared_ptr<Transform> getTransform();
     void setTransform(std::shared_ptr<Transform> t);
 
-    void takeDamage();
+    void takeDamage(float damageValue);
 
     std::shared_ptr<jt::Animation> getSprite() const;
 };

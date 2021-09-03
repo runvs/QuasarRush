@@ -20,6 +20,7 @@ public:
     explicit ShotMg::ShotMg(ExplosionSpawnInterface& explosionSpawnInterface);
 
     void doCreate() override;
+    float getDamageValue() override;
     void doUpdate(float const /*elapsed*/) override;
     void doDraw() const override;
 

@@ -8,6 +8,7 @@ enum eWeaponType { WeaponMg, WeaponRockets };
 struct PlayerConfig {
     eWeaponType weapon { WeaponMg };
     int sensorLevel { 1 };
+    int engineLevel { 1 };
 
     std::set<int> availableLevels { 0, 1, 2, 3, 4 };
 };

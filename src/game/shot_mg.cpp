@@ -44,3 +44,4 @@ void ShotMg::hit()
     m_explosionSpawnInterface.spawnImpactExplosion(m_transform->position);
     kill();
 }
+float ShotMg::getDamageValue() { return 0.25f; }

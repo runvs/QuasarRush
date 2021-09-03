@@ -36,6 +36,7 @@ void Player::doCreate()
     m_glowOverlayFlame->loadSprite("#g#32#100");
     m_glowOverlayFlame->setOrigin(jt::Vector2{16.0f,16.0f});
     m_glowOverlayFlame->setOffset(jt::Vector2{16.0f, 16.0f});
+
 }
 
 void Player::doUpdate(float const elapsed)
@@ -79,6 +80,7 @@ void Player::updateSprite(float const elapsed)
 void Player::updateShooting(float const elapsed)
 {
     m_shootTimer -= elapsed;
+
     if (getGame()->input()->mouse()->pressed(jt::MouseButtonCode::MBLeft)) {
         if (canShoot()) {
             shoot();
@@ -93,7 +95,7 @@ void Player::updateMovement(const float elapsed)
 
     auto const& keyboard = getGame()->input()->keyboard();
     if (keyboard->pressed(jt::KeyCode::W)) {
-        bool flyBoost = keyboard->pressed(jt::KeyCode::LShift);
+        bool const flyBoost = keyboard->pressed(jt::KeyCode::LShift);
 
         m_shipSprite->play("fly");
         jt::Vector2 flameOffset { -9.5f, 0.0f };
@@ -105,7 +107,8 @@ void Player::updateMovement(const float elapsed)
             m_flameSprite->play("fly");
         }
 
-        float const acceleration_factor = flyBoost ? GP::PlayerAccelerationBoostFactor() : 1.0f;
+        float acceleration_factor = flyBoost ? GP::PlayerAccelerationBoostFactor() : 1.0f;
+        acceleration_factor +=  m_playerConfig.engineLevel * 0.25f;
         m_transform->player_acceleration
             = direction * GP::PlayerAcceleration() * acceleration_factor;
     } else if (keyboard->justReleased(jt::KeyCode::W)) {
@@ -155,16 +158,19 @@ void Player::shoot()
     jt::MathHelper::normalizeMe(aim_direction);
     m_shotCounter++;
 
+
+    // TODO Refactor to avoid ugly if statement. Use proper OOP
     if (m_playerConfig.weapon == WeaponMg) {
         m_shootTimer = GP::PlayerShootTimerMg();
-
+        m_shootTimerMax = GP::PlayerShootTimerMg();
         jt::Vector2 const orthogonal_aim_direction{aim_direction.y(), -aim_direction.x()};
-        auto startPos = m_transform->position + 8.0f * orthogonal_aim_direction * ((m_shotCounter%2 == 0) ? -1.0f : 1.0f);
+        auto startPos = m_transform->position + 6.0f * orthogonal_aim_direction * ((m_shotCounter%2 == 0) ? -1.0f : 1.0f);
         m_shotSpawnInterface.spawnShotMg(startPos, aim_direction, true);
 
     }
     else if (m_playerConfig.weapon == WeaponRockets) {
         m_shootTimer = GP::PlayerShootTimerMissile();
+        m_shootTimerMax = GP::PlayerShootTimerMissile();
         m_shotSpawnInterface.spawnShotMissile(m_transform->position, aim_direction, true);
 
     }

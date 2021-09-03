@@ -13,7 +13,14 @@ Level::Level(std::string const filename)
     parseTransforms(j);
     parseEnemies(j);
     parseTargets(j);
+    parseBackgroundImage(j);
+    parseLevelTime(j);
 
+}
+void Level::parseLevelTime(nlohmann::json const& j) { m_levelTime = j.value("time",-100.0f); }
+
+void Level::parseBackgroundImage(nlohmann::json const& j)
+{
     m_backgroundFilePath = "assets/backgrounds/" + j.value("background", "background_00.png");
 }
 
@@ -80,3 +87,4 @@ std::shared_ptr<Transform> Level::getPlayer() { return m_player_transform; }
 std::vector<EnemyLoadInfo> Level::getEnemies() { return m_enemies; }
 std::vector<jt::Vector2> Level::getTargets() { return m_targets; }
 std::string Level::getBackgroundFilePath() { return m_backgroundFilePath; }
+float Level::getLevelTime() const { return m_levelTime; }

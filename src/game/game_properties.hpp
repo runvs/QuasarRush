@@ -35,10 +35,11 @@ public:
     static float PlayerAcceleration() { return 2.0; }
     static float PlayerAccelerationBoostFactor() { return 3.2f; }
 
-    static float PlayerShootTimerMg() { return 0.2f; }
+    static float PlayerShootTimerMg() { return 0.09f; }
     static float PlayerShootTimerMissile() { return 5.0f; }
 
     static float ShotSpeed() { return 50.0f; }
+
     static int PlayerHalfSize() { return 9; }
 
     static int PlanetHalfSize() { return 16; }
