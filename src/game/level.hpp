@@ -31,6 +31,7 @@ private:
     void parseEnemies(nlohmann::json const& j);
     void parseTargets(nlohmann::json const& j);
     void parseBackgroundImage(nlohmann::json const& j);
+    void parseLevelTime(nlohmann::json const& j);
 };
 
 #endif // QUASARRUSH_LEVEL_HPP

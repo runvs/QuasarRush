@@ -14,9 +14,10 @@ Level::Level(std::string const filename)
     parseEnemies(j);
     parseTargets(j);
     parseBackgroundImage(j);
+    parseLevelTime(j);
 
-    m_levelTime = j.value("time",-100.0f);
 }
+void Level::parseLevelTime(nlohmann::json const& j) { m_levelTime = j.value("time",-100.0f); }
 
 void Level::parseBackgroundImage(nlohmann::json const& j)
 {
