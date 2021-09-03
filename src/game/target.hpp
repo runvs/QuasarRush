@@ -1,8 +1,8 @@
 #ifndef QUASARRUSH_TARGET_HPP
 #define QUASARRUSH_TARGET_HPP
 
+#include "animation.hpp"
 #include "game_object.hpp"
-#include "shape.hpp"
 #include "sprite.hpp"
 #include "tween_base.hpp"
 
@@ -14,10 +14,10 @@ public:
     std::vector<std::shared_ptr<jt::TweenBase>> hit();
 
     bool hasBeenHit() const;
-    std::shared_ptr<jt::Shape> getShape() const;
+    std::shared_ptr<jt::Animation> getAnimation() const;
 
 private:
-    std::shared_ptr<jt::Shape> m_shape;
+    std::shared_ptr<jt::Animation> m_animation;
     std::shared_ptr<jt::Sprite> m_glow;
     jt::Vector2 m_position;
     bool m_hasBeenHit { false };

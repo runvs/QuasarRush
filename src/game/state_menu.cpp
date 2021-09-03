@@ -8,12 +8,12 @@
 #include "json.hpp"
 #include "key_codes.hpp"
 #include "math_helper.hpp"
+#include "player_config.hpp"
 #include "shape.hpp"
 #include "state_game.hpp"
 #include "text.hpp"
 #include "tween_alpha.hpp"
 #include "tween_position.hpp"
-#include "player_config.hpp"
 #include <fstream>
 
 StateMenu::StateMenu() = default;
@@ -41,20 +41,18 @@ void StateMenu::createLevelButtons()
         std::string displayName = l["display"];
 
         float xPos = 74.0f;
-        float yPos = 80.0f + 24.0f * (int)(counter/2);
-        if (counter %2 == 1)
-        {
+        float yPos = 80.0f + 24.0f * (int)(counter / 2);
+        if (counter % 2 == 1) {
             xPos += 134.0f;
         }
 
         auto button = std::make_shared<jt::Button>(jt::Vector2u { 128, 18 });
         add(button);
-        if (m_playerConfig.availableLevels.find(counter) == m_playerConfig.availableLevels.end())
-        {
+        if (m_playerConfig.availableLevels.find(counter) == m_playerConfig.availableLevels.end()) {
             button->setVisible(false);
         }
         button->addCallback([this, filename]() { startTransitionToStateGame(filename); });
-        button->setPosition(jt::Vector2 { xPos,yPos});
+        button->setPosition(jt::Vector2 { xPos, yPos });
         auto const text = jt::dh::createText(getGame()->getRenderTarget(), displayName, 12);
         text->setOrigin(jt::Vector2 { -4.0f, -2.0f });
         text->SetTextAlign(jt::Text::TextAlign::LEFT);
@@ -90,7 +88,8 @@ void StateMenu::createTextCredits()
         "Created by " + GP::AuthorName() + " for " + GP::JamName() + "\n" + GP::JamDate()
             + "\nCover 'QUASAR RUSH' by William Hackworth for Famicase2021"
             + "\nThis game uses OpenAl, licensed under LGPL v2.\nPlease see https://openal.org/ "
-              "for details",
+              "for details."
+            + "\nThis game uses the font Oxanium, licensed under SIL OFL v1.1.",
         10U, GP::PaletteColor5());
     m_text_Credits->SetTextAlign(jt::Text::TextAlign::LEFT);
     m_text_Credits->setPosition({ 10, GP::GetScreenSize().y() - 68 });
@@ -188,6 +187,4 @@ void StateMenu::doInternalDraw() const
     m_vignette->draw(getGame()->getRenderTarget());
 }
 
-void StateMenu::setPlayerConfig(PlayerConfig const& pc) {
-    m_playerConfig = pc;
-}
+void StateMenu::setPlayerConfig(PlayerConfig const& pc) { m_playerConfig = pc; }

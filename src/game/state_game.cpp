@@ -100,7 +100,7 @@ void StateGame::CreateTutorialForSecondMission()
 {
     CreateInfoText(m_planets.front().lock()->getSprite(), "Gravity Well", 0.0f, RightDown);
 
-    CreateInfoText(m_targets.back().lock()->getShape(), "Mission End", 7.0f, LeftUp);
+    CreateInfoText(m_targets.back().lock()->getAnimation(), "Mission End", 7.0f, LeftUp);
     CreateInfoText(m_player->getSprite(), "Those two were easy", 11.0f, RightDown);
 }
 
@@ -123,11 +123,11 @@ void StateGame::CreateInfoText(std::shared_ptr<jt::DrawableInterface> target, st
 void StateGame::createTutorialForFirstMission()
 {
     CreateInfoText(m_player->getSprite(), "Your Ship", 0.0f, RightDown);
-    CreateInfoText(m_targets.front().lock()->getShape(), "Nav Target", 4.0f, RightUp);
+    CreateInfoText(m_targets.front().lock()->getAnimation(), "Nav Target", 4.0f, RightUp);
     CreateInfoText(m_player->getSprite(), "Accelerate with 'W'", 8.0f, RightUp);
     CreateInfoText(m_player->getSprite(), "Rotate with 'A'/'D'", 12.0f, RightUp);
-    CreateInfoText(m_targets.at(1).lock()->getShape(), "Correct Course", 16.0f, LeftDown);
-    CreateInfoText(m_targets.back().lock()->getShape(), "Mission End", 20.0f, LeftUp);
+    CreateInfoText(m_targets.at(1).lock()->getAnimation(), "Correct Course", 16.0f, LeftDown);
+    CreateInfoText(m_targets.back().lock()->getAnimation(), "Mission End", 20.0f, LeftUp);
 }
 
 void StateGame::createLevelEntities()
