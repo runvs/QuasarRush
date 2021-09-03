@@ -41,7 +41,9 @@ private:
     std::vector<jt::Vector2> m_projectionPoints;
     std::shared_ptr<jt::Sprite> m_glowOverlayFlame;
 
+    // TODO Use shoot timer and shoot timer max to update some indicator in the HUD
     float m_shootTimer { 0.0f };
+    float m_shootTimerMax {1.0f};
     std::size_t m_shotCounter { 0 };
 
     // only store a reference, as we do not want to keep a copy and state_game contains player, so

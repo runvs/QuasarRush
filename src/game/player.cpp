@@ -36,6 +36,7 @@ void Player::doCreate()
     m_glowOverlayFlame->loadSprite("#g#32#100");
     m_glowOverlayFlame->setOrigin(jt::Vector2{16.0f,16.0f});
     m_glowOverlayFlame->setOffset(jt::Vector2{16.0f, 16.0f});
+
 }
 
 void Player::doUpdate(float const elapsed)
@@ -79,6 +80,7 @@ void Player::updateSprite(float const elapsed)
 void Player::updateShooting(float const elapsed)
 {
     m_shootTimer -= elapsed;
+
     if (getGame()->input()->mouse()->pressed(jt::MouseButtonCode::MBLeft)) {
         if (canShoot()) {
             shoot();
@@ -156,9 +158,11 @@ void Player::shoot()
     jt::MathHelper::normalizeMe(aim_direction);
     m_shotCounter++;
 
+
+    // TODO Refactor to avoid ugly if statement. Use proper OOP
     if (m_playerConfig.weapon == WeaponMg) {
         m_shootTimer = GP::PlayerShootTimerMg();
-
+        m_shootTimerMax = GP::PlayerShootTimerMg();
         jt::Vector2 const orthogonal_aim_direction{aim_direction.y(), -aim_direction.x()};
         auto startPos = m_transform->position + 6.0f * orthogonal_aim_direction * ((m_shotCounter%2 == 0) ? -1.0f : 1.0f);
         m_shotSpawnInterface.spawnShotMg(startPos, aim_direction, true);
@@ -166,6 +170,7 @@ void Player::shoot()
     }
     else if (m_playerConfig.weapon == WeaponRockets) {
         m_shootTimer = GP::PlayerShootTimerMissile();
+        m_shootTimerMax = GP::PlayerShootTimerMissile();
         m_shotSpawnInterface.spawnShotMissile(m_transform->position, aim_direction, true);
 
     }

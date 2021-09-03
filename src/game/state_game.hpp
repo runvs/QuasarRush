@@ -16,6 +16,7 @@
 #include "shot_spawn_interface.hpp"
 #include "spawn_trail_interface.hpp"
 #include "target.hpp"
+#include "hud/observer_interface.hpp"
 #include <memory>
 #include <vector>
 
@@ -66,6 +67,10 @@ private:
 
     jt::Vector2 m_trailSpawnPosition;
     std::shared_ptr<jt::ParticleSystem<jt::Shape, 100>> m_trailParticles;
+
+    float m_timer;
+    std::shared_ptr<ObserverInterface<float>> m_timeObserver;
+
 
 public:
     void spawnSmallExplosion(jt::Vector2 const& position) override;

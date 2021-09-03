@@ -79,6 +79,7 @@ void StateGame::doInternalCreate()
 
     m_hud = std::make_shared<Hud>();
     add(m_hud);
+    m_timeObserver = m_hud->getObserverTimer();
 
     // StateGame will call drawObjects itself.
     setAutoDraw(false);
@@ -166,6 +167,8 @@ void StateGame::createLevelEntities()
 
     m_background->loadSprite(l.getBackgroundFilePath());
     m_background->setScale(jt::Vector2 { 0.5f, 0.5f });
+
+    m_timer = l.getLevelTime();
 }
 std::shared_ptr<EnemyAI> StateGame::createShootAi(EnemyLoadInfo e)
 {
@@ -199,7 +202,15 @@ std::shared_ptr<EnemyAI> StateGame::createFlightAi(EnemyLoadInfo& e) const
 void StateGame::doInternalUpdate(float const elapsed)
 {
     if (m_running) {
-
+        if (m_timer != -100.0f)
+        {
+            m_timer -= elapsed;
+            m_timeObserver->notify(m_timer);
+            if (m_timer <= 0)
+            {
+                endGame();
+            }
+        }
         m_player->setProjectionPoints(m_physics_system->precalculate_path(
             m_player->getTransform(), m_playerConfig.sensorLevel));
 
