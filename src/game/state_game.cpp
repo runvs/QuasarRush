@@ -292,7 +292,7 @@ void StateGame::handleShotCollisions()
 
                 if (lengthSquared <= GP::EnemyHalfSize() * GP::EnemyHalfSize()) {
                     s->hit();
-                    e->takeDamage();
+                    e->takeDamage(s->getDamageValue());
                 }
             }
         }

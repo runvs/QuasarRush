@@ -58,9 +58,9 @@ void Enemy::setTransform(std::shared_ptr<Transform> t) { m_transform = t; }
 bool Enemy::canShoot() { return m_shootTimer <= 0; }
 void Enemy::shoot() { m_shootTimer = GP::EnemyShootTimer(); }
 
-void Enemy::takeDamage()
+void Enemy::takeDamage(float damageValue)
 {
-    m_health -= 1;
+    m_health -= damageValue;
     m_shipSprite->flash(0.25f, jt::colors::White);
     if (m_health <= 0) {
         kill();
