@@ -343,7 +343,6 @@ void StateGame::spawnSmallExplosion(jt::Vector2 const& position) {
 
 void StateGame::spawnShotMissile(jt::Vector2 const& pos, jt::Vector2 const& dir, bool byPlayer)
 {
-
     for (int i = 0; i != 5; ++i) {
         auto shot = std::make_shared<ShotMissile>(*this, *this);
         add(shot);

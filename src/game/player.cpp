@@ -93,7 +93,7 @@ void Player::updateMovement(const float elapsed)
 
     auto const& keyboard = getGame()->input()->keyboard();
     if (keyboard->pressed(jt::KeyCode::W)) {
-        bool flyBoost = keyboard->pressed(jt::KeyCode::LShift);
+        bool const flyBoost = keyboard->pressed(jt::KeyCode::LShift);
 
         m_shipSprite->play("fly");
         jt::Vector2 flameOffset { -9.5f, 0.0f };
@@ -105,7 +105,8 @@ void Player::updateMovement(const float elapsed)
             m_flameSprite->play("fly");
         }
 
-        float const acceleration_factor = flyBoost ? GP::PlayerAccelerationBoostFactor() : 1.0f;
+        float acceleration_factor = flyBoost ? GP::PlayerAccelerationBoostFactor() : 1.0f;
+        acceleration_factor +=  m_playerConfig.engineLevel * 0.25;
         m_transform->player_acceleration
             = direction * GP::PlayerAcceleration() * acceleration_factor;
     } else if (keyboard->justReleased(jt::KeyCode::W)) {
