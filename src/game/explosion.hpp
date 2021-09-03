@@ -8,7 +8,7 @@
 class Explosion : public jt::GameObject {
 private:
     std::shared_ptr<jt::Animation> m_sprite;
-    float const m_frameTime { 0.10f };
+    float const m_frameTime { 0.08f };
     int const m_numberOfFrames { 8 };
 
 public:

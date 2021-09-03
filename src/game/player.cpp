@@ -106,7 +106,7 @@ void Player::updateMovement(const float elapsed)
         }
 
         float acceleration_factor = flyBoost ? GP::PlayerAccelerationBoostFactor() : 1.0f;
-        acceleration_factor +=  m_playerConfig.engineLevel * 0.25;
+        acceleration_factor +=  m_playerConfig.engineLevel * 0.25f;
         m_transform->player_acceleration
             = direction * GP::PlayerAcceleration() * acceleration_factor;
     } else if (keyboard->justReleased(jt::KeyCode::W)) {
@@ -160,7 +160,7 @@ void Player::shoot()
         m_shootTimer = GP::PlayerShootTimerMg();
 
         jt::Vector2 const orthogonal_aim_direction{aim_direction.y(), -aim_direction.x()};
-        auto startPos = m_transform->position + 8.0f * orthogonal_aim_direction * ((m_shotCounter%2 == 0) ? -1.0f : 1.0f);
+        auto startPos = m_transform->position + 6.0f * orthogonal_aim_direction * ((m_shotCounter%2 == 0) ? -1.0f : 1.0f);
         m_shotSpawnInterface.spawnShotMg(startPos, aim_direction, true);
 
     }
