@@ -95,3 +95,7 @@ void ShotMissile::hit() {
 
 void ShotMissile::setTarget(std::weak_ptr<Transform> target) { m_target = target; }
 float ShotMissile::getDamageValue() { return 1.0f; }
+std::shared_ptr<jt::DrawableInterface> ShotMissile::getDrawable()
+{
+    return m_sprite;
+}

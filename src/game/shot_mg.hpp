@@ -20,6 +20,7 @@ public:
     explicit ShotMg(ExplosionSpawnInterface& explosionSpawnInterface);
 
     void doCreate() override;
+    std::shared_ptr<jt::DrawableInterface> getDrawable() override;
     float getDamageValue() override;
     void doUpdate(float const /*elapsed*/) override;
     void doDraw() const override;

@@ -45,3 +45,7 @@ void ShotMg::hit()
     kill();
 }
 float ShotMg::getDamageValue() { return 0.25f; }
+std::shared_ptr<jt::DrawableInterface> ShotMg::getDrawable()
+{
+    return m_sprite;
+}

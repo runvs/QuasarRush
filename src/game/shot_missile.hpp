@@ -22,6 +22,7 @@ private:
 
 public:
     explicit ShotMissile(SpawnTrailInterface& spawnTrailInterface, ExplosionSpawnInterface& explosionSpawnInterface);
+    std::shared_ptr<jt::DrawableInterface> getDrawable() override;
     float getDamageValue() override;
     std::shared_ptr<Transform> getTransform() override;
     bool getFiredByPlayer() const override;

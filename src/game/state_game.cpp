@@ -287,10 +287,7 @@ void StateGame::handleShotCollisions()
         auto const sp = s->getTransform()->position;
 
         if (!s->getFiredByPlayer()) {
-            auto const pp = m_player->getTransform()->position;
-            auto const diff = pp - sp;
-            auto const lengthSquared = jt::MathHelper::lengthSquared(diff);
-            if (lengthSquared <= GP::EnemyHalfSize() * GP::EnemyHalfSize()) {
+            if (jt::Collision::CircleTest(m_player->getSprite(), s->getDrawable())) {
                 s->hit();
             }
         } else {
@@ -299,11 +296,9 @@ void StateGame::handleShotCollisions()
                     continue;
                 }
                 auto e = eptr.lock();
-                auto const ep = e->getTransform()->position;
-                auto const diff = ep - sp;
-                auto const lengthSquared = jt::MathHelper::lengthSquared(diff);
 
-                if (lengthSquared <= GP::EnemyHalfSize() * GP::EnemyHalfSize()) {
+                if (jt::Collision::CircleTest(s->getDrawable(), e->getSprite()))
+                {
                     s->hit();
                     e->takeDamage(s->getDamageValue());
                 }
