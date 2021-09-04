@@ -1,6 +1,5 @@
 ﻿#include "state_menu.hpp"
 #include "button.hpp"
-#include "color.hpp"
 #include "drawable_helpers.hpp"
 #include "game_interface.hpp"
 #include "game_properties.hpp"
@@ -8,13 +7,9 @@
 #include "json.hpp"
 #include "key_codes.hpp"
 #include "math_helper.hpp"
-#include "player_config.hpp"
-#include "shape.hpp"
 #include "state_credits.hpp"
 #include "state_game.hpp"
 #include "text.hpp"
-#include "tween_alpha.hpp"
-#include "tween_position.hpp"
 #include <fstream>
 
 StateMenu::StateMenu() {
@@ -34,7 +29,7 @@ void StateMenu::doInternalCreate()
         newState->setPlayerConfig(m_menuBase->m_playerConfig);
         getGame()->switchState(newState);
     });
-    m_buttonCredits->setPosition(jt::Vector2 { 10, 280 });
+    m_buttonCredits->setPosition(jt::Vector2 { 345, 278 });
     auto const text = jt::dh::createText(getGame()->getRenderTarget(), "Credits", 12);
     text->setOrigin(jt::Vector2 { -5.0f, -1.0f });
     text->SetTextAlign(jt::Text::TextAlign::LEFT);
@@ -48,7 +43,7 @@ void StateMenu::createShipUpgradeButtons()
 {
     float const increment = 24.0f;
     float const xOffset = 280.0f;
-    float const yOffset = 186.0f;
+    float const yOffset = 200.0f;
 
     m_textSensor
         = jt::dh::createText(getGame()->getRenderTarget(), "Sensors", 12U, GP::PaletteFontFront());
@@ -121,7 +116,7 @@ void StateMenu::createLevelButtons()
         std::string displayName = l["display"];
 
         float xPos = 10.0f;
-        float yPos = 125.0f + 36.0f + 24.0f * (int)(counter / 2);
+        float yPos = 175.0f  + 24.0f * (int)(counter / 2);
         unsigned int buttonWidth = 100U;
         if (counter % 2 == 1) {
             xPos += buttonWidth + 8.0f;
