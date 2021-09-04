@@ -44,9 +44,10 @@ const jt::Color Sprite::getFlashColor() const { return m_colorFlash; }
 
 jt::Rect const Sprite::getGlobalBounds() const
 {
-    return jt::Rect { 0.0f, 0.0f, static_cast<float>(m_sourceRect.width()),
+    return jt::Rect { m_position.x(), m_position.y(), static_cast<float>(m_sourceRect.width()),
         static_cast<float>(m_sourceRect.height()) };
 }
+
 jt::Rect const Sprite::getLocalBounds() const
 {
     return jt::Rect { 0.0f, 0.0f, static_cast<float>(m_sourceRect.width()),

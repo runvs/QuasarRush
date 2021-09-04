@@ -185,7 +185,7 @@ public:
 
 #endif
     //////
-    /// Test for collision using circle collision dection
+    /// Test for collision using circle collision detection
     /// Radius is averaged from the dimensions of the sprite so
     /// roughly circular objects will be much more accurate
     //////
@@ -208,10 +208,15 @@ public:
     {
         auto const Obj1Size = getSize(obj1);
         auto const Obj2Size = getSize(obj2);
+
+        std::cout << "size_obj1: " <<  Obj1Size.x() << " " << Obj1Size.y() << std::endl;
+        std::cout << "size_obj1: " <<  Obj2Size.x() << " " << Obj2Size.y() << std::endl;
+
         auto const Radius1 = (Obj1Size.x() + Obj1Size.y()) / 4.0f;
         auto const Radius2 = (Obj2Size.x() + Obj2Size.y()) / 4.0f;
 
         auto const distance = getCenter(obj1) - getCenter(obj2);
+        std::cout << "distance: " <<  distance.x() << " " << distance.y() << std::endl;
 
         return (
             jt::MathHelper::lengthSquared(distance) <= (Radius1 + Radius2) * (Radius1 + Radius2));
