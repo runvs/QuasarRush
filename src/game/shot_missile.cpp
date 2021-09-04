@@ -34,7 +34,7 @@ void ShotMissile::doUpdate(float const elapsed)
     m_animation->setRotation(-m_transform->angle);
     m_animation->update(elapsed);
 
-    float missileTargetAcquisitionTime = 0.5f;
+    float missileTargetAcquisitionTime = 0.6f;
     float velocityDrag = 0.995f;
 
     auto v = m_transform->velocity;
@@ -45,7 +45,7 @@ void ShotMissile::doUpdate(float const elapsed)
         m_animation->play("fire");
 
         if (m_target.expired()) {
-            kill();
+            hit();
             return;
         }
 

@@ -297,8 +297,7 @@ void StateGame::handleShotCollisions()
                 }
                 auto e = eptr.lock();
 
-                if (jt::Collision::CircleTest(s->getDrawable(), e->getSprite()))
-                {
+                if (jt::Collision::CircleTest(s->getDrawable(), e->getSprite())) {
                     s->hit();
                     e->takeDamage(s->getDamageValue());
                 }
@@ -364,12 +363,14 @@ void StateGame::spawnShotMissile(jt::Vector2 const& pos, jt::Vector2 const& dir,
         auto shot = std::make_shared<ShotMissile>(*this, *this);
         add(shot);
         shot->setFiredByPlayer(byPlayer);
-        if (m_enemies.empty()) {
-            // TODO
-            return;
+        std::shared_ptr<Transform> target = nullptr;
+
+        if (!m_enemies.empty()) {
+            auto const idx = jt::Random::getInt(0, m_enemies.size() -1);
+            target = m_enemies.at(idx).lock()->getTransform();
         }
 
-        shot->setTarget(m_enemies.at(0).lock()->getTransform());
+        shot->setTarget(target);
         auto transform = shot->getTransform();
 
         transform->velocity = jt::MathHelper::rotateBy(dir, jt::Random::getFloatGauss(0.0f, 35.0f))
