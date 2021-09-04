@@ -2,6 +2,7 @@
 #define QUASARRUSH_PLAYER_CONFIG_HPP
 
 #include <set>
+#include <string>
 
 enum eWeaponType { WeaponMg, WeaponRockets };
 
@@ -14,6 +15,7 @@ struct PlayerConfig {
 
     std::set<int> availableLevels { 0 };
     std::set<eWeaponType> availableWeapons { WeaponMg, WeaponRockets };
+    std::string selectedLevelFilename {""};
 };
 
 bool playerConfigHasPointsToSpend(PlayerConfig const& pc);

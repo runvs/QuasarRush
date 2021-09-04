@@ -33,7 +33,6 @@ class StateGame : public jt::GameState,
                   public ExplosionSpawnInterface,
                   public SpawnTrailInterface {
 public:
-    void setLevel(std::string const& level_filename);
     void setPlayerConfig(PlayerConfig const& pc);
     void spawnShotMg(jt::Vector2 const& pos, jt::Vector2 const& dir, bool byPlayer) override;
     void spawnShotMissile(jt::Vector2 const& pos, jt::Vector2 const& dir, bool byPlayer) override;

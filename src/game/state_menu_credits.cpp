@@ -1,4 +1,4 @@
-#include "state_credits.hpp"
+#include "state_menu_credits.hpp"
 #include "drawable_helpers.hpp"
 #include "game_interface.hpp"
 #include "game_properties.hpp"
@@ -10,7 +10,6 @@ StateCredits::StateCredits() { m_menuBase = std::make_shared<StateMenuBase>(); }
 
 void StateCredits::doInternalCreate()
 {
-
     m_menuBase->create(getGame()->getRenderTarget(), *this);
 
     m_text_Credits = jt::dh::createText(getGame()->getRenderTarget(),
@@ -56,7 +55,9 @@ void StateCredits::doInternalDraw() const
     m_text_Credits->draw(getGame()->getRenderTarget());
     m_menuBase->drawOverlay(getGame()->getRenderTarget());
 }
+
 void StateCredits::setPlayerConfig(PlayerConfig const& pc) { m_menuBase->m_playerConfig = pc; }
+
 void StateCredits::createTweenTransition()
 {
     m_menuBase->startFadeOut(

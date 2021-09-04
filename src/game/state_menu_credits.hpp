@@ -1,5 +1,5 @@
-#ifndef QUASARRUSH_STATE_CREDITS_HPP
-#define QUASARRUSH_STATE_CREDITS_HPP
+#ifndef QUASARRUSH_STATE_MENU_CREDITS_HPP
+#define QUASARRUSH_STATE_MENU_CREDITS_HPP
 
 #include "game_state.hpp"
 #include "state_menu_base.hpp"
@@ -25,4 +25,4 @@ public:
     void createTweenTransition();
 };
 
-#endif // QUASARRUSH_STATE_CREDITS_HPP
+#endif // QUASARRUSH_STATE_MENU_CREDITS_HPP

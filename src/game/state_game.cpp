@@ -14,7 +14,7 @@
 #include "shape.hpp"
 #include "shot_missile.hpp"
 #include "sprite.hpp"
-#include "state_menu.hpp"
+#include "state_menu_level_select.hpp"
 #include "tween_alpha.hpp"
 #include "tween_position.hpp"
 #include "tween_scale.hpp"
@@ -421,7 +421,7 @@ void StateGame::endGame(bool win)
         m_overlay, 0.5f, std::uint8_t { 0 }, std::uint8_t { 255 });
     tw->setSkipFrames();
     tw->addCompleteCallback([this, win]() {
-        auto newState = std::make_shared<StateMenu>();
+        auto newState = std::make_shared<StateMenuLevelSelect>();
         if (win) {
             int maxCurrentLevel = *std::max_element(
                 m_playerConfig.availableLevels.begin(), m_playerConfig.availableLevels.end());
@@ -434,15 +434,17 @@ void StateGame::endGame(bool win)
     add(tw);
 }
 
-void StateGame::setLevel(std::string const& level_filename) { m_level_filename = level_filename; }
-
 void StateGame::checkGameOver()
 {
     if (m_targets.empty() && m_enemies.empty()) {
         endGame(true);
     }
 }
-void StateGame::setPlayerConfig(PlayerConfig const& pc) { m_playerConfig = pc; }
+void StateGame::setPlayerConfig(PlayerConfig const& pc)
+{
+    m_playerConfig = pc;
+    m_level_filename = pc.selectedLevelFilename;
+}
 void StateGame::spawnTrail(jt::Vector2 pos)
 {
     static int counter { 0 };
