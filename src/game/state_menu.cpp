@@ -129,7 +129,7 @@ void StateMenu::createVignette()
 
 void StateMenu::createShapes()
 {
-    m_background = jt::dh::createRectShape(GP::GetScreenSize(), GP::PaletteColor1());
+    m_background = jt::dh::createRectShape(GP::GetScreenSize(), GP::PaletteBackground());
     m_overlay = jt::dh::createRectShape(GP::GetScreenSize(), jt::colors::Black);
 }
 
@@ -142,14 +142,13 @@ void StateMenu::createMenuText()
 void StateMenu::createTextCredits()
 {
     m_text_Credits = jt::dh::createText(getGame()->getRenderTarget(),
-        "Created by " + GP::AuthorName() + " for " + GP::JamName() + " " + GP::JamDate()
+        "Created by " + GP::AuthorName() + " for " + GP::JamName() + " in " + GP::JamDate()
             + "\nCover 'QUASAR RUSH' by William Hackworth for Famicase2021"
-            + "\nThis game uses OpenAl, licensed under LGPL v2.\nPlease see https://openal.org/ "
-              "for details."
+            + "\nThis game uses OpenAl, licensed under LGPL v2. https://openal.org/"
             + "\nThis game uses the font Oxanium, licensed under SIL OFL v1.1.",
-        10U, GP::PaletteColor5());
+        10U, GP::PaletteFontFront());
     m_text_Credits->SetTextAlign(jt::Text::TextAlign::LEFT);
-    m_text_Credits->setPosition({ 10, GP::GetScreenSize().y() - 68 });
+    m_text_Credits->setPosition({ 10, GP::GetScreenSize().y() - m_text_Credits->getLocalBounds().height()- 8 });
     m_text_Credits->setShadow(GP::PaletteFontShadow(), jt::Vector2 { 1, 1 });
 }
 void StateMenu::createTextTitle()
@@ -157,7 +156,7 @@ void StateMenu::createTextTitle()
     float half_width = GP::GetScreenSize().x() / 2;
     m_text_Title = jt::dh::createText(
         getGame()->getRenderTarget(), GP::GameName(), 32U, GP::PaletteFontFront());
-    m_text_Title->setPosition({ half_width, 20 });
+    m_text_Title->setPosition({ half_width, 10 });
     m_text_Title->setShadow(GP::PaletteFontShadow(), jt::Vector2 { 3, 3 });
 }
 

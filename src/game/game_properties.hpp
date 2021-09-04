@@ -10,7 +10,7 @@ public:
     GP() = delete;
 
     static std::string GameName() { return "Quasar Rush"; }
-    static std::string AuthorName() { return "Thunraz & Laguna_999"; }
+    static std::string AuthorName() { return "Thunraz & adkiem & Laguna_999"; }
     static std::string JamName() { return "AGBIC"; }
     static std::string JamDate() { return "August 2021"; }
 
@@ -25,10 +25,10 @@ public:
     static jt::Color PaletteColor1() { return jt::Color { 5, 64, 71 }; }
     static jt::Color PaletteColor2() { return jt::Color { 32, 142, 68 }; }
     static jt::Color PaletteColor3() { return jt::Color { 133, 225, 66 }; }
-    static jt::Color PaletteColor4() { return jt::Color { 239, 255, 124 }; }
+    static jt::Color PaletteColor4() { return jt::Color { 255, 255, 255 }; }
     static jt::Color PaletteColor5() { return jt::Color { 251, 114, 48 }; }
     static jt::Color PaletteColor6() { return jt::Color { 20, 20, 20 }; }
-    static jt::Color PaletteColor7() { return jt::Color { 64, 23, 58 }; }
+    static jt::Color PaletteColor7() { return jt::Color { 64, 64, 64 }; }
     static jt::Color PaletteColor8() { return jt::Color { 157, 64, 43 }; }
 
     static float PlayerRotationSpeed() { return 80.0; }
