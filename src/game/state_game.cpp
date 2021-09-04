@@ -388,6 +388,7 @@ void StateGame::spawnShotMissile(jt::Vector2 const& pos, jt::Vector2 const& dir,
         transform->mass = 0.1f;
         transform->is_force_emitter = false;
         m_shots.push_back(shot);
+        shot->update(0.1f);
         m_physics_system->registerTransform(transform);
     }
 }
