@@ -43,6 +43,18 @@ std::shared_ptr<SDL_Texture> makeButtonImage(std::shared_ptr<jt::renderTarget> r
         [](SDL_Texture* t) { SDL_DestroyTexture(t); });
 }
 
+std::shared_ptr<SDL_Texture> makeBlankImage(std::shared_ptr<jt::renderTarget> rt, unsigned int w,
+    unsigned int h)
+{
+    std::shared_ptr<SDL_Surface> image
+        = std::shared_ptr<SDL_Surface>(SDL_CreateRGBSurface(0, w, h, 32, 255, 255, 255, 255),
+            [](SDL_Surface* s) { SDL_FreeSurface(s); });
+
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
+    return std::shared_ptr<SDL_Texture>(SDL_CreateTextureFromSurface(rt.get(), image.get()),
+        [](SDL_Texture* t) { SDL_DestroyTexture(t); });
+}
+
 std::shared_ptr<SDL_Texture> makeGlowImage(
     std::shared_ptr<jt::renderTarget> rt, float r, std::uint8_t max)
 {

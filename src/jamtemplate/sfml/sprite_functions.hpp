@@ -16,6 +16,8 @@ sf::Image makeGlowImage(float r, std::uint8_t max = 255);
 
 sf::Image makeVignetteImage(unsigned int w, unsigned int h);
 
+sf::Image makeBlankImage(unsigned int w, unsigned int h);
+
 } // namespace SpriteFunctions
 
 } // namespace jt

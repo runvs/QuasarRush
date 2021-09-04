@@ -32,6 +32,13 @@ sf::Image makeButtonImage(
     return img;
 }
 
+sf::Image makeBlankImage(unsigned int w, unsigned int h)
+{
+    sf::Image img {};
+    img.create(w, h, sf::Color::White);
+    return img;
+}
+
 sf::Image makeGlowImage(float r, std::uint8_t max)
 {
     unsigned int s = static_cast<unsigned int>(r + 0.5f * 2);
