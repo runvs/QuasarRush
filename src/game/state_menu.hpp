@@ -24,6 +24,7 @@ public:
 
 private:
     std::shared_ptr<jt::Shape> m_background;
+    std::shared_ptr<jt::Sprite> m_quasarImage;
 
     std::shared_ptr<jt::Text> m_text_Title;
     std::shared_ptr<jt::Text> m_text_Credits;
@@ -41,6 +42,9 @@ private:
 
     std::shared_ptr<jt::Button> m_buttonSwitchToMG;
     std::shared_ptr<jt::Button> m_buttonSwitchToMissile;
+
+    std::shared_ptr<jt::Text> m_textSensor;
+    std::shared_ptr<jt::Text> m_textEngine;
 
     bool m_started { false };
 

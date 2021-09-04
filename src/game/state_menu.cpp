@@ -22,6 +22,13 @@ void StateMenu::doInternalCreate()
 {
     createMenuText();
 
+    m_quasarImage = std::make_shared<jt::Sprite>();
+    m_quasarImage->loadSprite("assets/quasar_orig.png");
+    m_quasarImage->setScale(jt::Vector2 { 0.4f, 0.4f });
+    m_quasarImage->setPosition(jt::Vector2 { 100.0f, 0.0f });
+
+    m_quasarImage->update(0.1f);
+
     createLevelButtons();
     createShapes();
     createVignette();
@@ -33,14 +40,27 @@ void StateMenu::doInternalCreate()
 }
 void StateMenu::createShipUpgradeButtons()
 {
+
+    float const increment = 24.0f;
+    float const xOffset = 280.0f;
+    float const yOffset = 186.0f;
+
+    m_textSensor
+        = jt::dh::createText(getGame()->getRenderTarget(), "Sensors", 12U, GP::PaletteFontFront());
+    m_textSensor->setPosition(jt::Vector2 { xOffset - 30, yOffset + 0 * increment });
+
+    m_textEngine
+        = jt::dh::createText(getGame()->getRenderTarget(), "Engine", 12U, GP::PaletteFontFront());
+    m_textEngine->setPosition(jt::Vector2 { xOffset - 27, yOffset + 1.0f * increment });
+
     {
         m_buttonIncreaseSensors = std::make_shared<jt::Button>(jt::Vector2u { 18, 18 });
         add(m_buttonIncreaseSensors);
         m_buttonIncreaseSensors->addCallback(
             [this]() { playerConfigIncreaseSensors(m_playerConfig); });
-        m_buttonIncreaseSensors->setPosition(jt::Vector2 { 200, 150 + 0 });
+        m_buttonIncreaseSensors->setPosition(jt::Vector2 { xOffset, yOffset + 0 * increment });
         auto const text = jt::dh::createText(getGame()->getRenderTarget(), "+", 12);
-        text->setOrigin(jt::Vector2 { -4.0f, -2.0f });
+        text->setOrigin(jt::Vector2 { -5.0f, -1.0f });
         text->SetTextAlign(jt::Text::TextAlign::LEFT);
         m_buttonIncreaseSensors->setDrawable(text);
     }
@@ -49,23 +69,22 @@ void StateMenu::createShipUpgradeButtons()
         add(m_buttonIncreaseEngine);
         m_buttonIncreaseEngine->addCallback(
             [this]() { playerConfigIncreaseEngine(m_playerConfig); });
-        m_buttonIncreaseEngine->setPosition(jt::Vector2 { 200, 150 + 24});
+        m_buttonIncreaseEngine->setPosition(jt::Vector2 { xOffset, yOffset + 1.0f * increment });
         auto const text = jt::dh::createText(getGame()->getRenderTarget(), "+", 12);
-        text->setOrigin(jt::Vector2 { -4.0f, -2.0f });
+        text->setOrigin(jt::Vector2 { -5.0f, -1.0f });
         text->SetTextAlign(jt::Text::TextAlign::LEFT);
         m_buttonIncreaseEngine->setDrawable(text);
     }
-
 
     {
         m_buttonSwitchToMG = std::make_shared<jt::Button>(jt::Vector2u { 18, 18 });
         add(m_buttonSwitchToMG);
 
-        m_buttonSwitchToMG->addCallback(
-            [this]() { playerConfigSwitchToMg(m_playerConfig); });
-        m_buttonSwitchToMG->setPosition(jt::Vector2 { 200, 150 + 48});
+        m_buttonSwitchToMG->addCallback([this]() { playerConfigSwitchToMg(m_playerConfig); });
+        m_buttonSwitchToMG->setPosition(
+            jt::Vector2 { xOffset + 2 * increment, yOffset + 0 * increment });
         auto const text = jt::dh::createText(getGame()->getRenderTarget(), "Mg", 12);
-        text->setOrigin(jt::Vector2 { -4.0f, -2.0f });
+        text->setOrigin(jt::Vector2 { -5.0f, -1.0f });
         text->SetTextAlign(jt::Text::TextAlign::LEFT);
         m_buttonSwitchToMG->setDrawable(text);
     }
@@ -75,13 +94,13 @@ void StateMenu::createShipUpgradeButtons()
 
         m_buttonSwitchToMissile->addCallback(
             [this]() { playerConfigSwitchToMissile(m_playerConfig); });
-        m_buttonSwitchToMissile->setPosition(jt::Vector2 { 200+24, 150 + 48});
+        m_buttonSwitchToMissile->setPosition(
+            jt::Vector2 { xOffset + 2.0f * increment, yOffset + 24 });
         auto const text = jt::dh::createText(getGame()->getRenderTarget(), "Ro", 12);
-        text->setOrigin(jt::Vector2 { -4.0f, -2.0f });
+        text->setOrigin(jt::Vector2 { -5.0f, -1.0f });
         text->SetTextAlign(jt::Text::TextAlign::LEFT);
         m_buttonSwitchToMissile->setDrawable(text);
     }
-    std::shared_ptr<jt::Button> m_buttonSwitchToMissile;
 }
 void StateMenu::createLevelButtons()
 {
@@ -96,13 +115,14 @@ void StateMenu::createLevelButtons()
         std::string filename = l["filename"];
         std::string displayName = l["display"];
 
-        float xPos = 74.0f;
-        float yPos = 70.0f + 24.0f * (int)(counter / 2);
+        float xPos = 10.0f;
+        float yPos = 125.0f + 36.0f + 24.0f * (int)(counter / 2);
+        unsigned int buttonWidth = 100U;
         if (counter % 2 == 1) {
-            xPos += 134.0f;
+            xPos += buttonWidth + 8.0f;
         }
 
-        auto button = std::make_shared<jt::Button>(jt::Vector2u { 128, 18 });
+        auto button = std::make_shared<jt::Button>(jt::Vector2u { buttonWidth, 18 });
         add(button);
         if (m_playerConfig.availableLevels.find(counter) == m_playerConfig.availableLevels.end()) {
             // button->setVisible(false);
@@ -111,7 +131,7 @@ void StateMenu::createLevelButtons()
         button->addCallback([this, filename]() { startTransitionToStateGame(filename); });
         button->setPosition(jt::Vector2 { xPos, yPos });
         auto const text = jt::dh::createText(getGame()->getRenderTarget(), displayName, 12);
-        text->setOrigin(jt::Vector2 { -4.0f, -2.0f });
+        text->setOrigin(jt::Vector2 { -5.0f, -1.0f });
         text->SetTextAlign(jt::Text::TextAlign::LEFT);
         button->setDrawable(text);
 
@@ -148,15 +168,16 @@ void StateMenu::createTextCredits()
             + "\nThis game uses the font Oxanium, licensed under SIL OFL v1.1.",
         10U, GP::PaletteFontFront());
     m_text_Credits->SetTextAlign(jt::Text::TextAlign::LEFT);
-    m_text_Credits->setPosition({ 10, GP::GetScreenSize().y() - m_text_Credits->getLocalBounds().height()- 8 });
+    m_text_Credits->setPosition(
+        { 10, GP::GetScreenSize().y() - m_text_Credits->getLocalBounds().height() - 8 });
     m_text_Credits->setShadow(GP::PaletteFontShadow(), jt::Vector2 { 1, 1 });
 }
 void StateMenu::createTextTitle()
 {
-    float half_width = GP::GetScreenSize().x() / 2;
     m_text_Title = jt::dh::createText(
-        getGame()->getRenderTarget(), GP::GameName(), 32U, GP::PaletteFontFront());
-    m_text_Title->setPosition({ half_width, 10 });
+        getGame()->getRenderTarget(), GP::GameName(), 20U, GP::PaletteFontFront());
+    m_text_Title->setPosition({ 10, 6 });
+    m_text_Title->SetTextAlign(jt::Text::TextAlign::LEFT);
     m_text_Title->setShadow(GP::PaletteFontShadow(), jt::Vector2 { 3, 3 });
 }
 
@@ -206,6 +227,9 @@ void StateMenu::updateShipUpgradeButtons(float const elapsed)
 
     m_buttonSwitchToMG->setActive(playerConfigCanSwitchToMg(m_playerConfig));
     m_buttonSwitchToMissile->setActive(playerConfigCanSwitchToMissile(m_playerConfig));
+
+    m_textEngine->update(elapsed);
+    m_textSensor->update(elapsed);
 }
 
 void StateMenu::updateDrawables(const float& elapsed)
@@ -244,6 +268,8 @@ void StateMenu::doInternalDraw() const
 {
     m_background->draw(getGame()->getRenderTarget());
 
+    m_quasarImage->draw(getGame()->getRenderTarget());
+
     m_text_Title->draw(getGame()->getRenderTarget());
     m_text_Credits->draw(getGame()->getRenderTarget());
 
@@ -252,6 +278,8 @@ void StateMenu::doInternalDraw() const
     }
 
     m_buttonIncreaseSensors->draw();
+    m_textEngine->draw(getGame()->getRenderTarget());
+    m_textSensor->draw(getGame()->getRenderTarget());
     m_buttonIncreaseEngine->draw();
     m_buttonSwitchToMG->draw();
     m_buttonSwitchToMissile->draw();
