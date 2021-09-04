@@ -39,7 +39,6 @@ it freely, subject to the following restrictions:
 #include "math_helper.hpp"
 #include "rect.hpp"
 #include "vector.hpp"
-#include <SFML/Graphics.hpp>
 #include <memory>
 
 namespace jt {

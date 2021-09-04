@@ -10,7 +10,7 @@ EnemyShootAiMg::EnemyShootAiMg(ShotSpawnInterface& shotSpawnInterface, std::shar
 {
 }
 
-void EnemyShootAiMg::act(Enemy& enemy, float elapsed) {
+void EnemyShootAiMg::act(Enemy& enemy, float /*elapsed*/) {
     if (enemy.canShoot())
     {
         enemy.shoot();

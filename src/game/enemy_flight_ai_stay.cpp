@@ -6,7 +6,7 @@ EnemyFlightAiStay::EnemyFlightAiStay(jt::Vector2 pos)
 {
 }
 
-void EnemyFlightAiStay::act(Enemy& enemy, float elapsed)
+void EnemyFlightAiStay::act(Enemy& enemy, float /*elapsed*/)
 {
     auto t = enemy.getTransform();
     t->position = m_position;

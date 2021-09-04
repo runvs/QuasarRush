@@ -17,7 +17,7 @@ private:
     bool m_fired_by_player { true };
 
 public:
-    explicit ShotMg::ShotMg(ExplosionSpawnInterface& explosionSpawnInterface);
+    explicit ShotMg(ExplosionSpawnInterface& explosionSpawnInterface);
 
     void doCreate() override;
     float getDamageValue() override;

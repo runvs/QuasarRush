@@ -56,10 +56,11 @@ jt::Vector2 RenderWindow::getMousePosition()
     int mx { 0 };
     int my { 0 };
     auto const mouseState = SDL_GetMouseState(&mx, &my);
+    (void)mouseState;
     return jt::Vector2 { static_cast<float>(mx), static_cast<float>(my) };
 }
 
-jt::Vector2 RenderWindow::getMousePositionScreen(float zoom)
+jt::Vector2 RenderWindow::getMousePositionScreen(float /*zoom*/)
 {
     std::cerr << "RenderWindow::getMousepositonScreen() not supported by SDL Renderwindow.\n";
     return jt::Vector2 { 0.0f, 0.0f };
