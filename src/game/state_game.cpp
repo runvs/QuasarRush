@@ -19,6 +19,7 @@
 #include "tween_position.hpp"
 #include "tween_scale.hpp"
 #include <algorithm>
+#include <collision.hpp>
 
 void StateGame::doInternalCreate()
 {
@@ -208,12 +209,10 @@ std::shared_ptr<EnemyAI> StateGame::createFlightAi(EnemyLoadInfo& e) const
 void StateGame::doInternalUpdate(float const elapsed)
 {
     if (m_running) {
-        if (m_timer != -100.0f)
-        {
+        if (m_timer != -100.0f) {
             m_timer -= elapsed;
             m_timeObserver->notify(m_timer);
-            if (m_timer <= 0)
-            {
+            if (m_timer <= 0) {
                 endGame();
             }
         }
@@ -250,17 +249,14 @@ void StateGame::handlePlayerTargetCollisions()
         if (target->hasBeenHit()) {
             continue;
         }
-        auto const targetPosition = target->getPosition();
-        auto diff = targetPosition - playerPosition;
-        auto lengthSquared = jt::MathHelper::lengthSquared(diff);
-
-        if (lengthSquared <= GP::PlayerHalfSize() * GP::PlayerHalfSize()) {
+        if (jt::Collision::CircleTest(target->getAnimation(), m_player->getSprite())) {
             for (auto tw : target->hit()) {
                 add(tw);
             }
         }
     }
 }
+
 void StateGame::handlePlayerPlanetCollision()
 {
     auto const playerPos = m_player->getTransform()->position;
