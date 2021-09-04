@@ -13,11 +13,16 @@ class StateCredits : public jt::GameState {
 private:
     std::shared_ptr<StateMenuBase> m_menuBase;
     std::shared_ptr<jt::Text> m_text_Credits;
+    bool m_started { false };
 
 public:
+    StateCredits();
     void doInternalCreate() override;
     void doInternalUpdate(float elapsed) override;
     void doInternalDraw() const override;
+    void setPlayerConfig(PlayerConfig const& pc);
+    void startTransitionToStateMenu();
+    void createTweenTransition();
 };
 
 #endif // QUASARRUSH_STATE_CREDITS_HPP

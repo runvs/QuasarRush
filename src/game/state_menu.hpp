@@ -29,8 +29,7 @@ private:
     std::vector<std::shared_ptr<jt::Button>> m_buttons;
 
     std::string m_levelFilename{""};
-    PlayerConfig m_playerConfig;
-
+    
     std::shared_ptr<jt::Button> m_buttonIncreaseSensors;
     std::shared_ptr<jt::Button> m_buttonIncreaseEngine;
 

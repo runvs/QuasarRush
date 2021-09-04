@@ -2,6 +2,7 @@
 #define QUASARRUSH_STATE_MENU_BASE_HPP
 
 #include "game_state.hpp"
+#include "player_config.hpp"
 #include "render_target.hpp"
 #include <functional>
 #include <memory>
@@ -23,6 +24,7 @@ private:
     std::shared_ptr<jt::Sprite> m_vignette;
 
 public:
+    PlayerConfig m_playerConfig;
     void create(std::shared_ptr<jt::renderTarget> rt, jt::GameState& state);
     void update(float elapsed);
     void draw(std::shared_ptr<jt::renderTarget> rt);

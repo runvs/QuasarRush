@@ -17,11 +17,12 @@
 #include "tween_position.hpp"
 #include <fstream>
 
-StateMenu::StateMenu() = default;
+StateMenu::StateMenu() {
+    m_menuBase = std::make_shared<StateMenuBase>();
+}
 
 void StateMenu::doInternalCreate()
 {
-    m_menuBase = std::make_shared<StateMenuBase>();
     m_menuBase->create(getGame()->getRenderTarget(), *this);
 
     createLevelButtons();
@@ -30,6 +31,7 @@ void StateMenu::doInternalCreate()
     add(m_buttonCredits);
     m_buttonCredits->addCallback([this]() {
         auto newState = std::make_shared<StateCredits>();
+        newState->setPlayerConfig(m_menuBase->m_playerConfig);
         getGame()->switchState(newState);
     });
     m_buttonCredits->setPosition(jt::Vector2 { 10, 280 });
@@ -60,7 +62,7 @@ void StateMenu::createShipUpgradeButtons()
         m_buttonIncreaseSensors = std::make_shared<jt::Button>(jt::Vector2u { 18, 18 });
         add(m_buttonIncreaseSensors);
         m_buttonIncreaseSensors->addCallback(
-            [this]() { playerConfigIncreaseSensors(m_playerConfig); });
+            [this]() { playerConfigIncreaseSensors(m_menuBase->m_playerConfig); });
         m_buttonIncreaseSensors->setPosition(jt::Vector2 { xOffset, yOffset + 0 * increment });
         auto const text = jt::dh::createText(getGame()->getRenderTarget(), "+", 12);
         text->setOrigin(jt::Vector2 { -5.0f, -1.0f });
@@ -71,7 +73,7 @@ void StateMenu::createShipUpgradeButtons()
         m_buttonIncreaseEngine = std::make_shared<jt::Button>(jt::Vector2u { 18, 18 });
         add(m_buttonIncreaseEngine);
         m_buttonIncreaseEngine->addCallback(
-            [this]() { playerConfigIncreaseEngine(m_playerConfig); });
+            [this]() { playerConfigIncreaseEngine(m_menuBase->m_playerConfig); });
         m_buttonIncreaseEngine->setPosition(jt::Vector2 { xOffset, yOffset + 1.0f * increment });
         auto const text = jt::dh::createText(getGame()->getRenderTarget(), "+", 12);
         text->setOrigin(jt::Vector2 { -5.0f, -1.0f });
@@ -83,7 +85,7 @@ void StateMenu::createShipUpgradeButtons()
         m_buttonSwitchToMG = std::make_shared<jt::Button>(jt::Vector2u { 18, 18 });
         add(m_buttonSwitchToMG);
 
-        m_buttonSwitchToMG->addCallback([this]() { playerConfigSwitchToMg(m_playerConfig); });
+        m_buttonSwitchToMG->addCallback([this]() { playerConfigSwitchToMg(m_menuBase->m_playerConfig); });
         m_buttonSwitchToMG->setPosition(
             jt::Vector2 { xOffset + 2 * increment, yOffset + 0 * increment });
         auto const text = jt::dh::createText(getGame()->getRenderTarget(), "Mg", 12);
@@ -96,7 +98,7 @@ void StateMenu::createShipUpgradeButtons()
         add(m_buttonSwitchToMissile);
 
         m_buttonSwitchToMissile->addCallback(
-            [this]() { playerConfigSwitchToMissile(m_playerConfig); });
+            [this]() { playerConfigSwitchToMissile(m_menuBase->m_playerConfig); });
         m_buttonSwitchToMissile->setPosition(
             jt::Vector2 { xOffset + 2.0f * increment, yOffset + 24 });
         auto const text = jt::dh::createText(getGame()->getRenderTarget(), "Ro", 12);
@@ -127,7 +129,7 @@ void StateMenu::createLevelButtons()
 
         auto button = std::make_shared<jt::Button>(jt::Vector2u { buttonWidth, 18 });
         add(button);
-        if (m_playerConfig.availableLevels.find(counter) == m_playerConfig.availableLevels.end()) {
+        if (m_menuBase->m_playerConfig.availableLevels.find(counter) == m_menuBase->m_playerConfig.availableLevels.end()) {
             // button->setVisible(false);
             button->setActive(false);
         }
@@ -152,11 +154,11 @@ void StateMenu::doInternalUpdate(float const elapsed)
 }
 void StateMenu::updateShipUpgradeButtons(float const elapsed)
 {
-    m_buttonIncreaseSensors->setActive(playerConfigHasPointsToSpend(m_playerConfig));
-    m_buttonIncreaseEngine->setActive(playerConfigHasPointsToSpend(m_playerConfig));
+    m_buttonIncreaseSensors->setActive(playerConfigHasPointsToSpend(m_menuBase->m_playerConfig));
+    m_buttonIncreaseEngine->setActive(playerConfigHasPointsToSpend(m_menuBase->m_playerConfig));
 
-    m_buttonSwitchToMG->setActive(playerConfigCanSwitchToMg(m_playerConfig));
-    m_buttonSwitchToMissile->setActive(playerConfigCanSwitchToMissile(m_playerConfig));
+    m_buttonSwitchToMG->setActive(playerConfigCanSwitchToMg(m_menuBase->m_playerConfig));
+    m_buttonSwitchToMissile->setActive(playerConfigCanSwitchToMissile(m_menuBase->m_playerConfig));
 
     m_textEngine->update(elapsed);
     m_textSensor->update(elapsed);
@@ -181,7 +183,7 @@ void StateMenu::createTweenTransition()
     m_menuBase->startFadeOut([this]() {
         std::shared_ptr<StateGame> newState = std::make_shared<StateGame>();
         newState->setLevel(m_levelFilename);
-        newState->setPlayerConfig(m_playerConfig);
+        newState->setPlayerConfig(m_menuBase->m_playerConfig);
         getGame()->switchState(newState);
     }, *this);
 }
@@ -204,4 +206,4 @@ void StateMenu::doInternalDraw() const
     m_menuBase->drawOverlay(getGame()->getRenderTarget());
 }
 
-void StateMenu::setPlayerConfig(PlayerConfig const& pc) { m_playerConfig = pc; }
+void StateMenu::setPlayerConfig(PlayerConfig const& pc) { m_menuBase->m_playerConfig = pc; }

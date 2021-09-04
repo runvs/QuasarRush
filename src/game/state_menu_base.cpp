@@ -73,3 +73,4 @@ void StateMenuBase::startFadeOut(std::function<void(void)> callback, jt::GameSta
     tw->addCompleteCallback(callback);
     state.add(tw);
 }
+
