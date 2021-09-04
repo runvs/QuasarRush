@@ -219,7 +219,7 @@ void StateGame::doInternalUpdate(float const elapsed)
             m_timer -= elapsed;
             m_timeObserver->notify(m_timer);
             if (m_timer <= 0) {
-                endGame();
+                endGame(false);
             }
         }
         m_player->setProjectionPoints(m_physics_system->precalculate_path(
@@ -281,7 +281,7 @@ void StateGame::handlePlayerPlanetCollision()
 
         if (lsquared <= (GP::PlayerHalfSize() + GP::PlanetHalfSize())
                 * (GP::PlayerHalfSize() + GP::PlanetHalfSize())) {
-            endGame();
+            endGame(false);
         }
     }
 }
@@ -375,7 +375,7 @@ void StateGame::spawnShotMissile(jt::Vector2 const& pos, jt::Vector2 const& dir,
         std::shared_ptr<Transform> target = nullptr;
 
         if (!m_enemies.empty()) {
-            auto const idx = jt::Random::getInt(0, m_enemies.size() - 1);
+            auto const idx = jt::Random::getInt(0, static_cast<int>(m_enemies.size()) - 1);
             target = m_enemies.at(idx).lock()->getTransform();
         }
 
@@ -408,7 +408,7 @@ void StateGame::doInternalDraw() const
     m_cursor->draw(getGame()->getRenderTarget());
 }
 
-void StateGame::endGame()
+void StateGame::endGame(bool win)
 {
     if (m_hasEnded) {
         // trigger this function only once
@@ -420,15 +420,15 @@ void StateGame::endGame()
     auto tw = jt::TweenAlpha<jt::Shape>::create(
         m_overlay, 0.5f, std::uint8_t { 0 }, std::uint8_t { 255 });
     tw->setSkipFrames();
-    tw->addCompleteCallback([this]() {
+    tw->addCompleteCallback([this, win]() {
         auto newState = std::make_shared<StateMenu>();
-
-        int maxCurrentLevel = *std::max_element(
-            m_playerConfig.availableLevels.begin(), m_playerConfig.availableLevels.end());
-        m_playerConfig.availableLevels.insert(maxCurrentLevel + 1);
-
+        if (win) {
+            int maxCurrentLevel = *std::max_element(
+                m_playerConfig.availableLevels.begin(), m_playerConfig.availableLevels.end());
+            m_playerConfig.availableLevels.insert(maxCurrentLevel + 1);
+            m_playerConfig.pointsToSpend++;
+        }
         newState->setPlayerConfig(m_playerConfig); // keep playerConfig consistent
-
         getGame()->switchState(newState);
     });
     add(tw);
@@ -439,7 +439,7 @@ void StateGame::setLevel(std::string const& level_filename) { m_level_filename =
 void StateGame::checkGameOver()
 {
     if (m_targets.empty() && m_enemies.empty()) {
-        endGame();
+        endGame(true);
     }
 }
 void StateGame::setPlayerConfig(PlayerConfig const& pc) { m_playerConfig = pc; }

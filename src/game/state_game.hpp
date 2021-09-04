@@ -80,7 +80,7 @@ private:
     void doInternalUpdate(float const elapsed) override;
     void doInternalDraw() const override;
 
-    void endGame();
+    void endGame(bool win);
 
     void createLevelEntities();
     void handleShotCollisions();

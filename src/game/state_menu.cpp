@@ -28,6 +28,60 @@ void StateMenu::doInternalCreate()
     createTweens();
 
     getGame()->getRenderWindow()->setMouseCursorVisible(true);
+
+    createShipUpgradeButtons();
+}
+void StateMenu::createShipUpgradeButtons()
+{
+    {
+        m_buttonIncreaseSensors = std::make_shared<jt::Button>(jt::Vector2u { 18, 18 });
+        add(m_buttonIncreaseSensors);
+        m_buttonIncreaseSensors->addCallback(
+            [this]() { playerConfigIncreaseSensors(m_playerConfig); });
+        m_buttonIncreaseSensors->setPosition(jt::Vector2 { 200, 150 + 0 });
+        auto const text = jt::dh::createText(getGame()->getRenderTarget(), "+", 12);
+        text->setOrigin(jt::Vector2 { -4.0f, -2.0f });
+        text->SetTextAlign(jt::Text::TextAlign::LEFT);
+        m_buttonIncreaseSensors->setDrawable(text);
+    }
+    {
+        m_buttonIncreaseEngine = std::make_shared<jt::Button>(jt::Vector2u { 18, 18 });
+        add(m_buttonIncreaseEngine);
+        m_buttonIncreaseEngine->addCallback(
+            [this]() { playerConfigIncreaseEngine(m_playerConfig); });
+        m_buttonIncreaseEngine->setPosition(jt::Vector2 { 200, 150 + 24});
+        auto const text = jt::dh::createText(getGame()->getRenderTarget(), "+", 12);
+        text->setOrigin(jt::Vector2 { -4.0f, -2.0f });
+        text->SetTextAlign(jt::Text::TextAlign::LEFT);
+        m_buttonIncreaseEngine->setDrawable(text);
+    }
+
+
+    {
+        m_buttonSwitchToMG = std::make_shared<jt::Button>(jt::Vector2u { 18, 18 });
+        add(m_buttonSwitchToMG);
+
+        m_buttonSwitchToMG->addCallback(
+            [this]() { playerConfigSwitchToMg(m_playerConfig); });
+        m_buttonSwitchToMG->setPosition(jt::Vector2 { 200, 150 + 48});
+        auto const text = jt::dh::createText(getGame()->getRenderTarget(), "Mg", 12);
+        text->setOrigin(jt::Vector2 { -4.0f, -2.0f });
+        text->SetTextAlign(jt::Text::TextAlign::LEFT);
+        m_buttonSwitchToMG->setDrawable(text);
+    }
+    {
+        m_buttonSwitchToMissile = std::make_shared<jt::Button>(jt::Vector2u { 18, 18 });
+        add(m_buttonSwitchToMissile);
+
+        m_buttonSwitchToMissile->addCallback(
+            [this]() { playerConfigSwitchToMissile(m_playerConfig); });
+        m_buttonSwitchToMissile->setPosition(jt::Vector2 { 200+24, 150 + 48});
+        auto const text = jt::dh::createText(getGame()->getRenderTarget(), "Ro", 12);
+        text->setOrigin(jt::Vector2 { -4.0f, -2.0f });
+        text->SetTextAlign(jt::Text::TextAlign::LEFT);
+        m_buttonSwitchToMissile->setDrawable(text);
+    }
+    std::shared_ptr<jt::Button> m_buttonSwitchToMissile;
 }
 void StateMenu::createLevelButtons()
 {
@@ -43,7 +97,7 @@ void StateMenu::createLevelButtons()
         std::string displayName = l["display"];
 
         float xPos = 74.0f;
-        float yPos = 80.0f + 24.0f * (int)(counter / 2);
+        float yPos = 70.0f + 24.0f * (int)(counter / 2);
         if (counter % 2 == 1) {
             xPos += 134.0f;
         }
@@ -141,7 +195,19 @@ void StateMenu::createTweenCreditsPosition()
     add(tween);
 }
 
-void StateMenu::doInternalUpdate(float const elapsed) { updateDrawables(elapsed); }
+void StateMenu::doInternalUpdate(float const elapsed)
+{
+    updateDrawables(elapsed);
+    updateShipUpgradeButtons(elapsed);
+}
+void StateMenu::updateShipUpgradeButtons(float const elapsed)
+{
+    m_buttonIncreaseSensors->setActive(playerConfigHasPointsToSpend(m_playerConfig));
+    m_buttonIncreaseEngine->setActive(playerConfigHasPointsToSpend(m_playerConfig));
+
+    m_buttonSwitchToMG->setActive(playerConfigCanSwitchToMg(m_playerConfig));
+    m_buttonSwitchToMissile->setActive(playerConfigCanSwitchToMissile(m_playerConfig));
+}
 
 void StateMenu::updateDrawables(const float& elapsed)
 {
@@ -185,6 +251,11 @@ void StateMenu::doInternalDraw() const
     for (auto& button : m_buttons) {
         button->draw();
     }
+
+    m_buttonIncreaseSensors->draw();
+    m_buttonIncreaseEngine->draw();
+    m_buttonSwitchToMG->draw();
+    m_buttonSwitchToMissile->draw();
 
     m_overlay->draw(getGame()->getRenderTarget());
     m_vignette->draw(getGame()->getRenderTarget());

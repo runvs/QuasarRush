@@ -10,7 +10,22 @@ struct PlayerConfig {
     int sensorLevel { 1 };
     int engineLevel { 1 };
 
-    std::set<int> availableLevels { 0, 1, 2, 3, 4 };
+    int pointsToSpend { 0 };
+
+    std::set<int> availableLevels { 0 };
+    std::set<eWeaponType> availableWeapons { WeaponMg, WeaponRockets };
 };
+
+bool playerConfigHasPointsToSpend(PlayerConfig const& pc);
+
+void playerConfigIncreaseSensors(PlayerConfig& pc);
+void playerConfigIncreaseEngine(PlayerConfig& pc);
+
+
+bool playerConfigCanSwitchToMg(PlayerConfig const& pc);
+bool playerConfigCanSwitchToMissile(PlayerConfig const& pc);
+
+void playerConfigSwitchToMg(PlayerConfig& pc);
+void playerConfigSwitchToMissile(PlayerConfig& pc);
 
 #endif // QUASARRUSH_PLAYER_CONFIG_HPP

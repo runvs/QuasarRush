@@ -36,6 +36,12 @@ private:
     std::string m_levelFilename{""};
     PlayerConfig m_playerConfig;
 
+    std::shared_ptr<jt::Button> m_buttonIncreaseSensors;
+    std::shared_ptr<jt::Button> m_buttonIncreaseEngine;
+
+    std::shared_ptr<jt::Button> m_buttonSwitchToMG;
+    std::shared_ptr<jt::Button> m_buttonSwitchToMissile;
+
     bool m_started { false };
 
     void doInternalCreate() override;
@@ -60,6 +66,8 @@ private:
 
     void doInternalDraw() const override;
     void createLevelButtons();
+    void createShipUpgradeButtons();
+    void updateShipUpgradeButtons(float const elapsed);
 };
 
 #endif
