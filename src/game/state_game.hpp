@@ -95,6 +95,7 @@ private:
         float timeOffset, eInfoTextAlign align);
     std::shared_ptr<EnemyAI> createFlightAi(EnemyLoadInfo& e) const;
     std::shared_ptr<EnemyAI> createShootAi(EnemyLoadInfo e);
+    void createParticleSystems();
 };
 
 #endif

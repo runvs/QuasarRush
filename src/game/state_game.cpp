@@ -50,30 +50,7 @@ void StateGame::doInternalCreate()
 
     m_physics_system = std::make_unique<PhysicsSystem>();
 
-    m_trailParticles = jt::ParticleSystem<jt::Shape, 100>::create(
-        []() {
-            auto s = std::make_shared<jt::Shape>();
-            s->makeRect(jt::Vector2 { 2.0f, 2.0f });
-            s->setPosition(jt::Vector2 { -100.0f, -100.0f });
-            return s;
-        },
-        [this](auto s) {
-            s->setPosition(m_trailSpawnPosition);
-
-            auto tw = jt::TweenAlpha<jt::Shape>::create(s, 0.8f, 100, 0);
-            add(tw);
-            float spread = 6;
-            auto offset
-                = jt::Random::getRandomPointin({ -spread, -spread, spread * 2.0f, spread * 2.0f });
-            auto tp = jt::TweenPosition<jt::Shape>::create(
-                s, 0.8f, m_trailSpawnPosition, m_trailSpawnPosition + offset);
-            add(tp);
-
-            auto ts = jt::TweenScale<jt::Shape>::create(s, 0.4f, { 1.0f, 1.0f }, { 1.5f, 1.5f });
-            ts->setStartDelay(0.4f);
-            add(ts);
-        });
-    add(m_trailParticles);
+    createParticleSystems();
 
     createLevelEntities();
 
@@ -85,6 +62,35 @@ void StateGame::doInternalCreate()
     setAutoDraw(false);
 
     createTutorial();
+}
+void StateGame::createParticleSystems()
+{
+    m_trailParticles = jt::ParticleSystem<jt::Shape, 100>::create(
+        []() {
+            auto s = std::make_shared<jt::Shape>();
+            s->makeRect(jt::Vector2 { 2.0f, 2.0f });
+            s->setPosition(jt::Vector2 { -100.0f, -100.0f });
+            return s;
+        },
+        [this](auto s) {
+            s->setPosition(m_trailSpawnPosition);
+
+            auto tw = jt::TweenAlpha<jt::Shape>::create(s, 0.8f, 100, 0);
+            tw->setSkipFrames(1);
+            add(tw);
+            float const spread = 6;
+            auto const offset
+                = jt::Random::getRandomPointin({ -spread, -spread, spread * 2.0f, spread * 2.0f });
+            auto tp = jt::TweenPosition<jt::Shape>::create(
+                s, 0.8f, m_trailSpawnPosition, m_trailSpawnPosition + offset);
+            add(tp);
+
+            auto ts = jt::TweenScale<jt::Shape>::create(s, 0.4f, { 1.0f, 1.0f }, { 1.5f, 1.5f });
+            ts->setStartDelay(0.4f);
+            add(ts);
+            s->update(0.1f);
+        });
+    add(m_trailParticles);
 }
 void StateGame::createTutorial()
 {
