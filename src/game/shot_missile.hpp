@@ -19,6 +19,7 @@ private:
     SpawnTrailInterface& m_spawnTrailInterface;
     ExplosionSpawnInterface& m_explosionSpawnInterface;
     std::shared_ptr<jt::Sprite> m_glowOverlayFlame;
+    float m_missileAcquisitionTime;
 
 public:
     explicit ShotMissile(
