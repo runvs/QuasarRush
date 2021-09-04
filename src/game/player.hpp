@@ -34,12 +34,14 @@ private:
     ShotSpawnInterface& m_shotSpawnInterface;
     SpawnTrailInterface& m_spawnTrailInterface;
 
+
     std::shared_ptr<jt::Animation> m_shipSprite;
     std::shared_ptr<jt::Animation> m_flameSprite;
     std::shared_ptr<jt::Shape> m_projectionShape;
     std::shared_ptr<Transform> m_transform;
     std::vector<jt::Vector2> m_projectionPoints;
     std::shared_ptr<jt::Sprite> m_glowOverlayFlame;
+    std::shared_ptr<jt::Sprite> m_glowOverlayShip;
 
     // TODO Use shoot timer and shoot timer max to update some indicator in the HUD
     float m_shootTimer { 0.0f };

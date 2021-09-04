@@ -37,6 +37,10 @@ void Player::doCreate()
     m_glowOverlayFlame->setOrigin(jt::Vector2{16.0f,16.0f});
     m_glowOverlayFlame->setOffset(jt::Vector2{16.0f, 16.0f});
 
+    m_glowOverlayShip = std::make_shared<jt::Sprite>();
+    m_glowOverlayShip->loadSprite("#g#128#120");
+    m_glowOverlayShip->setColor(jt::Color{36,8,119});
+    m_glowOverlayShip->setOrigin(jt::Vector2{64.0f,64.0f});
 }
 
 void Player::doUpdate(float const elapsed)
@@ -75,6 +79,9 @@ void Player::updateSprite(float const elapsed)
     m_shipSprite->setRotation(m_transform->angle);
     m_shipSprite->setPosition(jt::Vector2 { px, py });
     m_shipSprite->update(elapsed);
+
+    m_glowOverlayShip->setPosition(m_transform->position);
+    m_glowOverlayShip->update(elapsed);
 }
 
 void Player::updateShooting(float const elapsed)
@@ -136,7 +143,10 @@ void Player::doDraw() const
         m_projectionShape->draw(getGame()->getRenderTarget());
     }
 
+
+    m_glowOverlayShip->draw(getGame()->getRenderTarget());
     m_shipSprite->draw(getGame()->getRenderTarget());
+
     m_flameSprite->draw(getGame()->getRenderTarget());
     m_glowOverlayFlame->draw(getGame()->getRenderTarget());
 }

@@ -11,7 +11,7 @@ public:
 
     static std::string GameName() { return "Quasar Rush"; }
     static std::string AuthorName() { return "Thunraz & Laguna_999"; }
-    static std::string JamName() { return "AGBIC 2021"; }
+    static std::string JamName() { return "AGBIC"; }
     static std::string JamDate() { return "August 2021"; }
 
     static jt::Vector2 GetWindowSize() { return jt::Vector2 { 800, 600 }; }
@@ -32,8 +32,8 @@ public:
     static jt::Color PaletteColor8() { return jt::Color { 157, 64, 43 }; }
 
     static float PlayerRotationSpeed() { return 80.0; }
-    static float PlayerAcceleration() { return 2.0; }
-    static float PlayerAccelerationBoostFactor() { return 3.2f; }
+    static float PlayerAcceleration() { return 3.0; }
+    static float PlayerAccelerationBoostFactor() { return 2.2f; }
 
     static float PlayerShootTimerMg() { return 0.09f; }
     static float PlayerShootTimerMissile() { return 5.0f; }
