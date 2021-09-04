@@ -25,6 +25,7 @@ void ShotMissile::doCreate()
     m_glowOverlayFlame = std::make_shared<jt::Sprite>();
     m_glowOverlayFlame->loadSprite("#g#10#150");
     m_glowOverlayFlame->setOrigin(jt::Vector2 { 5.0f, 5.0f });
+    m_missileAcquisitionTime = jt::Random::getFloat(0.45f, 0.7f);
 }
 
 void ShotMissile::doUpdate(float const elapsed)
@@ -34,14 +35,13 @@ void ShotMissile::doUpdate(float const elapsed)
     m_animation->setRotation(-m_transform->angle);
     m_animation->update(elapsed);
 
-    float missileTargetAcquisitionTime = 0.6f;
-    float velocityDrag = 0.995f;
+    float const velocityDrag = 0.995f;
 
     auto v = m_transform->velocity;
     v = v * velocityDrag;
     m_transform->velocity = v;
 
-    if (getAge() > missileTargetAcquisitionTime) {
+    if (getAge() > m_missileAcquisitionTime) {
         m_animation->play("fire");
 
         if (m_target.expired()) {
@@ -76,7 +76,7 @@ void ShotMissile::doUpdate(float const elapsed)
 
     float const t = getAge();
     float a = (abs(cos(sin(t * 8.0f) + t * 9.0f)) * 0.75f + 0.25f)
-        * (getAge() > missileTargetAcquisitionTime ? 1.0f : 0.0f);
+        * (getAge() > m_missileAcquisitionTime ? 1.0f : 0.0f);
     jt::Color col { 255, 255, 255, static_cast<std::uint8_t>(a * 255) };
     m_glowOverlayFlame->setColor(col);
 
