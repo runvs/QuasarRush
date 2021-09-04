@@ -1,5 +1,6 @@
 {
   "background": "background_04.png",
+  "time": 90.0,
   "player": {
     "x": 10.0,
     "y": 70.0,
