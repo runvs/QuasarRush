@@ -5,6 +5,7 @@
 #include "enemy_load_info.hpp"
 #include "explosion_spawn_interface.hpp"
 #include "game_state.hpp"
+#include "hud/observer_interface.hpp"
 #include "info_text.hpp"
 #include "object_group.hpp"
 #include "particle_system.hpp"
@@ -16,7 +17,6 @@
 #include "shot_spawn_interface.hpp"
 #include "spawn_trail_interface.hpp"
 #include "target.hpp"
-#include "hud/observer_interface.hpp"
 #include <memory>
 #include <vector>
 
@@ -45,6 +45,7 @@ private:
     std::shared_ptr<jt::Sprite> m_background;
     std::shared_ptr<jt::Shape> m_overlay;
     std::shared_ptr<jt::Sprite> m_vignette;
+    std::shared_ptr<jt::Sprite> m_cursor;
     std::shared_ptr<Hud> m_hud;
     std::vector<std::shared_ptr<InfoText>> m_infoTexts;
 
@@ -70,7 +71,6 @@ private:
 
     float m_timer;
     std::shared_ptr<ObserverInterface<float>> m_timeObserver;
-
 
 public:
     void spawnSmallExplosion(jt::Vector2 const& position) override;

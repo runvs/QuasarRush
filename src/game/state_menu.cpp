@@ -26,6 +26,8 @@ void StateMenu::doInternalCreate()
     createShapes();
     createVignette();
     createTweens();
+
+    getGame()->getRenderWindow()->setMouseCursorVisible(true);
 }
 void StateMenu::createLevelButtons()
 {
@@ -49,7 +51,7 @@ void StateMenu::createLevelButtons()
         auto button = std::make_shared<jt::Button>(jt::Vector2u { 128, 18 });
         add(button);
         if (m_playerConfig.availableLevels.find(counter) == m_playerConfig.availableLevels.end()) {
-            //button->setVisible(false);
+            // button->setVisible(false);
             button->setActive(false);
         }
         button->addCallback([this, filename]() { startTransitionToStateGame(filename); });

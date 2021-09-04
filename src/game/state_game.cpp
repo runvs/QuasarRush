@@ -49,6 +49,10 @@ void StateGame::doInternalCreate()
     m_vignette->setIgnoreCamMovement(true);
     m_vignette->setColor({ 255, 255, 255, 100 });
 
+    m_cursor = std::make_shared<jt::Sprite>();
+    m_cursor->loadSprite("assets/crosshair.png");
+    m_cursor->setOffset(jt::Vector2 { -8.0f, -8.0f });
+
     m_physics_system = std::make_unique<PhysicsSystem>();
 
     createParticleSystems();
@@ -63,6 +67,8 @@ void StateGame::doInternalCreate()
     setAutoDraw(false);
 
     createTutorial();
+
+    getGame()->getRenderWindow()->setMouseCursorVisible(false);
 }
 void StateGame::createParticleSystems()
 {
@@ -235,6 +241,9 @@ void StateGame::doInternalUpdate(float const elapsed)
     m_background->update(elapsed);
     m_vignette->update(elapsed);
     m_overlay->update(elapsed);
+
+    m_cursor->setPosition(getGame()->input()->mouse()->getMousePositionScreen());
+    m_cursor->update(elapsed);
 }
 
 void StateGame::handlePlayerTargetCollisions()
@@ -366,7 +375,7 @@ void StateGame::spawnShotMissile(jt::Vector2 const& pos, jt::Vector2 const& dir,
         std::shared_ptr<Transform> target = nullptr;
 
         if (!m_enemies.empty()) {
-            auto const idx = jt::Random::getInt(0, m_enemies.size() -1);
+            auto const idx = jt::Random::getInt(0, m_enemies.size() - 1);
             target = m_enemies.at(idx).lock()->getTransform();
         }
 
@@ -395,6 +404,7 @@ void StateGame::doInternalDraw() const
     }
 
     m_overlay->draw(getGame()->getRenderTarget());
+    m_cursor->draw(getGame()->getRenderTarget());
 }
 
 void StateGame::endGame()

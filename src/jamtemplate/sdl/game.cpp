@@ -113,4 +113,6 @@ std::shared_ptr<MusicPlayerInterface> Game::getMusicPlayer() { return m_musicPla
 
 std::shared_ptr<InputManagerInterface> Game::input() { return m_input; }
 
+std::shared_ptr<jt::RenderWindowInterface> Game::getRenderWindow() const { return m_window; }
+
 } // namespace jt
