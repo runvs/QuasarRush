@@ -3,8 +3,10 @@
 #include "game_properties.hpp"
 #include "math_helper.hpp"
 
-ShotMissile::ShotMissile(SpawnTrailInterface& spawnTrailInterface, ExplosionSpawnInterface& explosionSpawnInterface)
-    : m_spawnTrailInterface { spawnTrailInterface }, m_explosionSpawnInterface{ explosionSpawnInterface}
+ShotMissile::ShotMissile(
+    SpawnTrailInterface& spawnTrailInterface, ExplosionSpawnInterface& explosionSpawnInterface)
+    : m_spawnTrailInterface { spawnTrailInterface }
+    , m_explosionSpawnInterface { explosionSpawnInterface }
 {
 }
 
@@ -12,23 +14,25 @@ void ShotMissile::doCreate()
 {
     m_transform = std::make_shared<Transform>();
 
-    m_sprite = std::make_shared<jt::Sprite>();
-    m_sprite->loadSprite("assets/shot.png");
+    m_animation = std::make_shared<jt::Animation>();
+    m_animation->add("assets/missile.png", "idle", jt::Vector2u { 8, 4 }, { 0 }, 0.15f);
+    m_animation->add("assets/missile.png", "fire", jt::Vector2u { 8, 4 }, { 1, 2, 3 }, 0.15f);
+    m_animation->setOffset(jt::Vector2 { 4.0f, 2.0f });
+    m_animation->play("idle");
 
     m_targetOffset = jt::Random::getRandomPointin(jt::Rect { -15, -15, 30, 30 });
 
     m_glowOverlayFlame = std::make_shared<jt::Sprite>();
     m_glowOverlayFlame->loadSprite("#g#10#150");
-    m_glowOverlayFlame->setOrigin(jt::Vector2{5.0f, 5.0f});
+    m_glowOverlayFlame->setOrigin(jt::Vector2 { 5.0f, 5.0f });
 }
 
 void ShotMissile::doUpdate(float const elapsed)
 {
-
-    m_sprite->setPosition(m_transform->position);
-    m_sprite->setRotation(m_transform->angle);
-    m_sprite->update(elapsed);
     m_transform->angle = jt::MathHelper::angleOf(m_transform->velocity);
+    m_animation->setPosition(m_transform->position);
+    m_animation->setRotation(m_transform->angle);
+    m_animation->update(elapsed);
 
     float missileTargetAcquisitionTime = 0.5f;
     float velocityDrag = 0.995f;
@@ -38,6 +42,8 @@ void ShotMissile::doUpdate(float const elapsed)
     m_transform->velocity = v;
 
     if (getAge() > missileTargetAcquisitionTime) {
+        m_animation->play("fire");
+
         if (m_target.expired()) {
             kill();
             return;
@@ -79,7 +85,7 @@ void ShotMissile::doUpdate(float const elapsed)
 
 void ShotMissile::doDraw() const
 {
-    m_sprite->draw(getGame()->getRenderTarget());
+    m_animation->draw(getGame()->getRenderTarget());
     m_glowOverlayFlame->draw(getGame()->getRenderTarget());
 }
 
@@ -88,14 +94,12 @@ void ShotMissile::setTransform(std::shared_ptr<Transform> t) { m_transform = t; 
 
 bool ShotMissile::getFiredByPlayer() const { return m_firedByPlayer; }
 void ShotMissile::setFiredByPlayer(bool value) { m_firedByPlayer = value; }
-void ShotMissile::hit() {
+void ShotMissile::hit()
+{
     kill();
     m_explosionSpawnInterface.spawnSmallExplosion(m_transform->position);
 }
 
 void ShotMissile::setTarget(std::weak_ptr<Transform> target) { m_target = target; }
 float ShotMissile::getDamageValue() { return 1.0f; }
-std::shared_ptr<jt::DrawableInterface> ShotMissile::getDrawable()
-{
-    return m_sprite;
-}
+std::shared_ptr<jt::DrawableInterface> ShotMissile::getDrawable() { return m_animation; }
