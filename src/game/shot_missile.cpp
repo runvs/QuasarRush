@@ -31,7 +31,7 @@ void ShotMissile::doUpdate(float const elapsed)
 {
     m_transform->angle = jt::MathHelper::angleOf(m_transform->velocity);
     m_animation->setPosition(m_transform->position);
-    m_animation->setRotation(m_transform->angle);
+    m_animation->setRotation(-m_transform->angle);
     m_animation->update(elapsed);
 
     float missileTargetAcquisitionTime = 0.5f;
