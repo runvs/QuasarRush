@@ -9,7 +9,7 @@ namespace SpriteFunctions {
 
 sf::Image makeButtonImage(unsigned int w, unsigned int h)
 {
-    jt::Color emptyColor { 20, 20, 20 };
+    jt::Color emptyColor { 0, 0, 0 };
     jt::Color borderColor { 255, 255, 255 };
     jt::Color overBGColor {150,150, 150};
 

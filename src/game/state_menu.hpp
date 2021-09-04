@@ -3,6 +3,7 @@
 
 #include "game_state.hpp"
 #include "player_config.hpp"
+#include "state_menu_base.hpp"
 #include <string>
 
 namespace jt {
@@ -23,14 +24,7 @@ public:
     void setPlayerConfig(PlayerConfig const& pc);
 
 private:
-    std::shared_ptr<jt::Shape> m_background;
-    std::shared_ptr<jt::Sprite> m_quasarImage;
-
-    std::shared_ptr<jt::Text> m_text_Title;
-    std::shared_ptr<jt::Text> m_text_Credits;
-
-    std::shared_ptr<jt::Shape> m_overlay;
-    std::shared_ptr<jt::Sprite> m_vignette;
+    std::shared_ptr<StateMenuBase> m_menuBase;
 
     std::vector<std::shared_ptr<jt::Button>> m_buttons;
 
@@ -46,21 +40,12 @@ private:
     std::shared_ptr<jt::Text> m_textSensor;
     std::shared_ptr<jt::Text> m_textEngine;
 
+    std::shared_ptr<jt::Button> m_buttonCredits;
+
     bool m_started { false };
 
     void doInternalCreate() override;
 
-    void createVignette();
-    void createShapes();
-
-    void createMenuText();
-    void createTextCredits();
-    void createTextTitle();
-
-    void createTweens();
-    void createTweenTitleAlpha();
-    void createTweenOverlayAlpha();
-    void createTweenCreditsPosition();
 
     void createTweenTransition();
 

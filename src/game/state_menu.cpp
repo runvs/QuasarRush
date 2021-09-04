@@ -10,6 +10,7 @@
 #include "math_helper.hpp"
 #include "player_config.hpp"
 #include "shape.hpp"
+#include "state_credits.hpp"
 #include "state_game.hpp"
 #include "text.hpp"
 #include "tween_alpha.hpp"
@@ -20,19 +21,22 @@ StateMenu::StateMenu() = default;
 
 void StateMenu::doInternalCreate()
 {
-    createMenuText();
-
-    m_quasarImage = std::make_shared<jt::Sprite>();
-    m_quasarImage->loadSprite("assets/quasar_orig.png");
-    m_quasarImage->setScale(jt::Vector2 { 0.4f, 0.4f });
-    m_quasarImage->setPosition(jt::Vector2 { 100.0f, 0.0f });
-
-    m_quasarImage->update(0.1f);
+    m_menuBase = std::make_shared<StateMenuBase>();
+    m_menuBase->create(getGame()->getRenderTarget(), *this);
 
     createLevelButtons();
-    createShapes();
-    createVignette();
-    createTweens();
+
+    m_buttonCredits = std::make_shared<jt::Button>(jt::Vector2u { 51, 18 });
+    add(m_buttonCredits);
+    m_buttonCredits->addCallback([this]() {
+        auto newState = std::make_shared<StateCredits>();
+        getGame()->switchState(newState);
+    });
+    m_buttonCredits->setPosition(jt::Vector2 { 10, 280 });
+    auto const text = jt::dh::createText(getGame()->getRenderTarget(), "Credits", 12);
+    text->setOrigin(jt::Vector2 { -5.0f, -1.0f });
+    text->SetTextAlign(jt::Text::TextAlign::LEFT);
+    m_buttonCredits->setDrawable(text);
 
     getGame()->getRenderWindow()->setMouseCursorVisible(true);
 
@@ -40,7 +44,6 @@ void StateMenu::doInternalCreate()
 }
 void StateMenu::createShipUpgradeButtons()
 {
-
     float const increment = 24.0f;
     float const xOffset = 280.0f;
     float const yOffset = 186.0f;
@@ -141,79 +144,6 @@ void StateMenu::createLevelButtons()
     }
 }
 
-void StateMenu::createVignette()
-{
-    m_vignette = jt::dh::createVignette(GP::GetScreenSize());
-    m_vignette->setColor({ 255, 255, 255, 110 });
-}
-
-void StateMenu::createShapes()
-{
-    m_background = jt::dh::createRectShape(GP::GetScreenSize(), GP::PaletteBackground());
-    m_overlay = jt::dh::createRectShape(GP::GetScreenSize(), jt::colors::Black);
-}
-
-void StateMenu::createMenuText()
-{
-    createTextTitle();
-    createTextCredits();
-}
-
-void StateMenu::createTextCredits()
-{
-    m_text_Credits = jt::dh::createText(getGame()->getRenderTarget(),
-        "Created by " + GP::AuthorName() + " for " + GP::JamName() + " in " + GP::JamDate()
-            + "\nCover 'QUASAR RUSH' by William Hackworth for Famicase2021"
-            + "\nThis game uses OpenAl, licensed under LGPL v2. https://openal.org/"
-            + "\nThis game uses the font Oxanium, licensed under SIL OFL v1.1.",
-        10U, GP::PaletteFontFront());
-    m_text_Credits->SetTextAlign(jt::Text::TextAlign::LEFT);
-    m_text_Credits->setPosition(
-        { 10, GP::GetScreenSize().y() - m_text_Credits->getLocalBounds().height() - 8 });
-    m_text_Credits->setShadow(GP::PaletteFontShadow(), jt::Vector2 { 1, 1 });
-}
-void StateMenu::createTextTitle()
-{
-    m_text_Title = jt::dh::createText(
-        getGame()->getRenderTarget(), GP::GameName(), 20U, GP::PaletteFontFront());
-    m_text_Title->setPosition({ 10, 6 });
-    m_text_Title->SetTextAlign(jt::Text::TextAlign::LEFT);
-    m_text_Title->setShadow(GP::PaletteFontShadow(), jt::Vector2 { 3, 3 });
-}
-
-void StateMenu::createTweens()
-{
-    createTweenOverlayAlpha();
-    createTweenTitleAlpha();
-    createTweenCreditsPosition();
-}
-
-void StateMenu::createTweenTitleAlpha()
-{
-    auto tween = jt::TweenAlpha<jt::Text>::create(m_text_Title, 0.55f, 0, 255);
-    tween->setStartDelay(0.2f);
-    tween->setSkipFrames();
-    add(tween);
-}
-
-void StateMenu::createTweenOverlayAlpha()
-{
-    auto tween = jt::TweenAlpha<jt::Shape>::create(
-        m_overlay, 0.5f, std::uint8_t { 255 }, std::uint8_t { 0 });
-    tween->setSkipFrames();
-    add(tween);
-}
-
-void StateMenu::createTweenCreditsPosition()
-{
-    auto s3 = m_text_Credits->getPosition() + jt::Vector2 { 0, 100 };
-    auto e3 = m_text_Credits->getPosition();
-
-    auto tween = jt::TweenPosition<jt::Text>::create(m_text_Credits, 0.35f, s3, e3);
-    tween->setStartDelay(0.8f);
-    tween->setSkipFrames();
-    add(tween);
-}
 
 void StateMenu::doInternalUpdate(float const elapsed)
 {
@@ -234,11 +164,7 @@ void StateMenu::updateShipUpgradeButtons(float const elapsed)
 
 void StateMenu::updateDrawables(const float& elapsed)
 {
-    m_background->update(elapsed);
-    m_text_Title->update(elapsed);
-    m_text_Credits->update(elapsed);
-    m_overlay->update(elapsed);
-    m_vignette->update(elapsed);
+    m_menuBase->update(elapsed);
 }
 
 void StateMenu::startTransitionToStateGame(std::string const& levelFilename)
@@ -252,31 +178,22 @@ void StateMenu::startTransitionToStateGame(std::string const& levelFilename)
 
 void StateMenu::createTweenTransition()
 {
-    auto tw = jt::TweenAlpha<jt::Shape>::create(
-        m_overlay, 0.5f, std::uint8_t { 0 }, std::uint8_t { 255 });
-    tw->setSkipFrames();
-    tw->addCompleteCallback([this]() {
+    m_menuBase->startFadeOut([this]() {
         std::shared_ptr<StateGame> newState = std::make_shared<StateGame>();
         newState->setLevel(m_levelFilename);
         newState->setPlayerConfig(m_playerConfig);
         getGame()->switchState(newState);
-    });
-    add(tw);
+    }, *this);
 }
 
 void StateMenu::doInternalDraw() const
 {
-    m_background->draw(getGame()->getRenderTarget());
-
-    m_quasarImage->draw(getGame()->getRenderTarget());
-
-    m_text_Title->draw(getGame()->getRenderTarget());
-    m_text_Credits->draw(getGame()->getRenderTarget());
+    m_menuBase->draw(getGame()->getRenderTarget());
 
     for (auto& button : m_buttons) {
         button->draw();
     }
-
+    m_buttonCredits->draw();
     m_buttonIncreaseSensors->draw();
     m_textEngine->draw(getGame()->getRenderTarget());
     m_textSensor->draw(getGame()->getRenderTarget());
@@ -284,8 +201,7 @@ void StateMenu::doInternalDraw() const
     m_buttonSwitchToMG->draw();
     m_buttonSwitchToMissile->draw();
 
-    m_overlay->draw(getGame()->getRenderTarget());
-    m_vignette->draw(getGame()->getRenderTarget());
+    m_menuBase->drawOverlay(getGame()->getRenderTarget());
 }
 
 void StateMenu::setPlayerConfig(PlayerConfig const& pc) { m_playerConfig = pc; }
