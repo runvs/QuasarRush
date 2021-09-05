@@ -35,7 +35,7 @@ void StateMenuBase::create(std::shared_ptr<jt::renderTarget> rt, jt::GameState& 
     m_overlay = jt::dh::createRectShape(GP::GetScreenSize(), jt::colors::Black);
 
     auto tweenAlpha = jt::TweenAlpha<jt::Shape>::create(
-        m_overlay, 1.25f, std::uint8_t { 255 }, std::uint8_t { 0 });
+        m_overlay, 0.75f, std::uint8_t { 255 }, std::uint8_t { 0 });
     tweenAlpha->setSkipFrames();
     state.add(tweenAlpha);
 }

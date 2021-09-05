@@ -37,6 +37,7 @@ private:
 
     std::shared_ptr<jt::Text> m_textPointsAvailable;
 
+
     void doInternalCreate() override;
     void doInternalUpdate(float const elapsed) override;
     void doInternalDraw() const override;
@@ -48,6 +49,7 @@ private:
     void updateShipUpgradeButtons(float const elapsed);
     void createButtonBack();
     void createButtonFly();
+    void updateTexts(float const elapsed);
 };
 
 #endif // QUASARRUSH_STATE_MENU_SHIP_SELECT_HPP

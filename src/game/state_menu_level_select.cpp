@@ -2,8 +2,8 @@
 #include "button.hpp"
 #include "drawable_helpers.hpp"
 #include "game_interface.hpp"
-#include "state_menu_ship_select.hpp"
 #include "state_menu.hpp"
+#include "state_menu_ship_select.hpp"
 #include "text.hpp"
 #include "vector.hpp"
 #include <fstream>
@@ -45,16 +45,17 @@ void StateMenuLevelSelect::createTweenTransition()
         },
         *this);
 }
-void StateMenuLevelSelect::doInternalUpdate(float const elapsed) {
+void StateMenuLevelSelect::doInternalUpdate(float const elapsed)
+{
     m_menuBase->update(elapsed);
     m_buttonBack->update(elapsed);
 
-    for (auto& button: m_buttons)
-    {
+    for (auto& button : m_buttons) {
         button->update(elapsed);
     }
 }
-void StateMenuLevelSelect::doInternalDraw() const {
+void StateMenuLevelSelect::doInternalDraw() const
+{
     m_menuBase->draw(getGame()->getRenderTarget());
 
     for (auto& button : m_buttons) {
@@ -77,12 +78,11 @@ void StateMenuLevelSelect::createLevelButtons()
         std::string filename = l["filename"];
         std::string displayName = l["display"];
 
-        float xPos = 10.0f;
-        float yPos = 175.0f + 24.0f * (int)(counter / 2);
+        float xPos = 41.0f;
+        float yPos = 200.0f + 24.0f * (int)(counter / 3);
         unsigned int buttonWidth = 100U;
-        if (counter % 2 == 1) {
-            xPos += buttonWidth + 8.0f;
-        }
+
+        xPos +=  (buttonWidth + 8.0f) * (counter % 3);
 
         auto button = std::make_shared<jt::Button>(jt::Vector2u { buttonWidth, 18 });
         add(button);
@@ -114,4 +114,7 @@ void StateMenuLevelSelect::startTransitionToStateGame(std::string const& levelFi
     }
 }
 
-void StateMenuLevelSelect::setPlayerConfig(PlayerConfig const& pc) { m_menuBase->m_playerConfig = pc; }
+void StateMenuLevelSelect::setPlayerConfig(PlayerConfig const& pc)
+{
+    m_menuBase->m_playerConfig = pc;
+}

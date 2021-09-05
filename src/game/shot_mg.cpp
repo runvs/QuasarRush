@@ -29,7 +29,20 @@ void ShotMg::doUpdate(float const elapsed)
     if (m_transform->position.y() < 0 || m_transform->position.y() > GP::GetScreenSize().y()) {
         kill();
     }
-    if (getAge() > 60.0f) {
+
+    float mgShotDecayStart = 3.0f;
+    float mgShotDecayTime = 2.5f;
+    if (getAge() > mgShotDecayStart)
+    {
+        auto alphaValue = 255.0f * (1.0f - (getAge() - mgShotDecayStart)/ mgShotDecayTime);
+        alphaValue = jt::MathHelper::clamp(alphaValue,0.0f, 255.0f);
+        auto col = m_sprite->getColor();
+
+        col.a() = static_cast<uint8_t>(alphaValue);
+        m_sprite->setColor(col);
+    }
+
+    if (getAge() > mgShotDecayStart + mgShotDecayStart) {
         kill();
     }
 }

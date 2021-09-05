@@ -58,68 +58,21 @@ void StateMenuShipSelect::createButtonFly()
     m_buttonFly->setDrawable(text);
 }
 
-void StateMenuShipSelect::doInternalUpdate(float const elapsed)
-{
-    m_menuBase->update(elapsed);
-    m_buttonBack->update(elapsed);
-
-    m_textSensor->update(elapsed);
-    m_textEngine->update(elapsed);
-    m_textPointsAvailable->setText("Points: " + std::to_string(m_menuBase->m_playerConfig.pointsToSpend));
-    m_textPointsAvailable->update(elapsed);
-    updateShipUpgradeButtons(elapsed);
-}
-
-void StateMenuShipSelect::doInternalDraw() const
-{
-
-    m_menuBase->draw(getGame()->getRenderTarget());
-
-    m_buttonBack->draw();
-    m_buttonFly->draw();
-
-    m_buttonIncreaseSensors->draw();
-    m_textSensor->draw(getGame()->getRenderTarget());
-    m_textEngine->draw(getGame()->getRenderTarget());
-    m_buttonIncreaseEngine->draw();
-    m_buttonSwitchToMG->draw();
-    m_buttonSwitchToMissile->draw();
-
-    m_textPointsAvailable->draw(getGame()->getRenderTarget());
-
-    m_menuBase->drawOverlay(getGame()->getRenderTarget());
-}
-
-void StateMenuShipSelect::startTransitionToStateGame()
-{
-    if (!m_started) {
-        m_started = true;
-        createTweenTransition();
-    }
-}
-void StateMenuShipSelect::createTweenTransition()
-{
-    m_menuBase->startFadeOut(
-        [this]() {
-            std::shared_ptr<StateGame> newState = std::make_shared<StateGame>();
-            newState->setPlayerConfig(m_menuBase->m_playerConfig);
-            getGame()->switchState(newState);
-        },
-        *this);
-}
 void StateMenuShipSelect::createShipUpgradeButtons()
 {
     float const increment = 24.0f;
     float const xOffset = 280.0f;
     float const yOffset = 200.0f;
 
+    float const textXOffset = 35.5;
+
     m_textSensor
         = jt::dh::createText(getGame()->getRenderTarget(), "Sensors", 12U, GP::PaletteFontFront());
-    m_textSensor->setPosition(jt::Vector2 { xOffset - 30, yOffset + 0 * increment });
+    m_textSensor->setPosition(jt::Vector2 { xOffset - textXOffset , yOffset + 0 * increment });
 
     m_textEngine
         = jt::dh::createText(getGame()->getRenderTarget(), "Engine", 12U, GP::PaletteFontFront());
-    m_textEngine->setPosition(jt::Vector2 { xOffset - 27, yOffset + 1.0f * increment });
+    m_textEngine->setPosition(jt::Vector2 { xOffset - textXOffset + 5, yOffset + 1.0f * increment });
 
     {
         m_buttonIncreaseSensors = std::make_shared<jt::Button>(jt::Vector2u { 18, 18 });
@@ -171,6 +124,66 @@ void StateMenuShipSelect::createShipUpgradeButtons()
         m_buttonSwitchToMissile->setDrawable(text);
     }
 }
+
+void StateMenuShipSelect::doInternalUpdate(float const elapsed)
+{
+    m_menuBase->update(elapsed);
+    m_buttonBack->update(elapsed);
+
+    updateTexts(elapsed);
+
+    updateShipUpgradeButtons(elapsed);
+}
+void StateMenuShipSelect::updateTexts(float const elapsed)
+{
+    m_textSensor->setText("Sensors: " + std::to_string(m_menuBase->m_playerConfig.sensorLevel));
+    m_textSensor->update(elapsed);
+
+    m_textEngine->setText("Engine: " + std::to_string(m_menuBase->m_playerConfig.engineLevel));
+    m_textEngine->update(elapsed);
+
+    m_textPointsAvailable->setText("Points: " + std::to_string(m_menuBase->m_playerConfig.pointsToSpend));
+    m_textPointsAvailable->update(elapsed);
+}
+
+void StateMenuShipSelect::doInternalDraw() const
+{
+    m_menuBase->draw(getGame()->getRenderTarget());
+
+    m_buttonBack->draw();
+    m_buttonFly->draw();
+
+    m_buttonIncreaseSensors->draw();
+    m_textSensor->draw(getGame()->getRenderTarget());
+    m_textEngine->draw(getGame()->getRenderTarget());
+    m_buttonIncreaseEngine->draw();
+    m_buttonSwitchToMG->draw();
+    m_buttonSwitchToMissile->draw();
+
+    m_textPointsAvailable->draw(getGame()->getRenderTarget());
+
+    m_menuBase->drawOverlay(getGame()->getRenderTarget());
+}
+
+void StateMenuShipSelect::startTransitionToStateGame()
+{
+    if (!m_started) {
+        m_started = true;
+        createTweenTransition();
+    }
+}
+void StateMenuShipSelect::createTweenTransition()
+{
+    m_menuBase->startFadeOut(
+        [this]() {
+            std::shared_ptr<StateGame> newState = std::make_shared<StateGame>();
+            newState->setPlayerConfig(m_menuBase->m_playerConfig);
+            getGame()->switchState(newState);
+        },
+        *this);
+}
+
+
 void StateMenuShipSelect::updateShipUpgradeButtons(float const elapsed)
 {
     m_buttonIncreaseSensors->setActive(playerConfigHasPointsToSpend(m_menuBase->m_playerConfig));
@@ -178,7 +191,4 @@ void StateMenuShipSelect::updateShipUpgradeButtons(float const elapsed)
 
     m_buttonSwitchToMG->setActive(playerConfigCanSwitchToMg(m_menuBase->m_playerConfig));
     m_buttonSwitchToMissile->setActive(playerConfigCanSwitchToMissile(m_menuBase->m_playerConfig));
-
-    m_textEngine->update(elapsed);
-    m_textSensor->update(elapsed);
 }
