@@ -4,6 +4,7 @@
 #include "game_state.hpp"
 #include "player_config.hpp"
 #include "render_target.hpp"
+#include "input_manager_interface.hpp"
 #include <functional>
 #include <memory>
 
@@ -24,6 +25,8 @@ private:
 
     std::shared_ptr<jt::Shape> m_overlay;
     std::shared_ptr<jt::Sprite> m_vignette;
+
+    std::shared_ptr<jt::InputManagerInterface> m_input;
 
 public:
     PlayerConfig m_playerConfig;

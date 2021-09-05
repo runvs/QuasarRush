@@ -10,6 +10,7 @@
 
 void StateMenuBase::create(std::shared_ptr<jt::renderTarget> rt, jt::GameState& state)
 {
+    m_input = state.getGame()->input();
     m_background = jt::dh::createRectShape(GP::GetScreenSize(), GP::PaletteBackground());
 
     m_quasarImage = std::make_shared<jt::Sprite>();
@@ -46,6 +47,18 @@ void StateMenuBase::create(std::shared_ptr<jt::renderTarget> rt, jt::GameState& 
 
 void StateMenuBase::update(float elapsed)
 {
+    auto const mp = m_input->mouse()->getMousePositionWorld();
+
+    jt::Vector2 const screenCenter = GP::GetScreenSize() / 2.0f;
+
+    auto dif = screenCenter - mp;
+
+    float const sxf = dif.x() / (GP::GetScreenSize().x() / 2.0f);
+    float const syf = dif.y() / (GP::GetScreenSize().y() / 2.0f);
+
+    m_text_Title->setShadowOffset(jt::Vector2{3.0f* sxf, 3.0f*syf} );
+    m_text_Subtitle->setShadowOffset(jt::Vector2{3.0f* sxf, 3.0f*syf} );
+
     m_background->update(elapsed);
     m_quasarImage->update(elapsed);
     m_text_Title->update(elapsed);
