@@ -47,8 +47,15 @@ std::shared_ptr<SDL_Texture> makeBlankImage(std::shared_ptr<jt::renderTarget> rt
     unsigned int h)
 {
     std::shared_ptr<SDL_Surface> image
-        = std::shared_ptr<SDL_Surface>(SDL_CreateRGBSurface(0, w, h, 32, 255, 255, 255, 255),
+        = std::shared_ptr<SDL_Surface>(SDL_CreateRGBSurface(0, w, h, 32, 0, 0, 0 ,0),
             [](SDL_Surface* s) { SDL_FreeSurface(s); });
+
+    for (auto i = 0U; i != w; ++i) {
+        for (auto j = 0U; j != h; ++j) {
+            auto const col = SDL_MapRGBA(image->format, 255, 255, 255, 255U);
+            jt::setPixel(image.get(), i, j, col);
+        }
+    }
 
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
     return std::shared_ptr<SDL_Texture>(SDL_CreateTextureFromSurface(rt.get(), image.get()),
