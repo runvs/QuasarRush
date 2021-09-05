@@ -31,7 +31,8 @@ std::shared_ptr<SDL_Texture> createButtonImage(
     return jt::SpriteFunctions::makeButtonImage(rt, w, h);
 }
 
-std::shared_ptr<SDL_Texture> createBlankImage(std::vector<std::string> const& ssv)
+std::shared_ptr<SDL_Texture> createBlankImage(
+    std::vector<std::string> const& ssv, std::shared_ptr<jt::renderTarget> rt)
 {
     if (ssv.size() != 3) {
         throw std::invalid_argument { "create button image: vector does not contain 3 elements." };
@@ -49,7 +50,7 @@ std::shared_ptr<SDL_Texture> createBlankImage(std::vector<std::string> const& ss
         throw std::invalid_argument { "invalid image size" };
     }
 
-    return SpriteFunctions::makeBlankImage(
+    return SpriteFunctions::makeBlankImage( rt,
         static_cast<unsigned int>(w), static_cast<unsigned int>(h));
 }
 

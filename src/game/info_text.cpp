@@ -27,7 +27,7 @@ jt::Color InfoText::getColor() const { return m_color; }
 
 void InfoText::doCreate()
 {
-    m_text = jt::dh::createText(getGame()->getRenderTarget(), m_textstring, 10);
+    m_text = jt::dh::createText(getGame()->getRenderTarget(), m_textstring, 12);
     m_text->SetTextAlign(jt::Text::TextAlign::LEFT);
 }
 void InfoText::doUpdate(float const elapsed)

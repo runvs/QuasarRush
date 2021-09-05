@@ -20,7 +20,7 @@ void StateMenuBase::create(std::shared_ptr<jt::renderTarget> rt, jt::GameState& 
 
     m_quasarImage->update(0.1f);
 
-    m_text_Title = jt::dh::createText(rt, GP::GameName(), 20U, GP::PaletteFontFront());
+    m_text_Title = jt::dh::createText(rt, GP::GameName(), 24U, GP::PaletteFontFront());
     m_text_Title->setPosition({ 10, 6 });
     m_text_Title->SetTextAlign(jt::Text::TextAlign::LEFT);
     m_text_Title->setShadow(GP::PaletteFontShadow(), jt::Vector2 { 3, 3 });

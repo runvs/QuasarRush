@@ -185,7 +185,7 @@ void StateMenuShipSelect::createTweenTransition()
 }
 
 
-void StateMenuShipSelect::updateShipUpgradeButtons(float const elapsed)
+void StateMenuShipSelect::updateShipUpgradeButtons(float const /*elapsed*/)
 {
     m_buttonIncreaseSensors->setActive(playerConfigHasPointsToSpend(m_menuBase->m_playerConfig));
     m_buttonIncreaseEngine->setActive(playerConfigHasPointsToSpend(m_menuBase->m_playerConfig));
