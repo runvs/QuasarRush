@@ -14,7 +14,7 @@
 #include "shape.hpp"
 #include "shot_missile.hpp"
 #include "sprite.hpp"
-#include "state_menu_level_select.hpp"
+#include "state_menu_stage_select.hpp"
 #include "tween_alpha.hpp"
 #include "tween_position.hpp"
 #include "tween_scale.hpp"
@@ -421,7 +421,7 @@ void StateGame::endGame(bool win)
         m_overlay, 0.5f, std::uint8_t { 0 }, std::uint8_t { 255 });
     tw->setSkipFrames();
     tw->addCompleteCallback([this, win]() {
-        auto newState = std::make_shared<StateMenuLevelSelect>();
+        auto newState = std::make_shared<StateMenuStageSelect>();
         if (win) {
             int maxCurrentLevel = *std::max_element(
                 m_playerConfig.availableLevels.begin(), m_playerConfig.availableLevels.end());

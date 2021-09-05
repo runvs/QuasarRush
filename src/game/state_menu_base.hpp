@@ -20,6 +20,8 @@ private:
     std::shared_ptr<jt::Sprite> m_quasarImage;
     std::shared_ptr<jt::Text> m_text_Title;
 
+    std::shared_ptr<jt::Text> m_text_Subtitle;
+
     std::shared_ptr<jt::Shape> m_overlay;
     std::shared_ptr<jt::Sprite> m_vignette;
 
@@ -32,6 +34,7 @@ public:
     void drawOverlay(std::shared_ptr<jt::renderTarget> rt);
 
     void startFadeOut(std::function<void(void)> callback, jt::GameState& state);
+    void setSubtitleText(std::string const& str);
 };
 
 #endif // QUASARRUSH_STATE_MENU_BASE_HPP

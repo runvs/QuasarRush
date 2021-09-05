@@ -1,4 +1,4 @@
-#include "state_menu_level_select.hpp"
+#include "state_menu_stage_select.hpp"
 #include "button.hpp"
 #include "drawable_helpers.hpp"
 #include "game_interface.hpp"
@@ -9,17 +9,18 @@
 #include <fstream>
 #include <json.hpp>
 
-StateMenuLevelSelect::StateMenuLevelSelect() { m_menuBase = std::make_shared<StateMenuBase>(); }
+StateMenuStageSelect::StateMenuStageSelect() { m_menuBase = std::make_shared<StateMenuBase>(); }
 
-void StateMenuLevelSelect::doInternalCreate()
+void StateMenuStageSelect::doInternalCreate()
 {
     m_menuBase->create(getGame()->getRenderTarget(), *this);
+    m_menuBase->setSubtitleText("Stage Selection");
     getGame()->getRenderWindow()->setMouseCursorVisible(true);
 
     createLevelButtons();
     createButtonBack();
 }
-void StateMenuLevelSelect::createButtonBack()
+void StateMenuStageSelect::createButtonBack()
 {
     m_buttonBack = std::make_shared<jt::Button>(jt::Vector2u { 51, 18 });
     add(m_buttonBack);
@@ -35,7 +36,7 @@ void StateMenuLevelSelect::createButtonBack()
     m_buttonBack->setDrawable(text);
 }
 
-void StateMenuLevelSelect::createTweenTransition()
+void StateMenuStageSelect::createTweenTransition()
 {
     m_menuBase->startFadeOut(
         [this]() {
@@ -45,7 +46,7 @@ void StateMenuLevelSelect::createTweenTransition()
         },
         *this);
 }
-void StateMenuLevelSelect::doInternalUpdate(float const elapsed)
+void StateMenuStageSelect::doInternalUpdate(float const elapsed)
 {
     m_menuBase->update(elapsed);
     m_buttonBack->update(elapsed);
@@ -54,7 +55,7 @@ void StateMenuLevelSelect::doInternalUpdate(float const elapsed)
         button->update(elapsed);
     }
 }
-void StateMenuLevelSelect::doInternalDraw() const
+void StateMenuStageSelect::doInternalDraw() const
 {
     m_menuBase->draw(getGame()->getRenderTarget());
 
@@ -65,7 +66,7 @@ void StateMenuLevelSelect::doInternalDraw() const
     m_buttonBack->draw();
     m_menuBase->drawOverlay(getGame()->getRenderTarget());
 }
-void StateMenuLevelSelect::createLevelButtons()
+void StateMenuStageSelect::createLevelButtons()
 {
     nlohmann::json j;
     std::ifstream file { "assets/levels/__all_levels.json" };
@@ -104,7 +105,7 @@ void StateMenuLevelSelect::createLevelButtons()
     }
 }
 
-void StateMenuLevelSelect::startTransitionToStateGame(std::string const& levelFilename)
+void StateMenuStageSelect::startTransitionToStateGame(std::string const& levelFilename)
 {
 
     if (!m_started) {
@@ -114,7 +115,7 @@ void StateMenuLevelSelect::startTransitionToStateGame(std::string const& levelFi
     }
 }
 
-void StateMenuLevelSelect::setPlayerConfig(PlayerConfig const& pc)
+void StateMenuStageSelect::setPlayerConfig(PlayerConfig const& pc)
 {
     m_menuBase->m_playerConfig = pc;
 }

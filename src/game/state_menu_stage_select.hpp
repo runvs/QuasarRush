@@ -1,5 +1,5 @@
-#ifndef QUASARRUSH_STATE_MENU_LEVEL_SELECT_HPP
-#define QUASARRUSH_STATE_MENU_LEVEL_SELECT_HPP
+#ifndef QUASARRUSH_STATE_MENU_STAGE_SELECT_HPP
+#define QUASARRUSH_STATE_MENU_STAGE_SELECT_HPP
 
 #include "state_menu_base.hpp"
 #include "game_state.hpp"
@@ -10,9 +10,9 @@ class Button;
 
 } // namespace jt
 
-class StateMenuLevelSelect  : public jt::GameState {
+class StateMenuStageSelect : public jt::GameState {
 public:
-    StateMenuLevelSelect();
+    StateMenuStageSelect();
     void setPlayerConfig(PlayerConfig const& pc);
 
 private:
@@ -35,4 +35,4 @@ private:
     void createButtonBack();
 };
 
-#endif // QUASARRUSH_STATE_MENU_LEVEL_SELECT_HPP
+#endif // QUASARRUSH_STATE_MENU_STAGE_SELECT_HPP

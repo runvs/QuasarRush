@@ -8,7 +8,7 @@
 #include "key_codes.hpp"
 #include "math_helper.hpp"
 #include "state_menu_credits.hpp"
-#include "state_menu_level_select.hpp"
+#include "state_menu_stage_select.hpp"
 #include "text.hpp"
 #include <fstream>
 
@@ -19,6 +19,7 @@ void StateMenu::setPlayerConfig(PlayerConfig const& pc) { m_menuBase->m_playerCo
 void StateMenu::doInternalCreate()
 {
     m_menuBase->create(getGame()->getRenderTarget(), *this);
+    m_menuBase->setSubtitleText("A Gavity Combat Game");
     getGame()->getRenderWindow()->setMouseCursorVisible(true);
 
     createButtonCredits();
@@ -43,7 +44,7 @@ void StateMenu::createButtonCredits()
     m_buttonCredits = std::make_shared<jt::Button>(jt::Vector2u { 51, 18 });
     add(m_buttonCredits);
     m_buttonCredits->addCallback([this]() {
-        auto newState = std::make_shared<StateCredits>();
+        auto newState = std::make_shared<StateMenuCredits>();
         newState->setPlayerConfig(m_menuBase->m_playerConfig);
         getGame()->switchState(newState);
     });
@@ -68,8 +69,8 @@ void StateMenu::createTweenTransition()
 {
     m_menuBase->startFadeOut(
         [this]() {
-            std::shared_ptr<StateMenuLevelSelect> newState
-                = std::make_shared<StateMenuLevelSelect>();
+            std::shared_ptr<StateMenuStageSelect> newState
+                = std::make_shared<StateMenuStageSelect>();
             newState->setPlayerConfig(m_menuBase->m_playerConfig);
             getGame()->switchState(newState);
         },

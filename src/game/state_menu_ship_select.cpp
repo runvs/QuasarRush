@@ -4,7 +4,7 @@
 #include "game_interface.hpp"
 #include "game_properties.hpp"
 #include "state_game.hpp"
-#include "state_menu_level_select.hpp"
+#include "state_menu_stage_select.hpp"
 #include "text.hpp"
 
 StateMenuShipSelect::StateMenuShipSelect() { m_menuBase = std::make_shared<StateMenuBase>(); }
@@ -17,6 +17,7 @@ void StateMenuShipSelect::setPlayerConfig(PlayerConfig const& pc)
 void StateMenuShipSelect::doInternalCreate()
 {
     m_menuBase->create(getGame()->getRenderTarget(), *this);
+    m_menuBase->setSubtitleText("Hangar");
 
     createShipUpgradeButtons();
 
@@ -33,7 +34,7 @@ void StateMenuShipSelect::createButtonBack()
     m_buttonBack = std::make_shared<jt::Button>(jt::Vector2u { 51, 18 });
     add(m_buttonBack);
     m_buttonBack->addCallback([this]() {
-        auto newState = std::make_shared<StateMenuLevelSelect>();
+        auto newState = std::make_shared<StateMenuStageSelect>();
         newState->setPlayerConfig(m_menuBase->m_playerConfig);
         getGame()->switchState(newState);
     });

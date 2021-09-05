@@ -24,6 +24,10 @@ void StateMenuBase::create(std::shared_ptr<jt::renderTarget> rt, jt::GameState& 
     m_text_Title->SetTextAlign(jt::Text::TextAlign::LEFT);
     m_text_Title->setShadow(GP::PaletteFontShadow(), jt::Vector2 { 3, 3 });
 
+    m_text_Subtitle = jt::dh::createText(rt, "", 14U, GP::PaletteFontFront());
+    m_text_Subtitle->setPosition({ GP::GetScreenSize().x() / 2.0f, 170.0f });
+    m_text_Subtitle->setShadow(GP::PaletteFontShadow(), jt::Vector2 { 2, 2 });
+
     auto tween = jt::TweenAlpha<jt::Text>::create(m_text_Title, 0.55f, 0, 255);
     tween->setStartDelay(0.2f);
     tween->setSkipFrames();
@@ -50,6 +54,8 @@ void StateMenuBase::update(float elapsed)
     sc.a() = m_text_Title->getColor().a();
     m_text_Title->setShadowColor(sc);
 
+    m_text_Subtitle->update(elapsed);
+
     m_overlay->update(elapsed);
     m_vignette->update(elapsed);
 }
@@ -59,11 +65,12 @@ void StateMenuBase::draw(std::shared_ptr<jt::renderTarget> rt)
     m_background->draw(rt);
     m_quasarImage->draw(rt);
     m_text_Title->draw(rt);
+    m_text_Subtitle->draw(rt);
 }
-void StateMenuBase::drawOverlay(std::shared_ptr<jt::renderTarget> rt) {
+void StateMenuBase::drawOverlay(std::shared_ptr<jt::renderTarget> rt)
+{
     m_vignette->draw(rt);
     m_overlay->draw(rt);
-
 }
 void StateMenuBase::startFadeOut(std::function<void(void)> callback, jt::GameState& state)
 {
@@ -74,3 +81,4 @@ void StateMenuBase::startFadeOut(std::function<void(void)> callback, jt::GameSta
     state.add(tw);
 }
 
+void StateMenuBase::setSubtitleText(std::string const& str) { m_text_Subtitle->setText(str); }

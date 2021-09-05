@@ -12,7 +12,7 @@ public:
     static std::string GameName() { return "Quasar Rush"; }
     static std::string AuthorName() { return "Thunraz & adkiem & Laguna_999"; }
     static std::string JamName() { return "AGBIC"; }
-    static std::string JamDate() { return "August 2021"; }
+    static std::string JamDate() { return "Aug 2021"; }
 
     static jt::Vector2 GetWindowSize() { return jt::Vector2 { 800, 600 }; }
     static float GetZoom() { return 2.0f; }
