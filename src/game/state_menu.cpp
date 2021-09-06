@@ -19,13 +19,11 @@ void StateMenu::setPlayerConfig(PlayerConfig const& pc) { m_menuBase->m_playerCo
 void StateMenu::doInternalCreate()
 {
     m_menuBase->create(getGame()->getRenderTarget(), *this);
-    m_menuBase->setSubtitleText("A Gavity Combat Game");
+    m_menuBase->setSubtitleText("A Gravity Combat Game");
     getGame()->getRenderWindow()->setMouseCursorVisible(true);
 
     createButtonCredits();
     createButtonSelectLevel();
-
-
 }
 void StateMenu::createButtonSelectLevel()
 {
