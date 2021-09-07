@@ -28,12 +28,14 @@ private:
 
     std::shared_ptr<jt::Button> m_buttonIncreaseSensors;
     std::shared_ptr<jt::Button> m_buttonIncreaseEngine;
+    std::shared_ptr<jt::Button> m_buttonIncreaseWeapon;
 
     std::shared_ptr<jt::Button> m_buttonSwitchToMG;
     std::shared_ptr<jt::Button> m_buttonSwitchToMissile;
 
     std::shared_ptr<jt::Text> m_textSensor;
     std::shared_ptr<jt::Text> m_textEngine;
+    std::shared_ptr<jt::Text> m_textWeapon;
 
     std::shared_ptr<jt::Text> m_textPointsAvailable;
 
