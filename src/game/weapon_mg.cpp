@@ -21,8 +21,16 @@ void WeaponMg::shoot(jt::Vector2 const& shooterPos, jt::Vector2 const& mousePosi
                 + 6.0f * orthogonal_aim_direction * ((m_shotCounter % 2 == 0) ? -1.0f : 1.0f);
             shotSpawnInterface.spawnShotMg(startPos, aimDirection, true);
         }
+        if (m_shotCounter >= GP::WeaponMgMagazineSize()) {
+            m_reloadTimer = GP::WeaponMgReloadTimer() + 3 * playerConfig.weaponLevel;
+            m_shotCounter = 0;
+        }
     }
 }
 
-bool WeaponMg::canShoot() { return m_shootTimer <= 0; }
-void WeaponMg::update(float elapsed) { m_shootTimer -= elapsed; }
+bool WeaponMg::canShoot() { return m_shootTimer <= 0 && m_reloadTimer <= 0; }
+void WeaponMg::update(float elapsed)
+{
+    m_shootTimer -= elapsed;
+    m_reloadTimer -= elapsed;
+}

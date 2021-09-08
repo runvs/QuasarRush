@@ -11,7 +11,9 @@ public:
     void update(float elapsed) override;
 private:
     int m_shotCounter{0};
+    float m_reloadTimer{0.0f};
     float m_shootTimer{0.0f};
+
     bool canShoot();
 };
 
