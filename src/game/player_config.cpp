@@ -28,25 +28,25 @@ void playerConfigIncreaseWeapon(PlayerConfig& pc) {
 }
 
 
-void playerConfigSwitchToMg(PlayerConfig& pc) { pc.weapon = WeaponMg; }
-void playerConfigSwitchToMissile(PlayerConfig& pc) { pc.weapon = WeaponRockets; }
+void playerConfigSwitchToMg(PlayerConfig& pc) { pc.weapon = WeaponTypeMg; }
+void playerConfigSwitchToMissile(PlayerConfig& pc) { pc.weapon = WeaponTypeRockets; }
 
 bool playerConfigCanSwitchToMg(PlayerConfig const& pc)
 {
-    if (pc.weapon == WeaponMg) {
+    if (pc.weapon == WeaponTypeMg) {
         return false;
     }
-    if (pc.availableWeapons.find(WeaponMg) == pc.availableWeapons.end()) {
+    if (pc.availableWeapons.find(WeaponTypeMg) == pc.availableWeapons.end()) {
         return false;
     }
     return true;
 }
 bool playerConfigCanSwitchToMissile(PlayerConfig const& pc)
 {
-    if (pc.weapon == WeaponRockets) {
+    if (pc.weapon == WeaponTypeRockets) {
         return false;
     }
-    if (pc.availableWeapons.find(WeaponRockets) == pc.availableWeapons.end()) {
+    if (pc.availableWeapons.find(WeaponTypeRockets) == pc.availableWeapons.end()) {
         return false;
     }
     return true;

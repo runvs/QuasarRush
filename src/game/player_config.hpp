@@ -4,10 +4,10 @@
 #include <set>
 #include <string>
 
-enum eWeaponType { WeaponMg, WeaponRockets };
+enum eWeaponType { WeaponTypeMg, WeaponTypeRockets };
 
 struct PlayerConfig {
-    eWeaponType weapon { WeaponMg };
+    eWeaponType weapon { WeaponTypeMg };
     int sensorLevel { 1 };
     int engineLevel { 1 };
     int weaponLevel { 1 };
@@ -15,7 +15,7 @@ struct PlayerConfig {
     int pointsToSpend { 0 };
 
     std::set<int> availableLevels { 0 };
-    std::set<eWeaponType> availableWeapons { WeaponMg, WeaponRockets };
+    std::set<eWeaponType> availableWeapons { WeaponTypeMg, WeaponTypeRockets };
     std::string selectedLevelFilename { "" };
 };
 

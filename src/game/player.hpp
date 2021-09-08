@@ -9,6 +9,7 @@
 #include "shot_spawn_interface.hpp"
 #include "spawn_trail_interface.hpp"
 #include "transform.hpp"
+#include "weapon_interface.hpp"
 #include <memory>
 
 class Player : public jt::GameObject {
@@ -42,6 +43,8 @@ private:
     std::vector<jt::Vector2> m_projectionPoints;
     std::shared_ptr<jt::Sprite> m_glowOverlayFlame;
     std::shared_ptr<jt::Sprite> m_glowOverlayShip;
+
+    std::shared_ptr<WeaponInterface> m_weapon;
 
     // TODO Use shoot timer and shoot timer max to update some indicator in the HUD
     float m_shootTimer { 0.0f };
