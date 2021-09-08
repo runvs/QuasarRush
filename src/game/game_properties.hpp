@@ -31,17 +31,16 @@ public:
     static jt::Color PaletteColor7() { return jt::Color { 64, 64, 64 }; }
     static jt::Color PaletteColor8() { return jt::Color { 157, 64, 43 }; }
 
-    static float PlayerRotationSpeed() { return 80.0; }
-    static float PlayerAcceleration() { return 3.0; }
-    static float PlayerAccelerationBoostFactor() { return 2.2f; }
+    static float PlayerRotationSpeed() { return 95.0; }
+    static float PlayerAcceleration() { return 3.5; }
+    static float PlayerAccelerationBoostFactor() { return 2.0f; }
 
     static float PlayerShootTimerMg() { return 0.09f; }
     static float PlayerShootTimerMissile() { return 5.0f; }
 
-    static float ShotSpeed() { return 50.0f; }
+    static float ShotSpeed() { return 55.0f; }
 
     static int PlayerHalfSize() { return 9; }
-
     static int PlanetHalfSize() { return 16; }
 
     static float EnemyShootTimer() { return 2.5f; }

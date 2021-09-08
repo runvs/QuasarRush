@@ -18,6 +18,16 @@ void playerConfigIncreaseEngine(PlayerConfig& pc)
     pc.pointsToSpend--;
     pc.engineLevel++;
 }
+
+void playerConfigIncreaseWeapon(PlayerConfig& pc) {
+    if (!playerConfigHasPointsToSpend(pc)) {
+        return;
+    }
+    pc.pointsToSpend--;
+    pc.weaponLevel++;
+}
+
+
 void playerConfigSwitchToMg(PlayerConfig& pc) { pc.weapon = WeaponMg; }
 void playerConfigSwitchToMissile(PlayerConfig& pc) { pc.weapon = WeaponRockets; }
 
@@ -41,3 +51,4 @@ bool playerConfigCanSwitchToMissile(PlayerConfig const& pc)
     }
     return true;
 }
+
