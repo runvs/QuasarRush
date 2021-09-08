@@ -4,8 +4,26 @@
 #include "math_helper.hpp"
 #include "sprite.hpp"
 #include "weapon_mg.hpp"
+#include "weapon_rockets.hpp"
 #include <utility>
 #include <memory>
+
+
+std::unique_ptr<WeaponInterface> createWeaponFromConfig(PlayerConfig config)
+{
+    if (config.weapon == WeaponTypeMg)
+    {
+        return std::make_unique<WeaponMg>();
+    }
+    else if (config.weapon == WeaponTypeRockets)
+    {
+        return std::make_unique<WeaponRockets>();
+    }
+    else
+    {
+        throw std::invalid_argument{"invalid weapon type in createWeaponFromConfig"};
+    }
+}
 
 Player::Player(ShotSpawnInterface& shotSpawnInterface, SpawnTrailInterface& spawnTrailInterface,
     PlayerConfig& pc)
@@ -44,7 +62,8 @@ void Player::doCreate()
     m_glowOverlayShip->setColor(jt::Color{36,8,119});
     m_glowOverlayShip->setOrigin(jt::Vector2{64.0f,64.0f});
 
-    m_weapon = std::make_shared<WeaponMg>();
+
+    m_weapon = createWeaponFromConfig(m_playerConfig);
 }
 
 void Player::doUpdate(float const elapsed)
@@ -93,10 +112,7 @@ void Player::updateShooting(float const elapsed)
     m_weapon->update(elapsed);
 
     if (getGame()->input()->mouse()->pressed(jt::MouseButtonCode::MBLeft)) {
-        // TODO does the check need to be done here?
-        if (m_weapon->canShoot()) {
-            m_weapon->shoot(m_transform->position, getGame()->input()->mouse()->getMousePositionWorld(), m_playerConfig, m_shotSpawnInterface);
-        }
+        m_weapon->shoot(m_transform->position, getGame()->input()->mouse()->getMousePositionWorld(), m_playerConfig, m_shotSpawnInterface);
     }
 }
 
@@ -164,34 +180,9 @@ void Player::setProjectionPoints(std::vector<jt::Vector2>&& points)
 {
     m_projectionPoints = std::move(points);
 }
-bool Player::canShoot() { return m_shootTimer <= 0; }
 
 void Player::shoot()
 {
-    auto const mouse_position = getGame()->input()->mouse()->getMousePositionScreen();
-    auto aim_direction = mouse_position - m_transform->position;
-    jt::MathHelper::normalizeMe(aim_direction);
-    m_shotCounter++;
 
-    float shotTimeFactor = 1.0f - (static_cast<float>(m_playerConfig.weaponLevel)-1.0f) * 0.1f;
-    shotTimeFactor = jt::MathHelper::clamp(shotTimeFactor, 0.2f, 1.0f);
-
-    // TODO Refactor to avoid ugly if statement. Use proper OOP
-    if (m_playerConfig.weapon == WeaponTypeMg) {
-        m_shootTimer = GP::PlayerShootTimerMg() * shotTimeFactor;
-        m_shootTimerMax = m_shootTimer;
-        jt::Vector2 const orthogonal_aim_direction{aim_direction.y(), -aim_direction.x()};
-        auto startPos = m_transform->position + 6.0f * orthogonal_aim_direction * ((m_shotCounter%2 == 0) ? -1.0f : 1.0f);
-        m_shotSpawnInterface.spawnShotMg(startPos, aim_direction, true);
-    }
-    else if (m_playerConfig.weapon == WeaponTypeRockets) {
-        m_shootTimer = GP::PlayerShootTimerMissile() * shotTimeFactor;
-        m_shootTimerMax = m_shootTimer;
-        m_shotSpawnInterface.spawnShotMissile(m_transform->position, aim_direction, true);
-    }
-    else
-    {
-        std::cerr << "unsupported weapon" << m_playerConfig.weapon << std::endl;
-    }
 }
 std::shared_ptr<jt::Animation> Player::getSprite() const { return m_shipSprite; }

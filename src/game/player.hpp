@@ -21,7 +21,6 @@ public:
     void doDraw() const override;
     void doKill() override;
 
-    bool canShoot();
     void shoot();
 
     std::shared_ptr<jt::Animation> getSprite() const;
@@ -35,7 +34,6 @@ private:
     ShotSpawnInterface& m_shotSpawnInterface;
     SpawnTrailInterface& m_spawnTrailInterface;
 
-
     std::shared_ptr<jt::Animation> m_shipSprite;
     std::shared_ptr<jt::Animation> m_flameSprite;
     std::shared_ptr<jt::Shape> m_projectionShape;
@@ -44,12 +42,7 @@ private:
     std::shared_ptr<jt::Sprite> m_glowOverlayFlame;
     std::shared_ptr<jt::Sprite> m_glowOverlayShip;
 
-    std::shared_ptr<WeaponInterface> m_weapon;
-
-    // TODO Use shoot timer and shoot timer max to update some indicator in the HUD
-    float m_shootTimer { 0.0f };
-    float m_shootTimerMax {1.0f};
-    std::size_t m_shotCounter { 0 };
+    std::unique_ptr<WeaponInterface> m_weapon;
 
     // only store a reference, as we do not want to keep a copy and state_game contains player, so
     // the reference will always be valid.

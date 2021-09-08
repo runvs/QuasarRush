@@ -12,7 +12,6 @@ public:
     virtual void shoot(jt::Vector2 const& playerPos, jt::Vector2 const& mousePosition,
         PlayerConfig playerConfig, ShotSpawnInterface& shotSpawnInterface)
         = 0;
-    virtual bool canShoot () = 0;
     virtual void update(float elapsed) = 0;
 };
 
