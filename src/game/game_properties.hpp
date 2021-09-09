@@ -46,7 +46,7 @@ public:
     static float EnemyShootTimer() { return 2.5f; }
     static int EnemyHalfSize() { return 8; }
     static int WeaponMgMagazineSize() { return 20; }
-    static float WeaponMgReloadTimer() {return 2.0f;}
+    static float WeaponMgReloadTimer() {return 2.5f;}
 };
 
 #endif

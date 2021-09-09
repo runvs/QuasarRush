@@ -15,14 +15,14 @@ void WeaponMg::shoot(jt::Vector2 const& shooterPos, jt::Vector2 const& mousePosi
 
         // TODO Refactor to avoid ugly if statement. Use proper OOP
         if (playerConfig.weapon == WeaponTypeMg) {
-            m_shootTimer = GP::PlayerShootTimerMg() * shotTimeFactor;
+            m_shootTimer = GP::PlayerShootTimerMg() * sqrt(shotTimeFactor);
             jt::Vector2 const orthogonal_aim_direction { aimDirection.y(), -aimDirection.x() };
             auto startPos = shooterPos
                 + 6.0f * orthogonal_aim_direction * ((m_shotCounter % 2 == 0) ? -1.0f : 1.0f);
             shotSpawnInterface.spawnShotMg(startPos, aimDirection, true);
         }
         if (m_shotCounter >= GP::WeaponMgMagazineSize()) {
-            m_reloadTimer = GP::WeaponMgReloadTimer() + 3 * playerConfig.weaponLevel;
+            m_reloadTimer = 1.0f + GP::WeaponMgReloadTimer() * shotTimeFactor;
             m_reloadTimerMax = m_reloadTimer;
             m_shotCounter = 0;
         }
