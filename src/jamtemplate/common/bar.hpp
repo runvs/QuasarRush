@@ -64,7 +64,7 @@ private:
     // things to take care of:
     //   - make sure flash object and normal object are at the same position
     virtual void doUpdate(float elapsed) override;
-    virtual void doFlash(float /*t*/, jt::Color /*col = jt::colors::White*/) override;
+    virtual void doFlash(float t, jt::Color col = jt::colors::White) override;
     virtual void doRotate(float /*rot*/) override;
 };
 

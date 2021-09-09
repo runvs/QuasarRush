@@ -57,11 +57,13 @@ void StateGame::doInternalCreate()
 
     createParticleSystems();
 
-    createLevelEntities();
-
     m_hud = std::make_shared<Hud>();
     add(m_hud);
     m_timeObserver = m_hud->getObserverTimer();
+
+    createLevelEntities();
+
+
 
     // StateGame will call drawObjects itself.
     setAutoDraw(false);
@@ -147,7 +149,7 @@ void StateGame::createTutorialForFirstMission()
 void StateGame::createLevelEntities()
 {
     Level l("assets/levels/" + m_level_filename);
-    m_player = std::make_shared<Player>(*this, *this, m_playerConfig);
+    m_player = std::make_shared<Player>(*this, *this, m_playerConfig, nullptr, m_hud->getObserverReload());
     add(m_player);
     m_player->setTransform(l.getPlayer());
 
@@ -298,6 +300,7 @@ void StateGame::handleShotCollisions()
         if (!s->getFiredByPlayer()) {
             if (jt::Collision::CircleTest(m_player->getSprite(), s->getDrawable())) {
                 s->hit();
+                m_player->takeDamage(1.0f);
             }
         } else {
             for (auto eptr : m_enemies) {
@@ -438,6 +441,10 @@ void StateGame::checkGameOver()
 {
     if (m_targets.empty() && m_enemies.empty()) {
         endGame(true);
+    }
+    if (m_player->isDead())
+    {
+        endGame(false);
     }
 }
 void StateGame::setPlayerConfig(PlayerConfig const& pc)

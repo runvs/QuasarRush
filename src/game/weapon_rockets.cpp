@@ -13,9 +13,18 @@ void WeaponRockets::shoot(jt::Vector2 const& playerPos, jt::Vector2 const& mouse
         shotTimeFactor = jt::MathHelper::clamp(shotTimeFactor, 0.2f, 1.0f);
 
         m_shootTimer = GP::PlayerShootTimerMissile() * shotTimeFactor;
+        m_shootTimerMax= m_shootTimer;
         shotSpawnInterface.spawnShotMissile(playerPos, aim_direction, true);
     }
 }
 
 bool WeaponRockets::canShoot() { return m_shootTimer <= 0; }
 void WeaponRockets::update(float elapsed) { m_shootTimer -= elapsed; }
+
+float WeaponRockets::getReloadCompletion()
+{
+    if (canShoot()) {
+        return 0.0f;
+    }
+    return m_shootTimer / m_shootTimerMax;
+}

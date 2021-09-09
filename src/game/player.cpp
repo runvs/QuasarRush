@@ -5,29 +5,28 @@
 #include "sprite.hpp"
 #include "weapon_mg.hpp"
 #include "weapon_rockets.hpp"
-#include <utility>
 #include <memory>
-
+#include <utility>
 
 std::unique_ptr<WeaponInterface> createWeaponFromConfig(PlayerConfig config)
 {
-    if (config.weapon == WeaponTypeMg)
-    {
+    if (config.weapon == WeaponTypeMg) {
         return std::make_unique<WeaponMg>();
-    }
-    else if (config.weapon == WeaponTypeRockets)
-    {
+    } else if (config.weapon == WeaponTypeRockets) {
         return std::make_unique<WeaponRockets>();
-    }
-    else
-    {
-        throw std::invalid_argument{"invalid weapon type in createWeaponFromConfig"};
+    } else {
+        throw std::invalid_argument { "invalid weapon type in createWeaponFromConfig" };
     }
 }
 
 Player::Player(ShotSpawnInterface& shotSpawnInterface, SpawnTrailInterface& spawnTrailInterface,
-    PlayerConfig& pc)
-    : m_shotSpawnInterface { shotSpawnInterface }, m_spawnTrailInterface{spawnTrailInterface}, m_playerConfig{pc}
+    PlayerConfig& pc, std::shared_ptr<ObserverInterface<float>> healthObserver,
+    std::shared_ptr<ObserverInterface<float>> reloadObserver)
+    : m_shotSpawnInterface { shotSpawnInterface }
+    , m_spawnTrailInterface { spawnTrailInterface }
+    , m_playerConfig { pc }
+    , m_healthObserver { healthObserver }
+    , m_reloadObserver { reloadObserver }
 {
 }
 
@@ -54,16 +53,17 @@ void Player::doCreate()
 
     m_glowOverlayFlame = std::make_shared<jt::Sprite>();
     m_glowOverlayFlame->loadSprite("#g#32#100");
-    m_glowOverlayFlame->setOrigin(jt::Vector2{16.0f,16.0f});
-    m_glowOverlayFlame->setOffset(jt::Vector2{16.0f, 16.0f});
+    m_glowOverlayFlame->setOrigin(jt::Vector2 { 16.0f, 16.0f });
+    m_glowOverlayFlame->setOffset(jt::Vector2 { 16.0f, 16.0f });
 
     m_glowOverlayShip = std::make_shared<jt::Sprite>();
     m_glowOverlayShip->loadSprite("#g#128#120");
-    m_glowOverlayShip->setColor(jt::Color{36,8,119});
-    m_glowOverlayShip->setOrigin(jt::Vector2{64.0f,64.0f});
-
+    m_glowOverlayShip->setColor(jt::Color { 36, 8, 119 });
+    m_glowOverlayShip->setOrigin(jt::Vector2 { 64.0f, 64.0f });
 
     m_weapon = createWeaponFromConfig(m_playerConfig);
+
+    m_health = 3.0f + m_playerConfig.hullLevel * 2.0f;
 }
 
 void Player::doUpdate(float const elapsed)
@@ -83,12 +83,15 @@ void Player::updateFlame(float const elapsed)
     m_flameSprite->setRotation(m_transform->angle);
     m_flameSprite->update(elapsed);
 
-    m_glowOverlayFlame->setPosition(m_flameSprite->getPosition() - jt::Vector2{ m_flameSprite->getLocalBounds().width(), m_flameSprite->getLocalBounds().height()});
+    m_glowOverlayFlame->setPosition(m_flameSprite->getPosition()
+        - jt::Vector2 {
+            m_flameSprite->getLocalBounds().width(), m_flameSprite->getLocalBounds().height() });
     m_glowOverlayFlame->update(elapsed);
 
     float const t = getAge();
-    float a = ( abs(cos(sin(t * 8.0f) + t * 9.0f)) * 0.75f + 0.25f) * ((getGame()->input()->keyboard()->pressed(jt::KeyCode::W))?1.0f : 0.0f);
-    jt::Color col{255,255,255, static_cast<std::uint8_t>(a * 255)};
+    float a = (abs(cos(sin(t * 8.0f) + t * 9.0f)) * 0.75f + 0.25f)
+        * ((getGame()->input()->keyboard()->pressed(jt::KeyCode::W)) ? 1.0f : 0.0f);
+    jt::Color col { 255, 255, 255, static_cast<std::uint8_t>(a * 255) };
     m_glowOverlayFlame->setColor(col);
 }
 
@@ -110,9 +113,11 @@ void Player::updateSprite(float const elapsed)
 void Player::updateShooting(float const elapsed)
 {
     m_weapon->update(elapsed);
+    m_reloadObserver->notify(m_weapon->getReloadCompletion());
 
     if (getGame()->input()->mouse()->pressed(jt::MouseButtonCode::MBLeft)) {
-        m_weapon->shoot(m_transform->position, getGame()->input()->mouse()->getMousePositionWorld(), m_playerConfig, m_shotSpawnInterface);
+        m_weapon->shoot(m_transform->position, getGame()->input()->mouse()->getMousePositionWorld(),
+            m_playerConfig, m_shotSpawnInterface);
     }
 }
 
@@ -136,7 +141,7 @@ void Player::updateMovement(const float elapsed)
         }
 
         float acceleration_factor = flyBoost ? GP::PlayerAccelerationBoostFactor() : 1.0f;
-        acceleration_factor +=  m_playerConfig.engineLevel * 0.25f;
+        acceleration_factor += m_playerConfig.engineLevel * 0.25f;
         m_transform->player_acceleration
             = direction * GP::PlayerAcceleration() * acceleration_factor;
     } else if (keyboard->justReleased(jt::KeyCode::W)) {
@@ -164,7 +169,6 @@ void Player::doDraw() const
         m_projectionShape->draw(getGame()->getRenderTarget());
     }
 
-
     m_glowOverlayShip->draw(getGame()->getRenderTarget());
     m_shipSprite->draw(getGame()->getRenderTarget());
 
@@ -181,8 +185,10 @@ void Player::setProjectionPoints(std::vector<jt::Vector2>&& points)
     m_projectionPoints = std::move(points);
 }
 
-void Player::shoot()
-{
-
-}
 std::shared_ptr<jt::Animation> Player::getSprite() const { return m_shipSprite; }
+
+bool Player::isDead() const { return m_health <= 0; }
+void Player::takeDamage(float damageValue) {
+    m_health -= damageValue;
+    m_healthObserver->notify(m_health);
+}

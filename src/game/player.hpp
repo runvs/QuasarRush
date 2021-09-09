@@ -10,18 +10,18 @@
 #include "spawn_trail_interface.hpp"
 #include "transform.hpp"
 #include "weapon_interface.hpp"
+#include "hud/observer_interface.hpp"
 #include <memory>
 
 class Player : public jt::GameObject {
 public:
     Player(ShotSpawnInterface& shotSpawnInterface, SpawnTrailInterface& spawnTrailInterface,
-        PlayerConfig& pc);
+        PlayerConfig& pc, std::shared_ptr<ObserverInterface<float>> healthObserver,
+        std::shared_ptr<ObserverInterface<float>> reloadObserver);
     void doCreate() override;
     void doUpdate(float const /*elapsed*/) override;
     void doDraw() const override;
     void doKill() override;
-
-    void shoot();
 
     std::shared_ptr<jt::Animation> getSprite() const;
 
@@ -29,6 +29,9 @@ public:
     void setTransform(std::shared_ptr<Transform> t);
 
     void setProjectionPoints(std::vector<jt::Vector2>&& points);
+
+    bool isDead() const;
+    void takeDamage(float damageValue);
 
 private:
     ShotSpawnInterface& m_shotSpawnInterface;
@@ -47,6 +50,11 @@ private:
     // only store a reference, as we do not want to keep a copy and state_game contains player, so
     // the reference will always be valid.
     PlayerConfig& m_playerConfig;
+
+    float m_health;
+
+    std::shared_ptr<ObserverInterface<float>> m_healthObserver;
+    std::shared_ptr<ObserverInterface<float>> m_reloadObserver;
 
     void updateMovement(const float elapsed);
     void updateShooting(float const elapsed);

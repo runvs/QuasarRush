@@ -23,6 +23,7 @@ void WeaponMg::shoot(jt::Vector2 const& shooterPos, jt::Vector2 const& mousePosi
         }
         if (m_shotCounter >= GP::WeaponMgMagazineSize()) {
             m_reloadTimer = GP::WeaponMgReloadTimer() + 3 * playerConfig.weaponLevel;
+            m_reloadTimerMax = m_reloadTimer;
             m_shotCounter = 0;
         }
     }
@@ -33,4 +34,14 @@ void WeaponMg::update(float elapsed)
 {
     m_shootTimer -= elapsed;
     m_reloadTimer -= elapsed;
+}
+
+float WeaponMg::getReloadCompletion()
+{
+    if (canShoot())
+    {
+        return 0.0f;
+    }
+    return m_reloadTimer/m_reloadTimerMax;
+
 }

@@ -27,6 +27,14 @@ void playerConfigIncreaseWeapon(PlayerConfig& pc) {
     pc.weaponLevel++;
 }
 
+void playerConfigIncreaseHull(PlayerConfig& pc) {
+    if (!playerConfigHasPointsToSpend(pc)) {
+        return;
+    }
+    pc.pointsToSpend--;
+    pc.hullLevel++;
+}
+
 
 void playerConfigSwitchToMg(PlayerConfig& pc) { pc.weapon = WeaponTypeMg; }
 void playerConfigSwitchToMissile(PlayerConfig& pc) { pc.weapon = WeaponTypeRockets; }

@@ -13,6 +13,7 @@ public:
         PlayerConfig playerConfig, ShotSpawnInterface& shotSpawnInterface)
         = 0;
     virtual void update(float elapsed) = 0;
+    virtual float getReloadCompletion() = 0;
 };
 
 #endif // QUASARRUSH_WEAPON_INTERFACE_HPP
