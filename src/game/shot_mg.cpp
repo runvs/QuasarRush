@@ -23,13 +23,6 @@ void ShotMg::doUpdate(float const elapsed)
     m_sprite->setRotation(-m_transform->angle);
     m_sprite->update(elapsed);
 
-    if (m_transform->position.x() < 0 || m_transform->position.x() > GP::GetScreenSize().x()) {
-        kill();
-    }
-    if (m_transform->position.y() < 0 || m_transform->position.y() > GP::GetScreenSize().y()) {
-        kill();
-    }
-
     float mgShotDecayStart = 3.0f;
     float mgShotDecayTime = 2.5f;
     if (getAge() > mgShotDecayStart)

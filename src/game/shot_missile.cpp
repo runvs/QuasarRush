@@ -62,12 +62,6 @@ void ShotMissile::doUpdate(float const elapsed)
         m_spawnTrailInterface.spawnTrail(m_transform->position);
     }
 
-    if (m_transform->position.x() < 0 || m_transform->position.x() > GP::GetScreenSize().x()) {
-        kill();
-    }
-    if (m_transform->position.y() < 0 || m_transform->position.y() > GP::GetScreenSize().y()) {
-        kill();
-    }
     if (getAge() > 9.0f) {
         hit();
     }
