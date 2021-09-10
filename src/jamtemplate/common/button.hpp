@@ -23,6 +23,7 @@ public:
     Button(Button&& b) = default;
 
     void setDrawable(std::shared_ptr<DrawableInterface> sprt);
+    std::shared_ptr<Animation> getAnimation() const;
 
     void addCallback(std::function<void(void)> cb);
 

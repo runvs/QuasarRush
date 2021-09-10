@@ -1,9 +1,10 @@
 #ifndef QUASARRUSH_STATE_MENU_SHIP_SELECT_HPP
 #define QUASARRUSH_STATE_MENU_SHIP_SELECT_HPP
 
+#include "game_state.hpp"
 #include "player_config.hpp"
 #include "state_menu_base.hpp"
-#include "game_state.hpp"
+#include "info_text.hpp"
 
 namespace jt {
 
@@ -15,10 +16,11 @@ class Button;
 
 } // namespace jt
 
-class StateMenuShipSelect : public jt::GameState{
+class StateMenuShipSelect : public jt::GameState {
 public:
     StateMenuShipSelect();
     void setPlayerConfig(PlayerConfig const& pc);
+
 private:
     std::shared_ptr<StateMenuBase> m_menuBase;
     bool m_started { false };
@@ -26,17 +28,24 @@ private:
     std::shared_ptr<jt::Button> m_buttonBack;
     std::shared_ptr<jt::Button> m_buttonFly;
 
+    std::shared_ptr<jt::Text> m_textSensor;
     std::shared_ptr<jt::Button> m_buttonIncreaseSensors;
+    std::shared_ptr<InfoText> m_infoTextSensors;
+
+    std::shared_ptr<jt::Text> m_textEngine;
     std::shared_ptr<jt::Button> m_buttonIncreaseEngine;
+    std::shared_ptr<InfoText> m_infoTextEngine;
+
+    std::shared_ptr<jt::Text> m_textWeapon;
     std::shared_ptr<jt::Button> m_buttonIncreaseWeapon;
+    std::shared_ptr<InfoText> m_infoTextWeapon;
+
+    std::shared_ptr<jt::Text> m_textHull;
+    std::shared_ptr<jt::Button> m_buttonIncreaseHull;
+    std::shared_ptr<InfoText> m_infoTextHull;
 
     std::shared_ptr<jt::Button> m_buttonSwitchToMG;
     std::shared_ptr<jt::Button> m_buttonSwitchToMissile;
-
-    std::shared_ptr<jt::Text> m_textSensor;
-    std::shared_ptr<jt::Text> m_textEngine;
-    std::shared_ptr<jt::Text> m_textWeapon;
-
     std::shared_ptr<jt::Text> m_textPointsAvailable;
 
 
@@ -52,6 +61,9 @@ private:
     void createButtonBack();
     void createButtonFly();
     void updateTexts(float const elapsed);
+    void createWeaponButtons();
+    void createInfoTexts();
+    void infoTextUpdate();
 };
 
 #endif // QUASARRUSH_STATE_MENU_SHIP_SELECT_HPP

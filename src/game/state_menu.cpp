@@ -7,11 +7,12 @@
 #include "json.hpp"
 #include "key_codes.hpp"
 #include "math_helper.hpp"
+#include "state_game.hpp"
 #include "state_menu_credits.hpp"
 #include "state_menu_stage_select.hpp"
 #include "text.hpp"
-#include <fstream>
 #include "tween_alpha.hpp"
+#include <fstream>
 
 StateMenu::StateMenu() { m_menuBase = std::make_shared<StateMenuBase>(); }
 
@@ -54,7 +55,20 @@ void StateMenu::createButtonCredits()
     m_buttonCredits->setDrawable(text);
 }
 
-void StateMenu::doInternalUpdate(float const elapsed) { m_menuBase->update(elapsed); }
+void StateMenu::doInternalUpdate(float const elapsed) { m_menuBase->update(elapsed);
+
+    if (getGame()->input()->keyboard()->pressed(jt::KeyCode::LShift) && getGame()->input()->keyboard()->justPressed(jt::KeyCode::F4))
+    {
+        m_menuBase->m_playerConfig.selectedLevelFilename = "5_many_enemies.json";
+        m_menuBase->startFadeOut(
+            [this]() {
+                std::shared_ptr<StateGame> newState = std::make_shared<StateGame>();
+                newState->setPlayerConfig(m_menuBase->m_playerConfig);
+                getGame()->switchState(newState);
+            },
+            *this);
+    }
+}
 
 void StateMenu::startTransitionToStateSelectLevel()
 {

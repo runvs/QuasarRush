@@ -52,7 +52,7 @@ std::shared_ptr<SDL_Texture> makeBlankImage(std::shared_ptr<jt::renderTarget> rt
 
     for (auto i = 0U; i != w; ++i) {
         for (auto j = 0U; j != h; ++j) {
-            auto const col = SDL_MapRGBA(image->format, 255, 255, 255, 255U);
+            auto const col = SDL_MapRGBA(image->format, 255, 255, 255, 150U);
             jt::setPixel(image.get(), i, j, col);
         }
     }
