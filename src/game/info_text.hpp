@@ -24,6 +24,8 @@ public:
     void setColor(jt::Color const& col);
     jt::Color getColor() const;
 
+    void setOffset(jt::Vector2 const&);
+
 private:
     std::weak_ptr<jt::DrawableInterface> m_objectToTrack;
 
@@ -33,7 +35,7 @@ private:
     eInfoTextAlign m_align;
     jt::Vector2 m_diagonalVector;
     jt::Color m_color;
-
+    jt::Vector2 m_offset;
 
 
     void doCreate() override;

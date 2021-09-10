@@ -123,5 +123,6 @@ void Button::doUpdate(float elapsed)
 }
 bool Button::getActive() const { return m_isActive; }
 void Button::setActive(bool v) { m_isActive = v; }
+std::shared_ptr<Animation> Button::getAnimation() const { return m_background; }
 
 } // namespace jt

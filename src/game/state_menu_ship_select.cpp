@@ -22,11 +22,36 @@ void StateMenuShipSelect::doInternalCreate()
     createShipUpgradeButtons();
 
     createButtonBack();
+    createWeaponButtons();
     createButtonFly();
 
-    m_textPointsAvailable
-        = jt::dh::createText(getGame()->getRenderTarget(), "Points: 0", 12U, GP::PaletteFontFront());
+    createInfoTexts();
+
+    m_textPointsAvailable = jt::dh::createText(
+        getGame()->getRenderTarget(), "Points: 0", 12U, GP::PaletteFontFront());
     m_textPointsAvailable->setPosition(jt::Vector2 { 100, 180 });
+}
+void StateMenuShipSelect::createInfoTexts()
+{
+    m_infoTextSensors = std::make_shared<InfoText>(
+        m_buttonIncreaseSensors->getAnimation(), "Better Prediction", RightDown);
+    m_infoTextSensors->setOffset(jt::Vector2 { 4, -5.0f });
+    add(m_infoTextSensors);
+
+    m_infoTextEngine = std::make_shared<InfoText>(
+        m_buttonIncreaseEngine->getAnimation(), "Faster Ship", RightDown);
+    m_infoTextEngine->setOffset(jt::Vector2 { 4, -5.0f });
+    add(m_infoTextEngine);
+
+    m_infoTextWeapon = std::make_shared<InfoText>(
+        m_buttonIncreaseWeapon->getAnimation(), "Reload Speed", RightDown);
+    m_infoTextWeapon->setOffset(jt::Vector2 { 4, -5.0f });
+    add(m_infoTextWeapon);
+
+    m_infoTextHull
+        = std::make_shared<InfoText>(m_buttonIncreaseHull->getAnimation(), "More Armor", RightDown);
+    m_infoTextHull->setOffset(jt::Vector2 { 4, -5.0f });
+    add(m_infoTextHull);
 }
 
 void StateMenuShipSelect::createButtonBack()
@@ -49,9 +74,7 @@ void StateMenuShipSelect::createButtonFly()
 {
     m_buttonFly = std::make_shared<jt::Button>(jt::Vector2u { 51, 18 });
     add(m_buttonFly);
-    m_buttonFly->addCallback([this]() {
-        startTransitionToStateGame();
-    });
+    m_buttonFly->addCallback([this]() { startTransitionToStateGame(); });
     m_buttonFly->setPosition(jt::Vector2 { 100, 278 });
     auto const text = jt::dh::createText(getGame()->getRenderTarget(), "Fly", 12);
     text->setOrigin(jt::Vector2 { -5.0f, -1.0f });
@@ -61,30 +84,41 @@ void StateMenuShipSelect::createButtonFly()
 
 void StateMenuShipSelect::createShipUpgradeButtons()
 {
-    float const increment = 24.0f;
+
     float const xOffset = 100.0f;
-    float const yOffset = 200.0f;
+    float const yOffset = 204.0f;
+
+    float const xIncrementButton = 24.0f;
+    float const xIncrementText = 116.0f;
+    float const yIncrement = 24.0f;
 
     float const textXOffset = 35.5;
 
     m_textSensor
         = jt::dh::createText(getGame()->getRenderTarget(), "Sensors", 12U, GP::PaletteFontFront());
-    m_textSensor->setPosition(jt::Vector2 { xOffset - textXOffset , yOffset + 0 * increment });
+    m_textSensor->setPosition(jt::Vector2 { xOffset - textXOffset, yOffset + 0 * yIncrement });
 
     m_textEngine
         = jt::dh::createText(getGame()->getRenderTarget(), "Engine", 12U, GP::PaletteFontFront());
-    m_textEngine->setPosition(jt::Vector2 { xOffset - textXOffset + 5, yOffset + 1.0f * increment });
+    m_textEngine->setPosition(
+        jt::Vector2 { xOffset - textXOffset + 5, yOffset + 1.0f * yIncrement });
 
     m_textWeapon
         = jt::dh::createText(getGame()->getRenderTarget(), "Weapon", 12U, GP::PaletteFontFront());
-    m_textWeapon->setPosition(jt::Vector2 { xOffset - textXOffset - 2, yOffset + 2.0f * increment });
+    m_textWeapon->setPosition(
+        jt::Vector2 { xOffset - textXOffset - 2 + xIncrementText, yOffset + 0.0f * yIncrement });
+
+    m_textHull
+        = jt::dh::createText(getGame()->getRenderTarget(), "Hull", 12U, GP::PaletteFontFront());
+    m_textHull->setPosition(
+        jt::Vector2 { xOffset - textXOffset - 16 + xIncrementText, yOffset + 1.0f * yIncrement });
 
     {
         m_buttonIncreaseSensors = std::make_shared<jt::Button>(jt::Vector2u { 18, 18 });
         add(m_buttonIncreaseSensors);
         m_buttonIncreaseSensors->addCallback(
             [this]() { playerConfigIncreaseSensors(m_menuBase->m_playerConfig); });
-        m_buttonIncreaseSensors->setPosition(jt::Vector2 { xOffset, yOffset + 0 * increment });
+        m_buttonIncreaseSensors->setPosition(jt::Vector2 { xOffset, yOffset + 0 * yIncrement });
         auto const text = jt::dh::createText(getGame()->getRenderTarget(), "+", 12);
         text->setOrigin(jt::Vector2 { -5.0f, -1.0f });
         text->SetTextAlign(jt::Text::TextAlign::LEFT);
@@ -95,7 +129,7 @@ void StateMenuShipSelect::createShipUpgradeButtons()
         add(m_buttonIncreaseEngine);
         m_buttonIncreaseEngine->addCallback(
             [this]() { playerConfigIncreaseEngine(m_menuBase->m_playerConfig); });
-        m_buttonIncreaseEngine->setPosition(jt::Vector2 { xOffset, yOffset + 1.0f * increment });
+        m_buttonIncreaseEngine->setPosition(jt::Vector2 { xOffset, yOffset + 1.0f * yIncrement });
         auto const text = jt::dh::createText(getGame()->getRenderTarget(), "+", 12);
         text->setOrigin(jt::Vector2 { -5.0f, -1.0f });
         text->SetTextAlign(jt::Text::TextAlign::LEFT);
@@ -106,13 +140,31 @@ void StateMenuShipSelect::createShipUpgradeButtons()
         add(m_buttonIncreaseWeapon);
         m_buttonIncreaseWeapon->addCallback(
             [this]() { playerConfigIncreaseWeapon(m_menuBase->m_playerConfig); });
-        m_buttonIncreaseWeapon->setPosition(jt::Vector2 { xOffset, yOffset + 2.0f * increment });
+        m_buttonIncreaseWeapon->setPosition(
+            jt::Vector2 { xOffset + xIncrementButton, yOffset + 0.0f * yIncrement });
         auto const text = jt::dh::createText(getGame()->getRenderTarget(), "+", 12);
         text->setOrigin(jt::Vector2 { -5.0f, -1.0f });
         text->SetTextAlign(jt::Text::TextAlign::LEFT);
         m_buttonIncreaseWeapon->setDrawable(text);
     }
-
+    {
+        m_buttonIncreaseHull = std::make_shared<jt::Button>(jt::Vector2u { 18, 18 });
+        add(m_buttonIncreaseHull);
+        m_buttonIncreaseHull->addCallback(
+            [this]() { playerConfigIncreaseHull(m_menuBase->m_playerConfig); });
+        m_buttonIncreaseHull->setPosition(
+            jt::Vector2 { xOffset + xIncrementButton, yOffset + 1.0f * yIncrement });
+        auto const text = jt::dh::createText(getGame()->getRenderTarget(), "+", 12);
+        text->setOrigin(jt::Vector2 { -5.0f, -1.0f });
+        text->SetTextAlign(jt::Text::TextAlign::LEFT);
+        m_buttonIncreaseHull->setDrawable(text);
+    }
+}
+void StateMenuShipSelect::createWeaponButtons()
+{
+    float const increment = 24.0f;
+    float const xOffset = 250.0f;
+    float const yOffset = 204.0f;
     {
         m_buttonSwitchToMG = std::make_shared<jt::Button>(jt::Vector2u { 18, 18 });
         add(m_buttonSwitchToMG);
@@ -141,6 +193,7 @@ void StateMenuShipSelect::createShipUpgradeButtons()
     }
 }
 
+
 void StateMenuShipSelect::doInternalUpdate(float const elapsed)
 {
     m_menuBase->update(elapsed);
@@ -148,7 +201,31 @@ void StateMenuShipSelect::doInternalUpdate(float const elapsed)
 
     updateTexts(elapsed);
 
+    infoTextUpdate();
+
     updateShipUpgradeButtons(elapsed);
+
+    if (getGame()->input()->keyboard()->pressed(jt::KeyCode::LShift) && getGame()->input()->keyboard()->justPressed(jt::KeyCode::F8))
+    {
+        m_menuBase->m_playerConfig.pointsToSpend++;
+    }
+}
+
+void updateInfoText(std::shared_ptr<InfoText> text, std::shared_ptr<jt::Button> button)
+{
+    if (button->IsMouseOver()) {
+        text->setColor(jt::Color { 255, 255, 255 });
+    } else {
+        text->setColor(jt::Color { 255, 255, 255, 0 });
+    }
+}
+
+void StateMenuShipSelect::infoTextUpdate()
+{
+    updateInfoText(m_infoTextSensors,m_buttonIncreaseSensors);
+    updateInfoText(m_infoTextEngine,m_buttonIncreaseEngine);
+    updateInfoText(m_infoTextWeapon,m_buttonIncreaseWeapon);
+    updateInfoText(m_infoTextHull,m_buttonIncreaseHull);
 }
 void StateMenuShipSelect::updateTexts(float const elapsed)
 {
@@ -158,10 +235,14 @@ void StateMenuShipSelect::updateTexts(float const elapsed)
     m_textEngine->setText("Engine: " + std::to_string(m_menuBase->m_playerConfig.engineLevel));
     m_textEngine->update(elapsed);
 
-    m_textWeapon->setText("Weapons: " + std::to_string(m_menuBase->m_playerConfig.weaponLevel));
+    m_textWeapon->setText(std::to_string(m_menuBase->m_playerConfig.weaponLevel) + " :Weapons");
     m_textWeapon->update(elapsed);
 
-    m_textPointsAvailable->setText("Points: " + std::to_string(m_menuBase->m_playerConfig.pointsToSpend));
+    m_textHull->setText(std::to_string(m_menuBase->m_playerConfig.hullLevel) + " :Hull");
+    m_textHull->update(elapsed);
+
+    m_textPointsAvailable->setText(
+        "Points: " + std::to_string(m_menuBase->m_playerConfig.pointsToSpend));
     m_textPointsAvailable->update(elapsed);
 }
 
@@ -181,10 +262,18 @@ void StateMenuShipSelect::doInternalDraw() const
     m_textWeapon->draw(getGame()->getRenderTarget());
     m_buttonIncreaseWeapon->draw();
 
+    m_textHull->draw(getGame()->getRenderTarget());
+    m_buttonIncreaseHull->draw();
+
     m_buttonSwitchToMG->draw();
     m_buttonSwitchToMissile->draw();
 
     m_textPointsAvailable->draw(getGame()->getRenderTarget());
+
+    m_infoTextSensors->draw();
+    m_infoTextEngine->draw();
+    m_infoTextWeapon->draw();
+    m_infoTextHull->draw();
 
     m_menuBase->drawOverlay(getGame()->getRenderTarget());
 }
@@ -207,13 +296,13 @@ void StateMenuShipSelect::createTweenTransition()
         *this);
 }
 
-
 void StateMenuShipSelect::updateShipUpgradeButtons(float const /*elapsed*/)
 {
     bool const hasPointsToSpend = playerConfigHasPointsToSpend(m_menuBase->m_playerConfig);
     m_buttonIncreaseSensors->setActive(hasPointsToSpend);
     m_buttonIncreaseEngine->setActive(hasPointsToSpend);
     m_buttonIncreaseWeapon->setActive(hasPointsToSpend);
+    m_buttonIncreaseHull->setActive(hasPointsToSpend);
 
     m_buttonSwitchToMG->setActive(playerConfigCanSwitchToMg(m_menuBase->m_playerConfig));
     m_buttonSwitchToMissile->setActive(playerConfigCanSwitchToMissile(m_menuBase->m_playerConfig));

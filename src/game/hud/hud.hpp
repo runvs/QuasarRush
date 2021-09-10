@@ -25,6 +25,7 @@ private:
     jt::Text::Sptr m_timeText;
     std::shared_ptr<jt::Bar> m_reloadBar;
     std::shared_ptr<jt::Bar> m_healthBar;
+    std::shared_ptr<jt::Sprite> m_healthOverlay;
 
     void doCreate() override;
 

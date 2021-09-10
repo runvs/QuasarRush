@@ -51,12 +51,12 @@ void InfoText::doUpdate(float const elapsed)
     } else if (m_align == eInfoTextAlign::LeftUp) {
         offset = jt::Vector2 { -10.0f, -24.0f };
     }
-    auto textPosition = targetPosition + m_diagonalVector + offset;
+    auto textPosition = targetPosition + m_diagonalVector + offset + m_offset;
     if (m_align == eInfoTextAlign::LeftDown || m_align == eInfoTextAlign::LeftUp) {
         textPosition.x() -= m_text->getLocalBounds().width();
     }
 
-    m_text->setPosition(textPosition);
+    m_text->setPosition(textPosition );
     m_text->setColor(m_color);
     m_text->update(elapsed);
 }
@@ -78,7 +78,7 @@ void InfoText::doDraw() const
     } else if (m_align == eInfoTextAlign::LeftUp) {
         offset = jt::Vector2 { -10.0f, -12.0f };
     }
-    auto const targetPosition = target->getPosition() + offset;
+    auto const targetPosition = target->getPosition() + offset + m_offset;
 
     jt::Line lineDiag(m_diagonalVector);
     lineDiag.setPosition(targetPosition);
@@ -95,3 +95,4 @@ void InfoText::doDraw() const
     m_text->draw(getGame()->getRenderTarget());
 }
 void InfoText::doKill() { }
+void InfoText::setOffset(jt::Vector2 const& offset) {m_offset = offset; }
