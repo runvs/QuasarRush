@@ -54,6 +54,8 @@ private:
 
     float m_health;
 
+    float m_timerPlayerOutOfBounds{0.0f};
+
     std::shared_ptr<ObserverInterface<std::tuple<float,jt::Vector2>>> m_healthObserver;
     std::shared_ptr<ObserverInterface<float>> m_reloadObserver;
 

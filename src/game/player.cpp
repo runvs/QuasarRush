@@ -20,7 +20,8 @@ std::unique_ptr<WeaponInterface> createWeaponFromConfig(PlayerConfig config)
 }
 
 Player::Player(ShotSpawnInterface& shotSpawnInterface, SpawnTrailInterface& spawnTrailInterface,
-    PlayerConfig& pc, std::shared_ptr<ObserverInterface<std::tuple<float,jt::Vector2>>> healthObserver,
+    PlayerConfig& pc,
+    std::shared_ptr<ObserverInterface<std::tuple<float, jt::Vector2>>> healthObserver,
     std::shared_ptr<ObserverInterface<float>> reloadObserver)
     : m_shotSpawnInterface { shotSpawnInterface }
     , m_spawnTrailInterface { spawnTrailInterface }
@@ -76,6 +77,15 @@ void Player::doUpdate(float const elapsed)
     updateFlame(elapsed);
 
     m_healthObserver->notify(std::make_tuple(m_health, m_transform->position));
+
+    bool playerOutOfBounds
+        = m_transform->position.x() < -m_shipSprite->getLocalBounds().width() * 1.5f
+        || m_transform->position.y() < -m_shipSprite->getLocalBounds().height() * 1.5f
+        || m_transform->position.x() >= GP::GetScreenSize().x()
+        || m_transform->position.y() >= GP::GetScreenSize().y();
+    if (playerOutOfBounds) {
+        takeDamage(elapsed*2.0f);
+    }
 }
 void Player::updateFlame(float const elapsed)
 {
@@ -99,10 +109,9 @@ void Player::updateFlame(float const elapsed)
 
 void Player::updateSprite(float const elapsed)
 {
-    auto const px = jt::MathHelper::clamp(m_transform->position.x(),
-        static_cast<float>(GP::PlayerHalfSize()), GP::GetScreenSize().x() - GP::PlayerHalfSize());
-    auto const py = jt::MathHelper::clamp(m_transform->position.y(),
-        static_cast<float>(GP::PlayerHalfSize()), GP::GetScreenSize().y() - GP::PlayerHalfSize());
+
+    auto const px = m_transform->position.x();
+    auto const py = m_transform->position.y();
 
     m_shipSprite->setRotation(m_transform->angle);
     m_shipSprite->setPosition(jt::Vector2 { px, py });
@@ -190,6 +199,4 @@ void Player::setProjectionPoints(std::vector<jt::Vector2>&& points)
 std::shared_ptr<jt::Animation> Player::getSprite() const { return m_shipSprite; }
 
 bool Player::isDead() const { return m_health <= 0; }
-void Player::takeDamage(float damageValue) {
-    m_health -= damageValue;
-}
+void Player::takeDamage(float damageValue) { m_health -= damageValue; }
