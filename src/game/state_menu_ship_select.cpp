@@ -65,6 +65,7 @@ void StateMenuShipSelect::createInfoTexts()
         = std::make_shared<InfoText>(m_buttonSwitchToRockets->getAnimation(), "Rockets", LeftDown);
     m_infoTextRockets->setOffset(InfoTextOffset);
     add(m_infoTextRockets);
+
 }
 
 void StateMenuShipSelect::createButtonBack()
@@ -98,11 +99,11 @@ void StateMenuShipSelect::createButtonFly()
 void StateMenuShipSelect::createShipUpgradeButtons()
 {
 
-    float const xOffset = 100.0f;
+    float const xOffset = 75.0f;
     float const yOffset = 210.0f;
 
     float const xIncrementButton = 30.0f;
-    float const xIncrementText = 132.0f;
+    float const xIncrementText = 124.0f;
     float const yIncrement = 30.0f;
 
     float const textXOffset = 35.5;
@@ -176,7 +177,7 @@ void StateMenuShipSelect::createShipUpgradeButtons()
 void StateMenuShipSelect::createWeaponButtons()
 {
     float const increment = 30.0f;
-    float const xOffset = 250.0f;
+    float const xOffset = 280.0f;
     float const yOffset = 210.0f;
     {
         m_buttonSwitchToMg = std::make_shared<jt::Button>(jt::Vector2u { 18, 18 });
