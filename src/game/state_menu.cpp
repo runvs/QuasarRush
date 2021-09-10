@@ -11,6 +11,7 @@
 #include "state_menu_stage_select.hpp"
 #include "text.hpp"
 #include <fstream>
+#include "tween_alpha.hpp"
 
 StateMenu::StateMenu() { m_menuBase = std::make_shared<StateMenuBase>(); }
 
@@ -18,7 +19,7 @@ void StateMenu::setPlayerConfig(PlayerConfig const& pc) { m_menuBase->m_playerCo
 
 void StateMenu::doInternalCreate()
 {
-    m_menuBase->create(getGame()->getRenderTarget(), *this);
+    m_menuBase->create(getGame()->getRenderTarget(), *this, true);
     m_menuBase->setSubtitleText("A Gravity Combat Game");
     getGame()->getRenderWindow()->setMouseCursorVisible(true);
 

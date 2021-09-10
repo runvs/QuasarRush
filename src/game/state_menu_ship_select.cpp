@@ -16,7 +16,7 @@ void StateMenuShipSelect::setPlayerConfig(PlayerConfig const& pc)
 
 void StateMenuShipSelect::doInternalCreate()
 {
-    m_menuBase->create(getGame()->getRenderTarget(), *this);
+    m_menuBase->create(getGame()->getRenderTarget(), *this, true);
     m_menuBase->setSubtitleText("Hangar");
 
     createShipUpgradeButtons();

@@ -19,7 +19,7 @@ class StateMenuBase {
 private:
     std::shared_ptr<jt::Shape> m_background;
     std::shared_ptr<jt::Sprite> m_quasarImage;
-    std::shared_ptr<jt::Text> m_text_Title;
+    std::shared_ptr<jt::Sprite> m_titleLogo;
 
     std::shared_ptr<jt::Text> m_text_Subtitle;
 
@@ -30,7 +30,7 @@ private:
 
 public:
     PlayerConfig m_playerConfig;
-    void create(std::shared_ptr<jt::renderTarget> rt, jt::GameState& state);
+    void create(std::shared_ptr<jt::renderTarget> rt, jt::GameState& state, bool en);
     void update(float elapsed);
     void draw(std::shared_ptr<jt::renderTarget> rt);
 

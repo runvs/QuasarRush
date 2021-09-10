@@ -13,7 +13,7 @@ StateMenuStageSelect::StateMenuStageSelect() { m_menuBase = std::make_shared<Sta
 
 void StateMenuStageSelect::doInternalCreate()
 {
-    m_menuBase->create(getGame()->getRenderTarget(), *this);
+    m_menuBase->create(getGame()->getRenderTarget(), *this, true);
     m_menuBase->setSubtitleText("Stage Selection");
     getGame()->getRenderWindow()->setMouseCursorVisible(true);
 

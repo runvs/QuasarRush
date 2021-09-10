@@ -11,7 +11,7 @@ StateMenuCredits::StateMenuCredits() { m_menuBase = std::make_shared<StateMenuBa
 
 void StateMenuCredits::doInternalCreate()
 {
-    m_menuBase->create(getGame()->getRenderTarget(), *this);
+    m_menuBase->create(getGame()->getRenderTarget(), *this, false);
     m_menuBase->setSubtitleText("Credits");
 
     createCreditsText();
