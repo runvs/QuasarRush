@@ -8,7 +8,6 @@ ReloadDisplay::ReloadDisplay(std::shared_ptr<jt::Bar> bar)
 
 void ReloadDisplay::notify(float value)
 {
-
     if (m_bar->getValueFraction() != 0) {
         if (value == 0)
         {

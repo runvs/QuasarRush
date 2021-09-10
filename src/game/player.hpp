@@ -12,11 +12,12 @@
 #include "weapon_interface.hpp"
 #include "hud/observer_interface.hpp"
 #include <memory>
+#include <tuple>
 
 class Player : public jt::GameObject {
 public:
     Player(ShotSpawnInterface& shotSpawnInterface, SpawnTrailInterface& spawnTrailInterface,
-        PlayerConfig& pc, std::shared_ptr<ObserverInterface<float>> healthObserver,
+        PlayerConfig& pc, std::shared_ptr<ObserverInterface<std::tuple<float,jt::Vector2>>> healthObserver,
         std::shared_ptr<ObserverInterface<float>> reloadObserver);
     void doCreate() override;
     void doUpdate(float const /*elapsed*/) override;
@@ -53,7 +54,7 @@ private:
 
     float m_health;
 
-    std::shared_ptr<ObserverInterface<float>> m_healthObserver;
+    std::shared_ptr<ObserverInterface<std::tuple<float,jt::Vector2>>> m_healthObserver;
     std::shared_ptr<ObserverInterface<float>> m_reloadObserver;
 
     void updateMovement(const float elapsed);

@@ -149,7 +149,7 @@ void StateGame::createTutorialForFirstMission()
 void StateGame::createLevelEntities()
 {
     Level l("assets/levels/" + m_level_filename);
-    m_player = std::make_shared<Player>(*this, *this, m_playerConfig, nullptr, m_hud->getObserverReload());
+    m_player = std::make_shared<Player>(*this, *this, m_playerConfig, m_hud->getObserverHealth(), m_hud->getObserverReload());
     add(m_player);
     m_player->setTransform(l.getPlayer());
 

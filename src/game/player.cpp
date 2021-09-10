@@ -20,7 +20,7 @@ std::unique_ptr<WeaponInterface> createWeaponFromConfig(PlayerConfig config)
 }
 
 Player::Player(ShotSpawnInterface& shotSpawnInterface, SpawnTrailInterface& spawnTrailInterface,
-    PlayerConfig& pc, std::shared_ptr<ObserverInterface<float>> healthObserver,
+    PlayerConfig& pc, std::shared_ptr<ObserverInterface<std::tuple<float,jt::Vector2>>> healthObserver,
     std::shared_ptr<ObserverInterface<float>> reloadObserver)
     : m_shotSpawnInterface { shotSpawnInterface }
     , m_spawnTrailInterface { spawnTrailInterface }
@@ -74,6 +74,8 @@ void Player::doUpdate(float const elapsed)
     updateSprite(elapsed);
 
     updateFlame(elapsed);
+
+    m_healthObserver->notify(std::make_tuple(m_health, m_transform->position));
 }
 void Player::updateFlame(float const elapsed)
 {
@@ -190,5 +192,4 @@ std::shared_ptr<jt::Animation> Player::getSprite() const { return m_shipSprite; 
 bool Player::isDead() const { return m_health <= 0; }
 void Player::takeDamage(float damageValue) {
     m_health -= damageValue;
-    m_healthObserver->notify(m_health);
 }
