@@ -44,9 +44,13 @@ private:
     std::shared_ptr<jt::Button> m_buttonIncreaseHull;
     std::shared_ptr<InfoText> m_infoTextHull;
 
-    std::shared_ptr<jt::Button> m_buttonSwitchToMG;
-    std::shared_ptr<jt::Button> m_buttonSwitchToMissile;
+    std::shared_ptr<jt::Button> m_buttonSwitchToMg;
+    std::shared_ptr<InfoText> m_infoTextMg;
+    std::shared_ptr<jt::Button> m_buttonSwitchToRockets;
+    std::shared_ptr<InfoText> m_infoTextRockets;
+
     std::shared_ptr<jt::Text> m_textPointsAvailable;
+
 
 
     void doInternalCreate() override;

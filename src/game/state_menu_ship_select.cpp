@@ -33,25 +33,38 @@ void StateMenuShipSelect::doInternalCreate()
 }
 void StateMenuShipSelect::createInfoTexts()
 {
+    jt::Vector2 const& InfoTextOffset = jt::Vector2 { 4, -3.0f };
+
     m_infoTextSensors = std::make_shared<InfoText>(
         m_buttonIncreaseSensors->getAnimation(), "Better Prediction", RightDown);
-    m_infoTextSensors->setOffset(jt::Vector2 { 4, -5.0f });
+
+    m_infoTextSensors->setOffset(InfoTextOffset);
     add(m_infoTextSensors);
 
     m_infoTextEngine = std::make_shared<InfoText>(
         m_buttonIncreaseEngine->getAnimation(), "Faster Ship", RightDown);
-    m_infoTextEngine->setOffset(jt::Vector2 { 4, -5.0f });
+    m_infoTextEngine->setOffset(InfoTextOffset);
     add(m_infoTextEngine);
 
     m_infoTextWeapon = std::make_shared<InfoText>(
         m_buttonIncreaseWeapon->getAnimation(), "Reload Speed", RightDown);
-    m_infoTextWeapon->setOffset(jt::Vector2 { 4, -5.0f });
+    m_infoTextWeapon->setOffset(InfoTextOffset);
     add(m_infoTextWeapon);
 
     m_infoTextHull
         = std::make_shared<InfoText>(m_buttonIncreaseHull->getAnimation(), "More Armor", RightDown);
-    m_infoTextHull->setOffset(jt::Vector2 { 4, -5.0f });
+    m_infoTextHull->setOffset(InfoTextOffset);
     add(m_infoTextHull);
+
+    m_infoTextMg
+        = std::make_shared<InfoText>(m_buttonSwitchToMg->getAnimation(), "Machinegun", LeftDown);
+    m_infoTextMg->setOffset(InfoTextOffset);
+    add(m_infoTextMg);
+
+    m_infoTextRockets
+        = std::make_shared<InfoText>(m_buttonSwitchToRockets->getAnimation(), "Rockets", LeftDown);
+    m_infoTextRockets->setOffset(InfoTextOffset);
+    add(m_infoTextRockets);
 }
 
 void StateMenuShipSelect::createButtonBack()
@@ -86,11 +99,11 @@ void StateMenuShipSelect::createShipUpgradeButtons()
 {
 
     float const xOffset = 100.0f;
-    float const yOffset = 204.0f;
+    float const yOffset = 210.0f;
 
-    float const xIncrementButton = 24.0f;
-    float const xIncrementText = 116.0f;
-    float const yIncrement = 24.0f;
+    float const xIncrementButton = 30.0f;
+    float const xIncrementText = 132.0f;
+    float const yIncrement = 30.0f;
 
     float const textXOffset = 35.5;
 
@@ -162,37 +175,37 @@ void StateMenuShipSelect::createShipUpgradeButtons()
 }
 void StateMenuShipSelect::createWeaponButtons()
 {
-    float const increment = 24.0f;
+    float const increment = 30.0f;
     float const xOffset = 250.0f;
-    float const yOffset = 204.0f;
+    float const yOffset = 210.0f;
     {
-        m_buttonSwitchToMG = std::make_shared<jt::Button>(jt::Vector2u { 18, 18 });
-        add(m_buttonSwitchToMG);
+        m_buttonSwitchToMg = std::make_shared<jt::Button>(jt::Vector2u { 18, 18 });
+        add(m_buttonSwitchToMg);
 
-        m_buttonSwitchToMG->addCallback(
+        m_buttonSwitchToMg->addCallback(
             [this]() { playerConfigSwitchToMg(m_menuBase->m_playerConfig); });
-        m_buttonSwitchToMG->setPosition(
+        m_buttonSwitchToMg->setPosition(
             jt::Vector2 { xOffset + 2 * increment, yOffset + 0 * increment });
-        auto const text = jt::dh::createText(getGame()->getRenderTarget(), "Mg", 12);
-        text->setOrigin(jt::Vector2 { -5.0f, -1.0f });
-        text->SetTextAlign(jt::Text::TextAlign::LEFT);
-        m_buttonSwitchToMG->setDrawable(text);
+        auto const img = std::make_shared<jt::Sprite>();
+        img->loadSprite("assets/icons/mg.png");
+        img->setOrigin(jt::Vector2 { -1.0f, -1.0f });
+
+        m_buttonSwitchToMg->setDrawable(img);
     }
     {
-        m_buttonSwitchToMissile = std::make_shared<jt::Button>(jt::Vector2u { 18, 18 });
-        add(m_buttonSwitchToMissile);
+        m_buttonSwitchToRockets = std::make_shared<jt::Button>(jt::Vector2u { 18, 18 });
+        add(m_buttonSwitchToRockets);
 
-        m_buttonSwitchToMissile->addCallback(
+        m_buttonSwitchToRockets->addCallback(
             [this]() { playerConfigSwitchToMissile(m_menuBase->m_playerConfig); });
-        m_buttonSwitchToMissile->setPosition(
-            jt::Vector2 { xOffset + 2.0f * increment, yOffset + 24 });
-        auto const text = jt::dh::createText(getGame()->getRenderTarget(), "Ro", 12);
-        text->setOrigin(jt::Vector2 { -5.0f, -1.0f });
-        text->SetTextAlign(jt::Text::TextAlign::LEFT);
-        m_buttonSwitchToMissile->setDrawable(text);
+        m_buttonSwitchToRockets->setPosition(
+            jt::Vector2 { xOffset + 2.0f * increment, yOffset + increment });
+        auto const img = std::make_shared<jt::Sprite>();
+        img->loadSprite("assets/icons/rocket.png");
+        img->setOrigin(jt::Vector2 { -1.0f, -1.0f });
+        m_buttonSwitchToRockets->setDrawable(img);
     }
 }
-
 
 void StateMenuShipSelect::doInternalUpdate(float const elapsed)
 {
@@ -205,8 +218,8 @@ void StateMenuShipSelect::doInternalUpdate(float const elapsed)
 
     updateShipUpgradeButtons(elapsed);
 
-    if (getGame()->input()->keyboard()->pressed(jt::KeyCode::LShift) && getGame()->input()->keyboard()->justPressed(jt::KeyCode::F8))
-    {
+    if (getGame()->input()->keyboard()->pressed(jt::KeyCode::LShift)
+        && getGame()->input()->keyboard()->justPressed(jt::KeyCode::F8)) {
         m_menuBase->m_playerConfig.pointsToSpend++;
     }
 }
@@ -222,10 +235,13 @@ void updateInfoText(std::shared_ptr<InfoText> text, std::shared_ptr<jt::Button> 
 
 void StateMenuShipSelect::infoTextUpdate()
 {
-    updateInfoText(m_infoTextSensors,m_buttonIncreaseSensors);
-    updateInfoText(m_infoTextEngine,m_buttonIncreaseEngine);
-    updateInfoText(m_infoTextWeapon,m_buttonIncreaseWeapon);
-    updateInfoText(m_infoTextHull,m_buttonIncreaseHull);
+    updateInfoText(m_infoTextSensors, m_buttonIncreaseSensors);
+    updateInfoText(m_infoTextEngine, m_buttonIncreaseEngine);
+    updateInfoText(m_infoTextWeapon, m_buttonIncreaseWeapon);
+    updateInfoText(m_infoTextHull, m_buttonIncreaseHull);
+
+    updateInfoText(m_infoTextMg, m_buttonSwitchToMg);
+    updateInfoText(m_infoTextRockets, m_buttonSwitchToRockets);
 }
 void StateMenuShipSelect::updateTexts(float const elapsed)
 {
@@ -265,8 +281,8 @@ void StateMenuShipSelect::doInternalDraw() const
     m_textHull->draw(getGame()->getRenderTarget());
     m_buttonIncreaseHull->draw();
 
-    m_buttonSwitchToMG->draw();
-    m_buttonSwitchToMissile->draw();
+    m_buttonSwitchToMg->draw();
+    m_buttonSwitchToRockets->draw();
 
     m_textPointsAvailable->draw(getGame()->getRenderTarget());
 
@@ -274,6 +290,8 @@ void StateMenuShipSelect::doInternalDraw() const
     m_infoTextEngine->draw();
     m_infoTextWeapon->draw();
     m_infoTextHull->draw();
+    m_infoTextMg->draw();
+    m_infoTextRockets->draw();
 
     m_menuBase->drawOverlay(getGame()->getRenderTarget());
 }
@@ -304,6 +322,6 @@ void StateMenuShipSelect::updateShipUpgradeButtons(float const /*elapsed*/)
     m_buttonIncreaseWeapon->setActive(hasPointsToSpend);
     m_buttonIncreaseHull->setActive(hasPointsToSpend);
 
-    m_buttonSwitchToMG->setActive(playerConfigCanSwitchToMg(m_menuBase->m_playerConfig));
-    m_buttonSwitchToMissile->setActive(playerConfigCanSwitchToMissile(m_menuBase->m_playerConfig));
+    m_buttonSwitchToMg->setActive(playerConfigCanSwitchToMg(m_menuBase->m_playerConfig));
+    m_buttonSwitchToRockets->setActive(playerConfigCanSwitchToMissile(m_menuBase->m_playerConfig));
 }
