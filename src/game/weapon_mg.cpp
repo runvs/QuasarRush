@@ -2,6 +2,12 @@
 #include "game_properties.hpp"
 #include <math_helper.hpp>
 
+WeaponMg::WeaponMg()
+{
+    // TODO Sound
+    m_shotSounds = std::make_unique<jt::SoundGroup>(std::vector<std::string> { /*TODO*/ });
+}
+
 void WeaponMg::shoot(jt::Vector2 const& shooterPos, jt::Vector2 const& mousePosition,
     PlayerConfig playerConfig, ShotSpawnInterface& shotSpawnInterface)
 {
@@ -24,6 +30,7 @@ void WeaponMg::shoot(jt::Vector2 const& shooterPos, jt::Vector2 const& mousePosi
             m_reloadTimerMax = m_reloadTimer;
             m_shotCounter = 0;
         }
+        m_shotSounds->play();
     }
 }
 

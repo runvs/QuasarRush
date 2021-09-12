@@ -26,6 +26,9 @@ void StateMenu::doInternalCreate()
 
     createButtonCredits();
     createButtonSelectLevel();
+
+    // TODO Sound
+    // getGame()->getMusicPlayer()->PlayMusic("assets/music.ogg");
 }
 void StateMenu::createButtonSelectLevel()
 {
@@ -33,12 +36,12 @@ void StateMenu::createButtonSelectLevel()
     add(m_buttonSelectLevel);
     m_buttonSelectLevel->addCallback([this]() { startTransitionToStateSelectLevel(); });
     m_buttonSelectLevel->setPosition(jt::Vector2 { 185, 200 });
-    // TODO "Select Stage" ?
     auto const text2 = jt::dh::createText(getGame()->getRenderTarget(), "Play", 12);
     text2->setOrigin(jt::Vector2 { -5.0f, -1.0f });
     text2->SetTextAlign(jt::Text::TextAlign::LEFT);
     m_buttonSelectLevel->setDrawable(text2);
 }
+
 void StateMenu::createButtonCredits()
 {
     m_buttonCredits = std::make_shared<jt::Button>(jt::Vector2u { 51, 18 });
@@ -55,10 +58,12 @@ void StateMenu::createButtonCredits()
     m_buttonCredits->setDrawable(text);
 }
 
-void StateMenu::doInternalUpdate(float const elapsed) { m_menuBase->update(elapsed);
+void StateMenu::doInternalUpdate(float const elapsed)
+{
+    m_menuBase->update(elapsed);
 
-    if (getGame()->input()->keyboard()->pressed(jt::KeyCode::LShift) && getGame()->input()->keyboard()->justPressed(jt::KeyCode::F4))
-    {
+    if (getGame()->input()->keyboard()->pressed(jt::KeyCode::LShift)
+        && getGame()->input()->keyboard()->justPressed(jt::KeyCode::F4)) {
         m_menuBase->m_playerConfig.selectedLevelFilename = "5_many_enemies.json";
         m_menuBase->startFadeOut(
             [this]() {
