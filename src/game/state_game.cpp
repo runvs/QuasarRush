@@ -63,14 +63,15 @@ void StateGame::doInternalCreate()
 
     createLevelEntities();
 
-
-
     // StateGame will call drawObjects itself.
     setAutoDraw(false);
 
     createTutorial();
 
     getGame()->getRenderWindow()->setMouseCursorVisible(false);
+
+    // TODO Sound
+    m_explosionSounds = std::make_unique<jt::SoundGroup>(std::vector<std::string> { /*TODO*/ });
 }
 void StateGame::createParticleSystems()
 {
@@ -149,7 +150,8 @@ void StateGame::createTutorialForFirstMission()
 void StateGame::createLevelEntities()
 {
     Level l("assets/levels/" + m_level_filename);
-    m_player = std::make_shared<Player>(*this, *this, m_playerConfig, m_hud->getObserverHealth(), m_hud->getObserverReload());
+    m_player = std::make_shared<Player>(
+        *this, *this, m_playerConfig, m_hud->getObserverHealth(), m_hud->getObserverReload());
     add(m_player);
     m_player->setTransform(l.getPlayer());
 
@@ -346,29 +348,6 @@ void StateGame::spawnShotMg(jt::Vector2 const& pos, jt::Vector2 const& dir, bool
     m_physics_system->registerTransform(transform);
 }
 
-void StateGame::spawnBigExplosion(jt::Vector2 const& position)
-{
-    auto explosion = std::make_shared<Explosion>();
-    add(explosion);
-    explosion->getAnimation()->setPosition(position);
-    getGame()->getCamera()->shake(0.15f, 2.5f);
-}
-
-void StateGame::spawnSmallExplosion(jt::Vector2 const& position)
-{
-    auto explosion = std::make_shared<Explosion>();
-    add(explosion);
-    explosion->getAnimation()->setPosition(position);
-    getGame()->getCamera()->shake(0.15f, 1.5f);
-}
-
-void StateGame::spawnImpactExplosion(jt::Vector2 const& position)
-{
-    auto impact = std::make_shared<ImpactExplosion>();
-    add(impact);
-    impact->getAnimation()->setPosition(position);
-}
-
 void StateGame::spawnShotMissile(jt::Vector2 const& pos, jt::Vector2 const& dir, bool byPlayer)
 {
     for (int i = 0; i != 5; ++i) {
@@ -395,6 +374,33 @@ void StateGame::spawnShotMissile(jt::Vector2 const& pos, jt::Vector2 const& dir,
         m_physics_system->registerTransform(transform);
     }
 }
+
+void StateGame::spawnBigExplosion(jt::Vector2 const& position)
+{
+    auto explosion = std::make_shared<Explosion>();
+    add(explosion);
+    explosion->getAnimation()->setPosition(position);
+    getGame()->getCamera()->shake(0.15f, 2.5f);
+    m_explosionSounds->play();
+}
+
+void StateGame::spawnSmallExplosion(jt::Vector2 const& position)
+{
+    auto explosion = std::make_shared<Explosion>();
+    add(explosion);
+    explosion->getAnimation()->setPosition(position);
+    getGame()->getCamera()->shake(0.15f, 1.5f);
+    m_explosionSounds->play();
+}
+
+void StateGame::spawnImpactExplosion(jt::Vector2 const& position)
+{
+    auto impact = std::make_shared<ImpactExplosion>();
+    add(impact);
+    impact->getAnimation()->setPosition(position);
+    m_explosionSounds->play();
+}
+
 void StateGame::doInternalDraw() const
 {
     m_background->draw(getGame()->getRenderTarget());
@@ -442,8 +448,7 @@ void StateGame::checkGameOver()
     if (m_targets.empty() && m_enemies.empty()) {
         endGame(true);
     }
-    if (m_player->isDead())
-    {
+    if (m_player->isDead()) {
         endGame(false);
     }
 }

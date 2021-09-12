@@ -15,6 +15,7 @@
 #include "player_config.hpp"
 #include "shot_mg.hpp"
 #include "shot_spawn_interface.hpp"
+#include "sound_group.hpp"
 #include "spawn_trail_interface.hpp"
 #include "target.hpp"
 #include <memory>
@@ -34,10 +35,14 @@ class StateGame : public jt::GameState,
                   public SpawnTrailInterface {
 public:
     void setPlayerConfig(PlayerConfig const& pc);
+
     void spawnShotMg(jt::Vector2 const& pos, jt::Vector2 const& dir, bool byPlayer) override;
     void spawnShotMissile(jt::Vector2 const& pos, jt::Vector2 const& dir, bool byPlayer) override;
+
     void spawnBigExplosion(jt::Vector2 const& position) override;
     void spawnImpactExplosion(jt::Vector2 const& position) override;
+    void spawnSmallExplosion(jt::Vector2 const& position) override;
+
     void spawnTrail(jt::Vector2 pos) override;
 
 private:
@@ -71,13 +76,8 @@ private:
     float m_timer;
     std::shared_ptr<ObserverInterface<float>> m_timeObserver;
 
+    std::unique_ptr<jt::SoundGroup> m_explosionSounds;
 
-
-
-public:
-    void spawnSmallExplosion(jt::Vector2 const& position) override;
-
-private:
     void doInternalCreate() override;
     void doInternalUpdate(float const elapsed) override;
     void doInternalDraw() const override;
