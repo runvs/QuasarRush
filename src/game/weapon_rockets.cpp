@@ -5,7 +5,9 @@
 WeaponRockets::WeaponRockets()
 {
     // TODO Sound
-    m_shotSounds = std::make_unique<jt::SoundGroup>(std::vector<std::string> { /*TODO*/ });
+    m_shotSounds = std::make_unique<jt::SoundGroup>(
+        std::vector<std::string> { "assets/sfx/rocket_fire.ogg" });
+    m_shotSounds->setVolume(50);
 }
 
 void WeaponRockets::shoot(jt::Vector2 const& playerPos, jt::Vector2 const& mousePosition,
