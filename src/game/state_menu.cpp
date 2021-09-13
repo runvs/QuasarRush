@@ -47,7 +47,10 @@ void StateMenu::createButtonCredits()
 {
     m_buttonCredits = std::make_shared<jt::Button>(jt::Vector2u { 51, 18 });
     add(m_buttonCredits);
-    m_buttonCredits->addCallback([this]() {
+    m_buttonCredits->
+	
+	
+	addCallback([this]() {
         auto newState = std::make_shared<StateMenuCredits>();
         newState->setPlayerConfig(m_menuBase->m_playerConfig);
         getGame()->switchState(newState);
@@ -66,13 +69,15 @@ void StateMenu::doInternalUpdate(float const elapsed)
     if (getGame()->input()->keyboard()->pressed(jt::KeyCode::LShift)
         && getGame()->input()->keyboard()->justPressed(jt::KeyCode::F4)) {
         m_menuBase->m_playerConfig.selectedLevelFilename = "5_many_enemies.json";
-        m_menuBase->startFadeOut(
-            [this]() {
-                std::shared_ptr<StateGame> newState = std::make_shared<StateGame>();
-                newState->setPlayerConfig(m_menuBase->m_playerConfig);
-                getGame()->switchState(newState);
-            },
-            *this);
+        m_menuBase->
+
+            startFadeOut(
+                [this]() {
+                    std::shared_ptr<StateGame> newState = std::make_shared<StateGame>();
+                    newState->setPlayerConfig(m_menuBase->m_playerConfig);
+                    getGame()->switchState(newState);
+                },
+                *this);
     }
 }
 

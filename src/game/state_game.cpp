@@ -71,7 +71,9 @@ void StateGame::doInternalCreate()
     getGame()->getRenderWindow()->setMouseCursorVisible(false);
 
     // TODO Sound
-    m_explosionSounds = std::make_unique<jt::SoundGroup>(std::vector<std::string> { /*TODO*/ });
+    m_explosionSounds
+        = std::make_unique<jt::SoundGroup>(std::vector<std::string> { "assets/sfx/explosion.ogg" });
+    m_explosionSounds->setVolume(20);
 
     getGame()->getMusicPlayer()->PlayMusic("assets/music/game.ogg");
 }
