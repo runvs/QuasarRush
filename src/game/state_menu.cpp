@@ -27,8 +27,9 @@ void StateMenu::doInternalCreate()
     createButtonCredits();
     createButtonSelectLevel();
 
-    // TODO Sound
-    // getGame()->getMusicPlayer()->PlayMusic("assets/music.ogg");
+    if (getGame()->getMusicPlayer()->GetMusicFileName() != "assets/music/menu.ogg") {
+        getGame()->getMusicPlayer()->PlayMusic("assets/music/menu.ogg");
+    }
 }
 void StateMenu::createButtonSelectLevel()
 {

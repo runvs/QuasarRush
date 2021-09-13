@@ -72,6 +72,8 @@ void StateGame::doInternalCreate()
 
     // TODO Sound
     m_explosionSounds = std::make_unique<jt::SoundGroup>(std::vector<std::string> { /*TODO*/ });
+
+    getGame()->getMusicPlayer()->PlayMusic("assets/music/game.ogg");
 }
 void StateGame::createParticleSystems()
 {
