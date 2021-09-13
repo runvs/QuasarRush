@@ -19,6 +19,10 @@ void StateMenuStageSelect::doInternalCreate()
 
     createLevelButtons();
     createButtonBack();
+
+    if (getGame()->getMusicPlayer()->GetMusicFileName() != "assets/music/menu.ogg") {
+        getGame()->getMusicPlayer()->PlayMusic("assets/music/menu.ogg");
+    }
 }
 void StateMenuStageSelect::createButtonBack()
 {
@@ -83,7 +87,7 @@ void StateMenuStageSelect::createLevelButtons()
         float yPos = 200.0f + 24.0f * (int)(counter / 3);
         unsigned int buttonWidth = 100U;
 
-        xPos +=  (buttonWidth + 8.0f) * (counter % 3);
+        xPos += (buttonWidth + 8.0f) * (counter % 3);
 
         auto button = std::make_shared<jt::Button>(jt::Vector2u { buttonWidth, 18 });
         add(button);

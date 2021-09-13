@@ -54,7 +54,6 @@ public:
 
     void setScreenSizeHint(jt::Vector2 const& hint);
 
-    // FIXME: Not ideal because it only supports rectangles.
     std::map<std::string, std::vector<InfoRect>> getObjectGroups() { return m_objectGroups; };
     void toggleObjectGroupVisibility() { m_highlightObjectGroups = !m_highlightObjectGroups; };
 

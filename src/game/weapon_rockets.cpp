@@ -2,6 +2,12 @@
 #include "game_properties.hpp"
 #include <math_helper.hpp>
 
+WeaponRockets::WeaponRockets()
+{
+    // TODO Sound
+    m_shotSounds = std::make_unique<jt::SoundGroup>(std::vector<std::string> { /*TODO*/ });
+}
+
 void WeaponRockets::shoot(jt::Vector2 const& playerPos, jt::Vector2 const& mousePosition,
     PlayerConfig playerConfig, ShotSpawnInterface& shotSpawnInterface)
 {
@@ -13,8 +19,9 @@ void WeaponRockets::shoot(jt::Vector2 const& playerPos, jt::Vector2 const& mouse
         shotTimeFactor = jt::MathHelper::clamp(shotTimeFactor, 0.2f, 1.0f);
 
         m_shootTimer = GP::PlayerShootTimerMissile() * shotTimeFactor;
-        m_shootTimerMax= m_shootTimer;
+        m_shootTimerMax = m_shootTimer;
         shotSpawnInterface.spawnShotMissile(playerPos, aim_direction, true);
+        m_shotSounds->play();
     }
 }
 

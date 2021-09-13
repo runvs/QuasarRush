@@ -6,6 +6,7 @@
 #include "state_game.hpp"
 #include "state_menu_stage_select.hpp"
 #include "text.hpp"
+#include <math_helper.hpp>
 
 StateMenuShipSelect::StateMenuShipSelect() { m_menuBase = std::make_shared<StateMenuBase>(); }
 
@@ -65,7 +66,6 @@ void StateMenuShipSelect::createInfoTexts()
         = std::make_shared<InfoText>(m_buttonSwitchToRockets->getAnimation(), "Rockets", LeftDown);
     m_infoTextRockets->setOffset(InfoTextOffset);
     add(m_infoTextRockets);
-
 }
 
 void StateMenuShipSelect::createButtonBack()
@@ -222,6 +222,13 @@ void StateMenuShipSelect::doInternalUpdate(float const elapsed)
     if (getGame()->input()->keyboard()->pressed(jt::KeyCode::LShift)
         && getGame()->input()->keyboard()->justPressed(jt::KeyCode::F8)) {
         m_menuBase->m_playerConfig.pointsToSpend++;
+    }
+
+    if (m_started) {
+        float v = getGame()->getMusicPlayer()->GetMusicVolume();
+        v -= 100.0f / 0.5f * elapsed;
+        v = jt::MathHelper::clamp(v, 0.0f, 100.0f);
+        getGame()->getMusicPlayer()->SetMusicVolume(v);
     }
 }
 

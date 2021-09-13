@@ -30,5 +30,23 @@
       "x": 200.0,
       "y": 150.0
     }
+  ],
+  "enemies": [
+    {
+      "x": 10.0,
+      "y": 270.0,
+      "vx": 0,
+      "vy": 0.0,
+      "flight": "stay",
+      "shoot": "shootMG"
+    },
+    {
+      "x": 380.0,
+      "y": 150.0,
+      "vx": 0,
+      "vy": 0.0,
+      "flight": "stay",
+      "shoot": "shootMG"
+    }
   ]
 }
