@@ -2,6 +2,7 @@
 #define GUARD_JAMTEMPLATE_BUTTON_HPP_GUARD
 
 #include "game_object.hpp"
+#include "sound_group.hpp"
 #include "vector.hpp"
 #include <functional>
 #include <memory>
@@ -41,6 +42,8 @@ public:
     void setPosition(jt::Vector2 const& v);
     jt::Vector2 getPosition(void) const;
 
+    void setSound(std::string path);
+
 private:
     std::shared_ptr<Animation> m_background;
     std::shared_ptr<jt::Sprite> m_disabledOverlay;
@@ -49,7 +52,9 @@ private:
     jt::Vector2 m_pos;
 
     bool m_isVisible { true };
-    bool m_isActive {true};
+    bool m_isActive { true };
+
+    std::unique_ptr<jt::SoundGroup> m_sound;
 
     void doDraw() const override;
 
