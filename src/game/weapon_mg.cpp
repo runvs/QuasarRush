@@ -5,7 +5,8 @@
 WeaponMg::WeaponMg()
 {
     // TODO Sound
-    m_shotSounds = std::make_unique<jt::SoundGroup>(std::vector<std::string> { /*TODO*/ });
+    m_shotSounds = std::make_unique<jt::SoundGroup>(std::vector<std::string> {
+        "assets/sfx/mg1.ogg", "assets/sfx/mg2.ogg", "assets/sfx/mg3.ogg", "assets/sfx/mg4.ogg" });
 }
 
 void WeaponMg::shoot(jt::Vector2 const& shooterPos, jt::Vector2 const& mousePosition,
