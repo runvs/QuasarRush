@@ -76,6 +76,7 @@ void StateGame::doInternalCreate()
     m_explosionSounds->setVolume(20);
 
     getGame()->getMusicPlayer()->PlayMusic("assets/music/game.ogg");
+
 }
 void StateGame::createParticleSystems()
 {
